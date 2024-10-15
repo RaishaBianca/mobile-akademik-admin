@@ -1,3 +1,4 @@
+import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombuttonone.dart';
 import 'package:admin_fik_app/pages/pelaporan/kendalabaru_page.dart';
@@ -103,14 +104,7 @@ class PelaporanPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
-                          ),
-                        ),
+                        BarChart(),
                         SizedBox(height: 30), // Jarak antara tombol dan teks baru
                         Text(
                           'Pelaporan Ruang Kelas FIK',
@@ -128,14 +122,20 @@ class PelaporanPage extends StatelessWidget {
                             CustomButtonOne(
                               label: 'Laporan Baru',
                               onPressed: () {
-                                // Aksi saat tombol ditekan
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => KendalabaruPage()),
+                                  );
                               },
                               subText: '6', // Angka tambahan di bawah label
                             ),
                             CustomButtonOne(
                               label: 'Laporan Dikerjakan',
                               onPressed: () {
-                                // Aksi saat tombol ditekan
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => KendaladikerjakanPage()),
+                                );
                               },
                               subText: '12', // Angka tambahan di bawah label
                             ),
@@ -148,14 +148,20 @@ class PelaporanPage extends StatelessWidget {
                             CustomButtonOne(
                               label: 'Laporan Selesai',
                               onPressed: () {
-                                // Aksi saat tombol ditekan
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => KendalaselesaiPage()),
+                                );
                               },
                               subText: '6', // Angka tambahan di bawah label
                             ),
                             CustomButtonOne(
                               label: 'Semua Laporan',
                               onPressed: () {
-                                // Aksi saat tombol ditekan
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SemuakendalaPage()),
+                                );
                               },
                               subText: '12', // Angka tambahan di bawah label
                             ),
@@ -171,14 +177,7 @@ class PelaporanPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
-                          ),
-                        ),
+                        BarChart(),
                       ],
                     ),
                   ),

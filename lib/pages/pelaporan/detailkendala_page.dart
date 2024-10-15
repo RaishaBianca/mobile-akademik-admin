@@ -1,37 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/buttonaccept.dart';
-import 'package:admin_fik_app/customstyle/buttonreject.dart';
-import 'package:admin_fik_app/data/dummy_data.dart'; // Ganti dengan path yang sesuai
+import 'package:admin_fik_app/customstyle/savebutton.dart';
+import 'package:admin_fik_app/customstyle/statusdropdown.dart';
+import 'package:admin_fik_app/data/dummy_report.dart'; // Ganti dengan path yang sesuai
 
-class DetailkendalaPage extends StatelessWidget {
+class DetailkendalaPage extends StatefulWidget {
   final String studentName;
   final String studentNim;
   final String inputDate;
   final String ruangan;
-  final String bookDate;
-  final String jamMulai;
-  final String jamSelesai;
-  final String jumlahPengguna;
-  final String keterangan;
+  final String jenis;
+  final String bentuk;
+  final String deskripsi;
 
   DetailkendalaPage({
     Key? key,
-    // required this.labName,
     required this.studentName,
     required this.studentNim,
     required this.inputDate,
     required this.ruangan,
-    required this.bookDate,
-    required this.jamMulai,
-    required this.jamSelesai,
-    required this.jumlahPengguna,
-    required this.keterangan,
+    required this.jenis,
+    required this.bentuk,
+    required this.deskripsi,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController reasonController = TextEditingController();
+  _DetailkendalaPageState createState() => _DetailkendalaPageState();
+}
 
+class _DetailkendalaPageState extends State<DetailkendalaPage> {
+  String? _lastSavedStatus;
+  late TextEditingController reasonController;
+  late String _deskripsi;
+
+  @override
+  void initState() {
+    super.initState();
+    reasonController = TextEditingController(text: widget.deskripsi);
+    _deskripsi = widget.deskripsi;
+  }
+
+  void _handleSave(String status) {
+    setState(() {
+      _lastSavedStatus = status;
+      _deskripsi = reasonController.text;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Detail Laporan Kendala",
@@ -47,18 +63,16 @@ class DetailkendalaPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildRowWithDivider('Nama', studentName),
-            buildRowWithDivider('NIM', studentNim),
-            buildRowWithDivider('Tgl Input', inputDate),
-            buildRowWithDivider('Ruangan', ruangan),
-            buildRowWithDivider('Tgl Peminjaman', bookDate),
-            buildRowWithDivider('Jam Mulai', jamMulai),
-            buildRowWithDivider('Jam Selesai', jamSelesai),
-            buildRowWithDivider('Jml Pengguna', jumlahPengguna),
-            buildRowWithDivider('Keterangan', keterangan),
+            buildRowWithDivider('Nama', widget.studentName),
+            buildRowWithDivider('NIM', widget.studentNim),
+            buildRowWithDivider('Tgl Input', widget.inputDate),
+            buildRowWithDivider('Ruangan', widget.ruangan),
+            buildRowWithDivider('Jenis Kendala', widget.jenis),
+            buildRowWithDivider('Bentuk Kendala', widget.bentuk),
+            buildRowWithDivider('Deskripsi', _deskripsi),
             SizedBox(height: 16),
             Text(
-              'Alasan Ditolak:',
+              'Keterangan Pengerjaan:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
@@ -72,7 +86,7 @@ class DetailkendalaPage extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue),
                 ),
-                hintText: 'Masukkan alasan ditolak',
+                hintText: 'Masukkan keterangan penanganan kendala',
               ),
               maxLines: 3, // Untuk menampung beberapa baris
             ),
@@ -80,23 +94,12 @@ class DetailkendalaPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ButtonAccept(
-                  label: 'Terima',
-                  onPressed: () {
-                    // Aksi saat tombol Terima ditekan
-                    print("Diterima");
-                  },
-                ),
-                SizedBox(width: 40),
-                ButtonReject(
-                  label: 'Tolak',
-                  onPressed: () {
-                    // Aksi saat tombol Tolak ditekan
-                    print("Ditolak dengan alasan: ${reasonController.text}");
-                  },
-                ),
-              ],
-            ),
+                StatusDropdown(onSave: _handleSave),
+                // SizedBox(height: 20),
+                // if (_lastSavedStatus != null)
+                //   Text('Status Terakhir: $_lastSavedStatus'),
+              ]
+            )
           ],
         ),
       ),

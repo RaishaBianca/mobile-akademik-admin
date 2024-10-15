@@ -13,6 +13,8 @@ import 'package:admin_fik_app/pages/pelaporan/detailkendala_page.dart';
 import 'package:admin_fik_app/pages/profile/profile_page.dart'; //
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_sales_graph/flutter_sales_graph.dart';
+
 void main() {
   runApp(const MyApp());
 }

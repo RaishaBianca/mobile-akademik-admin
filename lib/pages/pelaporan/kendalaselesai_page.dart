@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/reportCard.dart';
-import 'package:admin_fik_app/data/dummy_data.dart'; // Import dummy data
+import 'package:admin_fik_app/data/dummy_report.dart'; // Import dummy data
 
 class KendalaselesaiPage extends StatelessWidget {
   @override
@@ -23,29 +23,26 @@ class KendalaselesaiPage extends StatelessWidget {
         child: ListView(
           children: [
             ReportCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
+              studentName: DummyReport.studentName,
+              inputDate: DummyReport.inputDate,
+              ruangan: DummyReport.ruangan,
+              jenis: DummyReport.jenis,
               status: 'Selesai',
             ),
             SizedBox(height: 16),
             ReportCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
+              studentName: DummyReport.studentName,
+              inputDate: DummyReport.inputDate,
+              ruangan: DummyReport.ruangan,
+              jenis: DummyReport.jenis,
               status: 'Selesai',
             ),
             SizedBox(height: 16),
             ReportCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
+              studentName: DummyReport.studentName,
+              inputDate: DummyReport.inputDate,
+              ruangan: DummyReport.ruangan,
+              jenis: DummyReport.jenis,
               status: 'Selesai',
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombuttonone.dart';
 import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
@@ -91,13 +92,56 @@ class PeminjamanPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
+                        BarChart(),
+                        SizedBox(height: 20),
+                        Text(
+                          'Peminjaman Ruang Kelas Komputer FIK',
+                          textAlign: TextAlign.left, // Teks rata kiri
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        SizedBox(height: 20), // Jarak antara teks dan tombol
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                          children: [
+                            CustomButtonOne(
+                              label: 'Peminjaman Baru',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MenungguPage()),
+                                );
+                              },
+                              subText: '6', // Angka tambahan di bawah label
+                            ),
+                            CustomButtonOne(
+                              label: 'Terkonfirmasi',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => TerkonfirmasiPage()),
+                                );
+                              },
+                              subText: '12', // Angka tambahan di bawah label
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20), // Jarak antara teks dan tombol
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                          children: [
+                            CustomButtonTwo(
+                              label: 'Lihat Semua Daftar',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SemuadaftarPage()),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                         SizedBox(height: 30), // Jarak antara tombol dan teks baru
                         Text(
@@ -109,14 +153,7 @@ class PeminjamanPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
-                          ),
-                        ),
+                        BarChart(),
                       ],
                     ),
                   ),

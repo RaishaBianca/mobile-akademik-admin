@@ -1,8 +1,11 @@
+import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombutton.dart';
 import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
 import 'package:admin_fik_app/pages/jadwal/kodedosenmk_page.dart';
+
+import 'package:flutter_sales_graph/flutter_sales_graph.dart';
 
 class JadwalPage extends StatefulWidget {
   const JadwalPage({Key? key}) : super(key: key);
@@ -92,14 +95,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
-                          ),
-                        ),
+                        BarChart(),
                         SizedBox(height: 30), // Jarak antara tombol dan teks baru
                         Text(
                           'Statistika Kepadatan Penggunaan Ruangan Kelas FIK',
@@ -110,14 +106,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        Container(
-                          height: 300, // Ukuran tinggi gambar
-                          width: double.infinity, // Ukuran gambar mengikuti lebar layar
-                          child: Image.asset(
-                            'assets/images/grafik.png', // Path gambar grafik lokal
-                            fit: BoxFit.cover, // Menyesuaikan gambar ke dalam container
-                          ),
-                        ),
+                        BarChart()
                       ],
                     ),
                   ),

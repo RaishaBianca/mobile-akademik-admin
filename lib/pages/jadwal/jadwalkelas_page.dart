@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/jamCard.dart';
 import 'package:admin_fik_app/customstyle/JadwalCard.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 
 class JadwalkelasPage extends StatefulWidget {
   @override
@@ -76,55 +77,17 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //use easy date timeline
+                  EasyDateTimeLine(initialDate: DateTime.now()),
+                  SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '24',
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Wed',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                'Aug 2024',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 70),
+                      // SizedBox(width: 8),
+                      Text("Ruang Kelas: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      // SizedBox(width: 20),
                       Container(
+                        // width: 200,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
                           color: Colors.blue[300],
@@ -132,7 +95,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                         ),
                         child: DropdownButton<String>(
                           value: selectedRoom,
-                          hint: Text("Pilih Ruang Kelas", style: TextStyle(color: Colors.white)),
+                          hint: Text("Pilih", style: TextStyle(color: Colors.white)),
                           items: [
                             DropdownMenuItem(
                               value: "KHD 201",
@@ -195,30 +158,35 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        'Jam',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Mata Kuliah',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //   children: [
+                  //     Text(
+                  //       'Jam',
+                  //       style: TextStyle(
+                  //         fontSize: 18,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       'Mata Kuliah',
+                  //       style: TextStyle(
+                  //         fontSize: 18,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 10),
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.blue[200],
                   ),
-                  SizedBox(height: 10),
+                  // SizedBox(height: 10),
                 ],
               ),
             ),
-            // ListView.builder untuk menampilkan banyak DosenCard dan MkCard
             Expanded(
               child: ListView.builder(
                 itemCount: jadwalmkList.length,
