@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/savebutton.dart';
 import 'package:admin_fik_app/customstyle/statusdropdown.dart';
 import 'package:admin_fik_app/data/dummy_report.dart'; // Ganti dengan path yang sesuai
 
@@ -56,7 +55,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[700], // Warna biru untuk AppBar
+        backgroundColor: Color(0xFFFFBE33), // Warna biru untuk AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -81,10 +80,10 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
                 ),
                 hintText: 'Masukkan keterangan penanganan kendala',
               ),
@@ -133,7 +132,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             ),
           ],
         ),
-        Divider(color: Colors.blue[100]),
+        Divider(color: Color(0xFFFFBE33)),
       ],
     );
   }

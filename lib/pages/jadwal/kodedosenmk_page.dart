@@ -30,7 +30,7 @@ class _KodedosenmkPageState extends State<KodedosenmkPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Color(0xFFFFBE33),
       ),
       body: SafeArea(
         child: Column(
@@ -53,7 +53,7 @@ class _KodedosenmkPageState extends State<KodedosenmkPage> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: Colors.blue[300],
+                          color: Color(0xFFFFBE33),
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: DropdownButton<String>(
@@ -87,7 +87,7 @@ class _KodedosenmkPageState extends State<KodedosenmkPage> {
                               selectedProgram = newValue;
                             });
                           },
-                          dropdownColor: Colors.blue[200],
+                          dropdownColor: Color(0xFFFFBE33),
                           underline: SizedBox(),
                         ),
                       ),

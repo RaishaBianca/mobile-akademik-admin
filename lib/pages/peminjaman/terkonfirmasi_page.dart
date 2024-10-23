@@ -16,7 +16,7 @@ class TerkonfirmasiPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Color(0xFFFFBE33),
       ),
       body: Container(
         color: Colors.grey[200],

@@ -21,7 +21,7 @@ class JadwalCard extends StatelessWidget {
       flex: 2,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[100], // Background warna untuk mata kuliah
+          color: Color(0xFFFF3374), // Background warna untuk mata kuliah
           borderRadius: BorderRadius.circular(12), // Tambahkan border radius
         ),
         padding: EdgeInsets.all(12),
@@ -33,30 +33,34 @@ class JadwalCard extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: Colors.white,
               ),
             ),
             Text(
               kodeMatkul, // Kode Mata Kuliah
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.location_pin),
+                Icon(Icons.location_pin, color: Colors.white,),
                 SizedBox(width: 12),
-                Text(ruangan),
+                Text(ruangan, style: TextStyle(color: Colors.white,),),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.person),
+                Icon(Icons.person, color: Colors.white),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(namaDosen),
-                      Text(kodeDosen, overflow: TextOverflow.ellipsis),
+                      Text(namaDosen, style: TextStyle(color: Colors.white),),
+                      Text(kodeDosen, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),),
                     ],
                   ),
                 ),

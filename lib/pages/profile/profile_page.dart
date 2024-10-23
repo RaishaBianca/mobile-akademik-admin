@@ -1,105 +1,87 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Profil',
+        automaticallyImplyLeading: false, // Disable back button
+        title: Text(
+          'Jadwal',
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFFFFFFFF),
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).primaryColor, // Menggunakan warna utama dari tema
+        backgroundColor: Color(0xFFFFBE33),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.wb_sunny, color: Colors.white),
+          ),
+        ],
       ),
-      body: Center( // Bungkus dengan Center agar semua berada di tengah
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/profile_picture.png'), // Path ke gambar profil
+                backgroundImage: AssetImage('assets/images/sylus.jpg'),
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Nama User',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor, // Menggunakan warna utama dari tema
-                ),
+              const SizedBox(height: 20),
+              const Text(
+                'Sylus Esterlita',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Kode User: 123456',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Edit Profil',
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Nama', value: 'Esterlita'),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'NIM', value: '2110511050'),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Email', value: 'example@example.com'),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Phone Number', value: '123-456-7890'),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Prodi', value: 'Computer Science'),
+              const SizedBox(height: 40),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                child: Text(
+                  'Logout',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                    color: Colors.red,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor, // Warna tombol menggunakan primary color
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Pengaturan',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red, // Warna tombol keluar
-                ),
-                child: Row( // Menggunakan Row untuk menambahkan ikon
-                  mainAxisSize: MainAxisSize.min, // Supaya Row tidak memenuhi lebar tombol
-                  children: const [
-                    Icon(Icons.exit_to_app, color: Colors.white), // Icon exit
-                    SizedBox(width: 8), // Jarak antara icon dan teks
-                    Text(
-                      'Keluar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileField({required String label, required String value}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
     );
   }
 }

@@ -46,7 +46,7 @@ class _StatusDropdownState extends State<StatusDropdown> {
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Reduced padding
-            backgroundColor: Colors.blue[300], // Background color fallback to primary
+            backgroundColor: Color(0xFFFF5833), // Background color fallback to primary
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

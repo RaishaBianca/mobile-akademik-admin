@@ -67,7 +67,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Color(0xFFFFBE33),
       ),
       body: SafeArea(
         child: Column(
@@ -90,7 +90,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                         // width: 200,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: Colors.blue[300],
+                          color: Color(0xFFFFBE33),
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: DropdownButton<String>(
@@ -151,39 +151,18 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                               selectedRoom = newValue;
                             });
                           },
-                          dropdownColor: Colors.blue[200],
+                          dropdownColor: Color(0xFFFFBE33),
                           underline: SizedBox(),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //   children: [
-                  //     Text(
-                  //       'Jam',
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //     Text(
-                  //       'Mata Kuliah',
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 10),
                   Container(
                     height: 1,
                     width: double.infinity,
-                    color: Colors.blue[200],
+                    color: Color(0xFFFF5833),
                   ),
-                  // SizedBox(height: 10),
                 ],
               ),
             ),

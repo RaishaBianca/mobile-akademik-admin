@@ -11,7 +11,7 @@ class BarChart extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, // Background color
         border: Border.all(
-          color: Colors.lightBlueAccent, // Border color
+          color: Color(0xFFFFBE33), // Border color
           width: 2.0, // Border width
         ),
         borderRadius: BorderRadius.circular(12), // Optional: Rounded corners
@@ -24,7 +24,7 @@ class BarChart extends StatelessWidget {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             maxBarHeight: 250.0,
             barWidth: 45.0,
-            colors: [Colors.pinkAccent, Colors.blueAccent, Colors.deepPurpleAccent],
+            colors: [Color(0xFFFFBE33), Color(0xFF3374FF), Color(0xFFFF3374)],
             dateLineHeight: 20.0,
           ),
         ),

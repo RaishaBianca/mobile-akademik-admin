@@ -12,7 +12,7 @@ class MkCard extends StatelessWidget {
       flex: 2,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[100], // Background warna untuk mata kuliah
+          color: Color(0xFFFF3374), // Background warna untuk mata kuliah
           borderRadius: BorderRadius.circular(12), // Tambahkan border radius
         ),
         padding: EdgeInsets.all(12),
@@ -24,11 +24,15 @@ class MkCard extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                color: Colors.white,
               ),
             ),
             Text(
               mkCode, // Kode Mata Kuliah
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             // Tambahan teks untuk testing jika diperlukan
             Text(
@@ -36,10 +40,14 @@ class MkCard extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                color: Colors.white,
               ),
             ),
             Text(
               mkCode, // Kode Mata Kuliah
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ],
         ),

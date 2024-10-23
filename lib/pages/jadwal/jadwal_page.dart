@@ -20,14 +20,33 @@ class _JadwalPageState extends State<JadwalPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        // automaticallyImplyLeading: false, // Disable back button
         title: Text(
           'Jadwal',
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFFFFFFFF),
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[700], // Warna biru untuk AppBar
+        backgroundColor: Color(0xFFFFBE33),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
+        //   child: Container(
+        //     color: Colors.transparent,
+        //     child: Container(
+        //       height: 4.0,
+        //       decoration: BoxDecoration(
+        //         border: Border(
+        //           bottom: BorderSide(
+        //             color: Color(0xFFFFBE33), // Color of the bottom border
+        //             width: 2.0, // Width of the bottom border
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
       body: SafeArea(
         child: Column(
