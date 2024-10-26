@@ -22,7 +22,7 @@ class PelaporanPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33),
+        backgroundColor: Color(0xFFFF5833),
         // bottom: PreferredSize(
         //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
         //   child: Container(

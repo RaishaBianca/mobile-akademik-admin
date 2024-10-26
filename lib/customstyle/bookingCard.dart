@@ -32,15 +32,16 @@ class BookingCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailpeminjamanPage(
-              studentName: DummyData.studentName,
+              studentName: studentName,
               studentNim: DummyData.studentNim,
-              inputDate: DummyData.inputDate,
-              ruangan: DummyData.ruangan,
+              inputDate: inputDate,
+              ruangan: ruangan,
               bookDate: DummyData.bookDate,
               jamMulai: DummyData.jamMulai,
               jamSelesai: DummyData.jamSelesai,
               jumlahPengguna: DummyData.jumlahPengguna,
               keterangan: DummyData.keterangan,
+              isAccepted: false,
             ),
           ),
         );

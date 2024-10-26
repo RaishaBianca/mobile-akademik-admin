@@ -67,7 +67,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33),
+        backgroundColor: Color(0xFFFF5833),
       ),
       body: SafeArea(
         child: Column(
@@ -90,7 +90,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                         // width: 200,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: Color(0xFFFFBE33),
+                          color: Color(0x99FF5833),
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: DropdownButton<String>(

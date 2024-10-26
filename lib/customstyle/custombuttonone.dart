@@ -21,7 +21,7 @@ class CustomButtonOne extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // Padding default
-          backgroundColor: Color(0xFFFF5833), // Background color fallback to primary
+          backgroundColor: Color(0xCCFF5833), // Background color fallback to primary
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

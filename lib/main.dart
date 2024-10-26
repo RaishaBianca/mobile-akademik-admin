@@ -1,7 +1,8 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/pages/authentication/welcome_screen.dart';
 import 'package:admin_fik_app/pages/authentication/signin_screen.dart';
-import 'package:admin_fik_app/pages/authentication/signup_screen.dart';
+import 'package:admin_fik_app/pages/authentication/signup_screen.dart'; // Ensure this import is present
 import 'package:admin_fik_app/pages/jadwal/jadwal_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/peminjaman_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
@@ -53,14 +54,14 @@ class _MyAppState extends State<MyApp> {
       home: const WelcomeScreen(),
       routes: {
         '/signin': (context) => const SignInScreen(),
-        '/signup': (context) => const SignUpScreen(),
+        '/signup': (context) => const SignUpScreen(), // Ensure this route is defined
         '/home': (context) => Scaffold(
           body: _pages[_selectedIndex], // Menampilkan halaman berdasarkan indeks
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
-                  color: Color(0xFFFFBE33), // Color of the top border
+                  color: Color(0xFFFF5833), // Color of the top border
                   width: 2.0, // Width of the top border
                 ),
               ),
@@ -68,8 +69,8 @@ class _MyAppState extends State<MyApp> {
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               backgroundColor: Color(0xFFFFFFFF),
-              selectedItemColor: Color(0xFF3374FF), // Warna icon dan text yang dipilih
-              unselectedItemColor: Color(0xFFFFBE33), // Warna icon dan text yang tidak dipilih
+              selectedItemColor: Color(0xFFFF5833), // Warna icon dan text yang dipilih
+              unselectedItemColor: Color(0x66FF5833), // Warna icon dan text yang tidak dipilih
               currentIndex: _selectedIndex, // Indeks yang aktif
               onTap: _onItemTapped, // Mengubah indeks saat diklik
               items: const [

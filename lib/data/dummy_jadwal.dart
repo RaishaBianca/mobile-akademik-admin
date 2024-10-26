@@ -8,6 +8,8 @@ class DummyJadwal {
   final String namaDosen;
   final String kodeDosen;
 
+  var bookDate;
+
   DummyJadwal({
     required this.ruangan,
     required this.hari,

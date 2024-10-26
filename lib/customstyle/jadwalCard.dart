@@ -21,7 +21,7 @@ class JadwalCard extends StatelessWidget {
       flex: 2,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFFF3374), // Background warna untuk mata kuliah
+          color: Color(0xCCFF5833), // Background warna untuk mata kuliah
           borderRadius: BorderRadius.circular(12), // Tambahkan border radius
         ),
         padding: EdgeInsets.all(12),

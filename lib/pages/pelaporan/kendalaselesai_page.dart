@@ -15,7 +15,7 @@ class KendalaselesaiPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33),
+        backgroundColor: Color(0xFFFF5833),
       ),
       body: Container(
         color: Colors.grey[200],

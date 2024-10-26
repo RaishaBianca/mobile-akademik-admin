@@ -55,7 +55,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33), // Warna biru untuk AppBar
+        backgroundColor: Color(0xFFFF5833), // Warna biru untuk AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -80,10 +80,10 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
                 ),
                 hintText: 'Masukkan keterangan penanganan kendala',
               ),
@@ -132,7 +132,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             ),
           ],
         ),
-        Divider(color: Color(0xFFFFBE33)),
+        Divider(color: Color(0x99FF5833)),
       ],
     );
   }

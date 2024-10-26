@@ -25,6 +25,7 @@ class DetailpeminjamanPage extends StatelessWidget {
     required this.jamSelesai,
     required this.jumlahPengguna,
     required this.keterangan,
+    required bool isAccepted,
   }) : super(key: key);
 
   @override
@@ -40,7 +41,7 @@ class DetailpeminjamanPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33),
+        backgroundColor: Color(0xFFFF5833),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -67,10 +68,10 @@ class DetailpeminjamanPage extends StatelessWidget {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFBE33)),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
                 ),
                 hintText: 'Masukkan alasan ditolak',
               ),
@@ -128,7 +129,7 @@ class DetailpeminjamanPage extends StatelessWidget {
             ),
           ],
         ),
-        Divider(color: Color(0xFFFFBE33)),
+        Divider(color: Color(0x99FF5833)),
       ],
     );
   }

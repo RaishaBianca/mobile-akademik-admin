@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombutton.dart';
 import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
+import 'package:admin_fik_app/pages/jadwal/jadwallab_page.dart';
 import 'package:admin_fik_app/pages/jadwal/kodedosenmk_page.dart';
 
 import 'package:flutter_sales_graph/flutter_sales_graph.dart';
@@ -29,7 +30,7 @@ class _JadwalPageState extends State<JadwalPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFFBE33),
+        backgroundColor: Color(0xFFFF5833),
         // bottom: PreferredSize(
         //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
         //   child: Container(
@@ -75,7 +76,10 @@ class _JadwalPageState extends State<JadwalPage> {
                             CustomButton(
                               label: 'Lihat Jadwal Lab Komputer',
                               onPressed: () {
-                                // Aksi ketika tombol ditekan
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => JadwallabPage()),
+                                );
                               },
                             ),
                             CustomButton(
