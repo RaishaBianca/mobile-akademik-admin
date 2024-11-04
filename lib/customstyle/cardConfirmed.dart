@@ -18,7 +18,6 @@ class CardConfirmed extends StatelessWidget {
     required this.studentName,
     required this.inputDate,
     required this.ruangan,
-    required this.groupSize,
     required this.isAccepted,
     required this.studentNim,
     required this.bookDate,
@@ -87,7 +86,7 @@ class CardConfirmed extends StatelessWidget {
                         children: [
                           Icon(Icons.access_time),
                           SizedBox(width: 12),
-                          Text(time),
+                          Text(jamMulai + ' - ' + jamSelesai),
                         ],
                       ),
                       SizedBox(height: 12),
@@ -103,7 +102,7 @@ class CardConfirmed extends StatelessWidget {
                         children: [
                           Icon(Icons.group),
                           SizedBox(width: 12),
-                          Text(groupSize),
+                          Text(jumlahPengguna),
                         ],
                       ),
                     ],

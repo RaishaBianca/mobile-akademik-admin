@@ -1,175 +1,176 @@
-import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/custombutton.dart';
-import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
-import 'package:admin_fik_app/customstyle/notificationCard.dart';
-import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
-import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
-import 'package:admin_fik_app/pages/jadwal/kodedosenmk_page.dart';
-import 'package:admin_fik_app/data/dummy_data.dart';
-
-import 'package:flutter_sales_graph/flutter_sales_graph.dart';
+import 'package:admin_fik_app/customstyle/jamCard.dart';
+import 'package:admin_fik_app/customstyle/JadwalCard.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 
 class JadwallabPage extends StatefulWidget {
-  const JadwallabPage({Key? key}) : super(key: key);
-
   @override
-  State<JadwallabPage> createState() => _JadwallabPageState();
+  _JadwallabPageState createState() => _JadwallabPageState();
 }
 
 class _JadwallabPageState extends State<JadwallabPage> {
+  String? selectedRoom;
+
+  // Dummy data list untuk dosen dan mata kuliah
+  final List<Map<String, String>> jadwalmkList = [
+    {
+      'ruangan': 'KHD Kelas 201',
+      'hari': 'Senin',
+      'jamMulai': '07:00',
+      'jamSelesai': '09:00',
+      'namaMatkul': 'Kalkulus',
+      'kodeMatkul': 'SSI123456789',
+      'namaDosen': 'John Doe',
+      'kodeDosen': 'SSI987654321',
+    },
+    {
+      'ruangan': 'KHD Kelas 301',
+      'hari': 'Senin',
+      'jamMulai': '09:30',
+      'jamSelesai': '12:00',
+      'namaMatkul': 'Pemrograman',
+      'kodeMatkul': 'INF123456780',
+      'namaDosen': 'Jane Smith',
+      'kodeDosen': 'IF987654322',
+    },
+    {
+      'ruangan': 'DS Kelas 401',
+      'hari': 'Selasa',
+      'jamMulai': '07:00',
+      'jamSelesai': '09:00',
+      'namaMatkul': 'Sistem Operasi',
+      'kodeMatkul': 'DSI123456781',
+      'namaDosen': 'Michael Johnson',
+      'kodeDosen': 'DSI987654323',
+    },
+    {
+      'ruangan': 'DS Kelas 402',
+      'hari': 'Selasa',
+      'jamMulai': '09:30',
+      'jamSelesai': '12:00',
+      'namaMatkul': 'Jaringan Komputer',
+      'kodeMatkul': 'SSD123456782',
+      'namaDosen': 'Emily Davis',
+      'kodeDosen': 'SSD987654324',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // automaticallyImplyLeading: false, // Disable back button
         title: Text(
-          'Home Lita',
+          'Jadwal Penggunaan Ruang Lab',
           style: TextStyle(
-            color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications, color: Colors.white),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //use easy date timeline
+                  EasyDateTimeLine(initialDate: DateTime.now()),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // SizedBox(width: 8),
+                      Text("Ruang Lab: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      // SizedBox(width: 20),
+                      Container(
+                        width: 160,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Color(0x99FF5833),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: DropdownButton<String>(
+                          value: selectedRoom,
+                          hint: Text("Pilih", style: TextStyle(color: Colors.white)),
+                          items: [
+                            DropdownMenuItem(
+                              value: "KHD 301",
+                              child: Text("KHD 301 Lab Programming", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 302",
+                              child: Text("KHD 302 Lab Cybersecurity", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 303",
+                              child: Text("KHD 303 Lab Data Mining dan Data Science", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 304",
+                              child: Text("KHD 304 Lab Artificial Intelligence", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 401",
+                              child: Text("KHD 401 Lab Business Intelligence", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 402",
+                              child: Text("KHD 402 Lab Database", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
+                              value: "KHD 403",
+                              child: Text("KH3 402 Lab Internet of Things", style: TextStyle(color: Colors.white)),
+                            ),
+                          ],
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedRoom = newValue;
+                            });
+                          },
+                          dropdownColor: Color(0xFFFFBE33),
+                          underline: SizedBox(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Color(0xFFFF5833),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
-              child: Container(
-                color: Colors.white, // Warna putih untuk konten utama
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
+              child: ListView.builder(
+                itemCount: jadwalmkList.length,
+                itemBuilder: (context, index) {
+                  final data = jadwalmkList[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
                       children: [
-                        Text(
-                          'Pemakaian Ruang Lab dan Kelas FIK UPNVJ',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        JamCard(
+                          jamMulai: data['jamMulai']!,
+                          jamSelesai: data['jamSelesai']!,
                         ),
-                        SizedBox(height: 20), // Jarak antara teks dan tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButton(
-                              label: 'Lihat Jadwal Ruang Lab',
-                              onPressed: () {
-                                // Aksi ketika tombol ditekan
-                              },
-                            ),
-                            CustomButton(
-                              label: 'Lihat Jadwal Ruang Kelas',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonTwo(
-                              label: 'Lihat Jadwal KRSku',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => KodedosenmkPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30), // Jarak antara tombol dan teks baru
-                        Text(
-                          'Peminjaman Ruang Lab dan Kelas FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButton(
-                              label: 'Ajukan Peminjaman Ruang Lab',
-                              onPressed: () {
-                                // Aksi ketika tombol ditekan
-                              },
-                            ),
-                            CustomButton(
-                              label: 'Ajukan Peminjaman Ruang Kelas',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ), // Tutup Row
-                        SizedBox(height: 30), // Jarak antara tombol dan teks baru
-                        Text(
-                          'Pelaporan Kendala Lab dan Kelas FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 20), // Jarak antara teks dan gambar grafik
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButton(
-                              label: 'Ajukan Kendala Lab',
-                              onPressed: () {
-                                // Aksi ketika tombol ditekan
-                              },
-                            ),
-                            CustomButton(
-                              label: 'Ajukan Kendala Kelas',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30),
-                        CardConfirmed(
-                          studentName: DummyData.studentName,
-                          studentNim: DummyData.studentNim,
-                          inputDate: DummyData.bookDate,
-                          time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-                          ruangan: DummyData.ruangan,
-                          groupSize: "${DummyData.jumlahPengguna} Orang",
-                          isAccepted: true, bookDate: '', jamMulai: '', jamSelesai: '', jumlahPengguna: '', keterangan: '', // Atur sesuai status
+                        SizedBox(width: 10),
+                        JadwalCard(
+                          namaMatkul: data['namaMatkul']!,
+                          kodeMatkul: data['kodeMatkul']!,
+                          namaDosen: data['namaDosen']!,
+                          kodeDosen: data['kodeDosen']!,
+                          ruangan: data['ruangan']!,
                         ),
                       ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],
