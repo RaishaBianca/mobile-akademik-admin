@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/jamCard.dart';
 import 'package:admin_fik_app/customstyle/JadwalCard.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class JadwalkelasPage extends StatefulWidget {
   @override
@@ -9,51 +10,63 @@ class JadwalkelasPage extends StatefulWidget {
 }
 
 class _JadwalkelasPageState extends State<JadwalkelasPage> {
+  late Future<List<Map<String, dynamic>>> _jadwalFuture;
   String? selectedRoom;
 
-  // Dummy data list untuk dosen dan mata kuliah
-  final List<Map<String, String>> jadwalmkList = [
-    {
-      'ruangan': 'KHD Kelas 201',
-      'hari': 'Senin',
-      'jamMulai': '07:00',
-      'jamSelesai': '09:00',
-      'namaMatkul': 'Kalkulus',
-      'kodeMatkul': 'SSI123456789',
-      'namaDosen': 'John Doe',
-      'kodeDosen': 'SSI987654321',
-    },
-    {
-      'ruangan': 'KHD Kelas 301',
-      'hari': 'Senin',
-      'jamMulai': '09:30',
-      'jamSelesai': '12:00',
-      'namaMatkul': 'Pemrograman',
-      'kodeMatkul': 'INF123456780',
-      'namaDosen': 'Jane Smith',
-      'kodeDosen': 'IF987654322',
-    },
-    {
-      'ruangan': 'DS Kelas 401',
-      'hari': 'Selasa',
-      'jamMulai': '07:00',
-      'jamSelesai': '09:00',
-      'namaMatkul': 'Sistem Operasi',
-      'kodeMatkul': 'DSI123456781',
-      'namaDosen': 'Michael Johnson',
-      'kodeDosen': 'DSI987654323',
-    },
-    {
-      'ruangan': 'DS Kelas 402',
-      'hari': 'Selasa',
-      'jamMulai': '09:30',
-      'jamSelesai': '12:00',
-      'namaMatkul': 'Jaringan Komputer',
-      'kodeMatkul': 'SSD123456782',
-      'namaDosen': 'Emily Davis',
-      'kodeDosen': 'SSD987654324',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _jadwalFuture = fetchJadwal();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchJadwal() async {
+    List<Map<String, dynamic>> allJadwal = await api_data.getAllJadwal();
+    return allJadwal;
+  }
+
+  // // Dummy data list untuk dosen dan mata kuliah
+  // final List<Map<String, String>> jadwalmkList = [
+  //   {
+  //     'ruangan': 'KHD Kelas 201',
+  //     'hari': 'Senin',
+  //     'jamMulai': '07:00',
+  //     'jamSelesai': '09:00',
+  //     'namaMatkul': 'Kalkulus',
+  //     'kodeMatkul': 'SSI123456789',
+  //     'namaDosen': 'John Doe',
+  //     'kodeDosen': 'SSI987654321',
+  //   },
+  //   {
+  //     'ruangan': 'KHD Kelas 301',
+  //     'hari': 'Senin',
+  //     'jamMulai': '09:30',
+  //     'jamSelesai': '12:00',
+  //     'namaMatkul': 'Pemrograman',
+  //     'kodeMatkul': 'INF123456780',
+  //     'namaDosen': 'Jane Smith',
+  //     'kodeDosen': 'IF987654322',
+  //   },
+  //   {
+  //     'ruangan': 'DS Kelas 401',
+  //     'hari': 'Selasa',
+  //     'jamMulai': '07:00',
+  //     'jamSelesai': '09:00',
+  //     'namaMatkul': 'Sistem Operasi',
+  //     'kodeMatkul': 'DSI123456781',
+  //     'namaDosen': 'Michael Johnson',
+  //     'kodeDosen': 'DSI987654323',
+  //   },
+  //   {
+  //     'ruangan': 'DS Kelas 402',
+  //     'hari': 'Selasa',
+  //     'jamMulai': '09:30',
+  //     'jamSelesai': '12:00',
+  //     'namaMatkul': 'Jaringan Komputer',
+  //     'kodeMatkul': 'SSD123456782',
+  //     'namaDosen': 'Emily Davis',
+  //     'kodeDosen': 'SSD987654324',
+  //   },
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +74,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Jadwal Penggunaan Ruang Kelas',
+          'Penggunaan Ruang Kelas',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -167,29 +180,43 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: jadwalmkList.length,
-                itemBuilder: (context, index) {
-                  final data = jadwalmkList[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Row(
-                      children: [
-                        JamCard(
-                          jamMulai: data['jamMulai']!,
-                          jamSelesai: data['jamSelesai']!,
-                        ),
-                        SizedBox(width: 10),
-                        JadwalCard(
-                          namaMatkul: data['namaMatkul']!,
-                          kodeMatkul: data['kodeMatkul']!,
-                          namaDosen: data['namaDosen']!,
-                          kodeDosen: data['kodeDosen']!,
-                          ruangan: data['ruangan']!,
-                        ),
-                      ],
-                    ),
-                  );
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: _jadwalFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No data available'));
+                  } else {
+                    List<Map<String, dynamic>> jadwalList = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: jadwalList.length,
+                      itemBuilder: (context, index) {
+                        var jadwal = jadwalList[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          child: Row(
+                            children: [
+                              JamCard(
+                                jamMulai: jadwal['jamMulai']!,
+                                jamSelesai: jadwal['jamSelesai']!,
+                              ),
+                              SizedBox(width: 10),
+                              JadwalCard(
+                                namaMatkul: jadwal['namaMatkul']!,
+                                kodeMatkul: jadwal['kodeMatkul']!,
+                                namaDosen: jadwal['namaDosen']!,
+                                kodeDosen: jadwal['kodeDosen']!,
+                                ruangan: jadwal['ruangan']!,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),

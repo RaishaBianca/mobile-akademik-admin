@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/pages/datas/api_service.dart';
 import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class TerkonfirmasiPage extends StatefulWidget {
   @override
@@ -8,13 +8,17 @@ class TerkonfirmasiPage extends StatefulWidget {
 }
 
 class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
-  late Future<List<dynamic>> _confirmedBookings;
+  late Future<List<Map<String, dynamic>>> _peminjamanFuture;
 
   @override
   void initState() {
     super.initState();
-    final apiService = ApiService();
-    _confirmedBookings = apiService.fetchData('users');
+    _peminjamanFuture = fetchPeminjaman();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
+    List<Map<String, dynamic>> allPeminjaman = await api_data.getAllPeminjaman();
+    return allPeminjaman.where((peminjaman) => peminjaman['status'] == 'approved' || peminjaman['status'] == 'rejected').toList();
   }
 
   @override
@@ -29,50 +33,40 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFFF58433),
+        backgroundColor: Color(0xFFFF5833),
       ),
-      body: Container(
-        color: Colors.grey[200],
-        padding: EdgeInsets.all(16),
-        child: FutureBuilder<List<dynamic>>(
-          future: _confirmedBookings,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No data available'));
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final user = snapshot.data![index];
-                  return Column(
-                    children: [
-                      // CardConfirmed(
-                      //   studentName: user['nama'],
-                      //   inputDate: user['dibuat_pada'],
-                      //   time: user['dimodif_pada'],
-                      //   ruangan: user['prodi'],
-                      //   groupSize: user['no_tlp'],
-                      //   isAccepted: user['id_peran'] == 1,
-                      //   studentNim: user['nim'],
-                      //   bookDate: user['book_date'],
-                      //   jamMulai: user['jam_mulai'],
-                      //   jamSelesai: user['jam_selesai'],
-                      //   jumlahPengguna: user['jumlah_pengguna'],
-                      //   keterangan: user['keterangan'],
-                      // ),
-                      Text(user['nama']),
-                      SizedBox(height: 16),
-                    ],
-                  );
-                },
-              );
-            }
-          },
-        ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _peminjamanFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data available'));
+          } else {
+            List<Map<String, dynamic>> peminjamanList = snapshot.data!;
+            return ListView.builder(
+              itemCount: peminjamanList.length,
+              itemBuilder: (context, index) {
+                var peminjaman = peminjamanList[index];
+                return CardConfirmed(
+                  studentName: peminjaman['nama_peminjam'],
+                  ruangan: peminjaman['ruangan'],
+                  groupSize: "${peminjaman['jumlah_orang']} Orang",
+                  isAccepted: peminjaman['status'] == 'approved',
+                  studentNim: peminjaman['nim'],
+                  bookDate: peminjaman['tanggal'],
+                  jamMulai: peminjaman['jam_mulai'],
+                  jamSelesai: peminjaman['jam_selesai'],
+                  keterangan: peminjaman['keterangan'],
+                  inputDate: peminjaman['tanggal'],
+                  jumlahPengguna: "${peminjaman['jumlah_orang']} Orang",
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

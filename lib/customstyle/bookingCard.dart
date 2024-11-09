@@ -10,6 +10,9 @@ class BookingCard extends StatelessWidget {
   final String inputDate;
   final String time;
   final String groupSize;
+  final String status;
+  final String studentNim;
+  final String keterangan;
   final Function onAccept;
   final Function onReject;
 
@@ -18,8 +21,11 @@ class BookingCard extends StatelessWidget {
     required this.ruangan,
     required this.studentName,
     required this.inputDate,
+    required this.studentNim,
+    required this.keterangan,
     required this.time,
     required this.groupSize,
+    required this.status,
     required this.onAccept,
     required this.onReject,
   }) : super(key: key);
@@ -33,15 +39,16 @@ class BookingCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => DetailpeminjamanPage(
               studentName: studentName,
-              studentNim: DummyData.studentNim,
+              studentNim: studentNim,
               inputDate: inputDate,
               ruangan: ruangan,
-              bookDate: DummyData.bookDate,
-              jamMulai: DummyData.jamMulai,
-              jamSelesai: DummyData.jamSelesai,
-              jumlahPengguna: DummyData.jumlahPengguna,
-              keterangan: DummyData.keterangan,
-              isAccepted: false,
+              bookDate: inputDate, // Replace with actual data if available
+              jamMulai: time.split(' - ')[0],
+              jamSelesai: time.split(' - ')[1].replaceAll(' WIB', ''),
+              jumlahPengguna: groupSize,
+              keterangan: keterangan,
+              isAccepted: status == 'approved',
+              time: time,
             ),
           ),
         );
@@ -107,15 +114,33 @@ class BookingCard extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ButtonAccept(
-                        label: 'Terima',
-                        onPressed: () => onAccept(),
-                      ),
-                      SizedBox(height: 12),
-                      ButtonReject(
-                        label: 'Tolak',
-                        onPressed: () => onReject(),
-                      ),
+                      if(status == 'pending')...[
+                        ButtonAccept(
+                          label: 'Terima',
+                          onPressed: () => onAccept(),
+                        ),
+                        SizedBox(height: 12),
+                        ButtonReject(
+                          label: 'Tolak',
+                          onPressed: () => onReject(),
+                        ),
+                      ],
+                      if(status == 'approved')
+                        Text(
+                          'Diterima',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      if(status == 'rejected')
+                        Text(
+                          'Ditolak',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                     ],
                   ),
                 ],

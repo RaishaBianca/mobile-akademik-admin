@@ -1,5 +1,5 @@
 import 'package:admin_fik_app/pages/authentication/signin_screen.dart';
-import 'package:admin_fik_app/pages/authentication/signup_screen.dart';
+// import 'package:admin_fik_app/pages/authentication/signup_screen.dart';
 import 'package:admin_fik_app/customstyle/theme.dart';
 import 'package:admin_fik_app/customstyle/custom_scaffold.dart';
 import 'package:admin_fik_app/customstyle/welcome_button.dart';
@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
                   text: const TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Welcome to ClassLeap\n',
+                        text: 'Selamat Datang di ClassLeap\n',
                         style: TextStyle(
                           fontSize: 45.0,
                           fontWeight: FontWeight.w600,
@@ -35,7 +35,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       TextSpan(
                         text:
-                        '\nYour one stop solution for Lab and Classroom management',
+                        '\nSolusi lengkap untuk manajemen Laboratorium dan Ruang Kelas Anda',
                         style: TextStyle(
                           fontSize: 20.0,
                           color: Colors.white,
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: WelcomeButton(
-                      buttonText: 'Sign in',
+                      buttonText: 'Masuk',
                       // onTap: SignInScreen(),
                       onTap: () {
                         Navigator.pushNamed(context, '/signin');
@@ -65,17 +65,17 @@ class WelcomeScreen extends StatelessWidget {
                       textColor: Colors.white,
                     ),
                   ),
-                  Expanded(
-                    child: WelcomeButton(
-                      buttonText: 'Sign up',
-                      // onTap: const SignUpScreen(),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      color: Colors.white,
-                      textColor: lightColorScheme.primary,
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: WelcomeButton(
+                  //     buttonText: 'Sign up',
+                  //     // onTap: const SignUpScreen(),
+                  //     onTap: () {
+                  //       Navigator.pushNamed(context, '/signup');
+                  //     },
+                  //     color: Colors.white,
+                  //     textColor: lightColorScheme.primary,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

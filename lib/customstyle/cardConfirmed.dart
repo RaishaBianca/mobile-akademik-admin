@@ -7,6 +7,7 @@ class CardConfirmed extends StatelessWidget {
   final String ruangan;
   final bool isAccepted;
   final String studentNim;
+  final String groupSize;
   final String bookDate;
   final String jamMulai;
   final String jamSelesai;
@@ -18,6 +19,7 @@ class CardConfirmed extends StatelessWidget {
     required this.studentName,
     required this.inputDate,
     required this.ruangan,
+    required this.groupSize,
     required this.isAccepted,
     required this.studentNim,
     required this.bookDate,
@@ -39,12 +41,13 @@ class CardConfirmed extends StatelessWidget {
               studentNim: studentNim,
               inputDate: inputDate,
               ruangan: ruangan,
+              time: "${jamMulai} - ${jamSelesai} WIB",
               bookDate: bookDate,
               jamMulai: jamMulai,
               jamSelesai: jamSelesai,
               jumlahPengguna: jumlahPengguna,
               keterangan: keterangan,
-                isAccepted: isAccepted,
+              isAccepted: isAccepted,
             ),
           ),
         );
@@ -86,7 +89,7 @@ class CardConfirmed extends StatelessWidget {
                         children: [
                           Icon(Icons.access_time),
                           SizedBox(width: 12),
-                          Text(jamMulai + ' - ' + jamSelesai),
+                          Text("${jamMulai} - ${jamSelesai} WIB"),
                         ],
                       ),
                       SizedBox(height: 12),
@@ -102,7 +105,7 @@ class CardConfirmed extends StatelessWidget {
                         children: [
                           Icon(Icons.group),
                           SizedBox(width: 12),
-                          Text(jumlahPengguna),
+                          Text(groupSize),
                         ],
                       ),
                     ],

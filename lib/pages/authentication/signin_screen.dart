@@ -3,7 +3,8 @@ import 'package:admin_fik_app/customstyle/custom_scaffold.dart';
 import 'package:admin_fik_app/customstyle/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:admin_fik_app/data/api_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -15,6 +16,40 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+  if (_formSignInKey.currentState!.validate()) {
+    final response = await login(_emailController.text, _passwordController.text);
+    if (response['statusCode'] == 200) {
+      final adminId = response['id_admin'];
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('admin_id', adminId);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Berhasil masuk')),
+      );
+
+      Navigator.pushNamed(context, '/home');
+      print('Berhasil masuk');
+      print('Admin ID: $adminId');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal masuk')),
+      );
+    }
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -37,7 +72,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   topRight: Radius.circular(40),
                 ),
               ),
-
               child: SingleChildScrollView(
                 child: Form(
                   key: _formSignInKey,
@@ -45,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Welcome back',
+                        'Selamat Datang Kembali',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
@@ -56,15 +90,16 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: 20,
                       ),
                       TextFormField(
+                        controller: _emailController, // Ensure controller is linked
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Tolong Masukkan Email';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
                           label: const Text('Email'),
-                          hintText: 'Enter your email',
+                          hintText: 'Masukkan email Anda',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
@@ -86,17 +121,18 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: 20,
                       ),
                       TextFormField(
+                        controller: _passwordController, // Ensure controller is linked
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Tolong masukkan kata sandi';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Password'),
-                          hintText: 'Enter your password',
+                          label: const Text('Kata Sandi'),
+                          hintText: 'Masukkan kata sandi Anda',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
@@ -132,20 +168,20 @@ class _SignInScreenState extends State<SignInScreen> {
                                 activeColor: lightColorScheme.primary,
                               ),
                               const Text(
-                                'Remember me',
+                                'Ingat aku',
                                 style: TextStyle(color: Colors.black45),
                               ),
                             ],
                           ),
-                          GestureDetector(
-                            child: Text(
-                              'Forgot password?',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
-                            ),
-                          )
+                          // GestureDetector(
+                          //   child: Text(
+                          //     'Forgot password?',
+                          //     style: TextStyle(
+                          //       fontWeight: FontWeight.bold,
+                          //       color: lightColorScheme.primary,
+                          //     ),
+                          //   ),
+                          // )
                         ],
                       ),
                       const SizedBox(
@@ -153,101 +189,88 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       SizedBox(
                         width: double.infinity,
-
                         child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  lightColorScheme.primary),),
-                            onPressed: () {
-                              if (_formSignInKey.currentState!.validate() &&
-                                  rememberPassword) {
-                                Navigator.pushNamed(context, '/home');
-                              } else if (!rememberPassword) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of your data'),
-                                  ),
-                                );
-                              }
-                              else if (!rememberPassword) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of your data'),
-                                  ),
-                                );
-                              }
-                            },
-                            child: const Text('Sign in')),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                lightColorScheme.primary),
+                          ),
+                          onPressed: _handleLogin,
+                          child: const Text('Masuk', style: TextStyle(color: Colors.white)),
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(child: Divider(
-                            thickness: 0.7,
-                            color: Colors.grey.withOpacity(0.5),
-                          ),),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0,
-                                horizontal: 10),
-                            child: Text('Sign up with',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
-                            ),
-                          ),
-                          Expanded(child: Divider(
-                            thickness: 0.7,
-                            color: Colors.grey.withOpacity(0.5),
-                          ),),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Expanded(
+                      //       child: Divider(
+                      //         thickness: 0.7,
+                      //         color: Colors.grey.withOpacity(0.5),
+                      //       ),
+                      //     ),
+                      //     const Padding(
+                      //       padding: EdgeInsets.symmetric(
+                      //           vertical: 0, horizontal: 10),
+                      //       child: Text(
+                      //         'Sign up with',
+                      //         style: TextStyle(
+                      //           color: Colors.black45,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     Expanded(
+                      //       child: Divider(
+                      //         thickness: 0.7,
+                      //         color: Colors.grey.withOpacity(0.5),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.facebook,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     IconButton(
+                      //       onPressed: () {},
+                      //       icon: const Icon(
+                      //         Icons.facebook,
+                      //         color: Colors.blue,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Don\'t have an account?',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (e) => const SignUpScreen()));
-                            },
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(
-                                color: lightColorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     const Text(
+                      //       'Don\'t have an account?',
+                      //       style: TextStyle(
+                      //         color: Colors.black45,
+                      //       ),
+                      //     ),
+                      //     GestureDetector(
+                      //       onTap: () {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (e) => const SignUpScreen()));
+                      //       },
+                      //       child: Text(
+                      //         'Sign up',
+                      //         style: TextStyle(
+                      //           color: lightColorScheme.primary,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

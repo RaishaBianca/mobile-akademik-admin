@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/bookingCard.dart'; // Import BookingCard
-import 'package:admin_fik_app/data/dummy_data.dart'; // Import dummy data
+import 'package:admin_fik_app/customstyle/bookingCard.dart';
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
-class MenungguPage extends StatelessWidget {
+class MenungguPage extends StatefulWidget {
+  @override
+  _MenungguPageState createState() => _MenungguPageState();
+}
+
+class _MenungguPageState extends State<MenungguPage> {
+  late Future<List<Map<String, dynamic>>> _peminjamanFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _peminjamanFuture = fetchPeminjaman();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
+    List<Map<String, dynamic>> allPeminjaman = await api_data.getAllPeminjaman();
+    return allPeminjaman.where((peminjaman) => peminjaman['status'] == 'pending').toList();
+  }
+
+  Future<int> verifikasiPeminjaman(String id, String status) async {
+    int statusCode = await api_data.verifikasiPeminjaman(id, status);
+    if (statusCode == 200) {
+      print('Peminjaman $id $status');
+      setState(() {
+        _peminjamanFuture = fetchPeminjaman();
+      });
+    } else {
+      print('Failed to verify peminjaman $id: $statusCode');
+    }
+    return statusCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,54 +48,41 @@ class MenungguPage extends StatelessWidget {
         ),
         backgroundColor: Color(0xFFFF5833),
       ),
-      body: Container(
-        color: Colors.grey[200],
-        padding: EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            BookingCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
-              onAccept: () {
-                // Aksi saat tombol 'Terima' ditekan
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _peminjamanFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data available'));
+          } else {
+            List<Map<String, dynamic>> peminjamanList = snapshot.data!;
+            return ListView.builder(
+              itemCount: peminjamanList.length,
+              itemBuilder: (context, index) {
+                var peminjaman = peminjamanList[index];
+                return BookingCard(
+                  studentName: peminjaman['nama_peminjam'],
+                  inputDate: peminjaman['tanggal'],
+                  studentNim: peminjaman['nim'],
+                  keterangan: peminjaman['keterangan'],
+                  time: "${peminjaman['jam_mulai']} - ${peminjaman['jam_selesai']} WIB",
+                  ruangan: peminjaman['ruangan'],
+                  groupSize: "${peminjaman['jumlah_orang']} Orang",
+                  status: peminjaman['status'],
+                  onAccept: () async {
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'approved');
+                  },
+                  onReject: () async {
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'rejected');
+                  },
+                );
               },
-              onReject: () {
-                // Aksi saat tombol 'Tolak' ditekan
-              },
-            ),
-            SizedBox(height: 16),
-            BookingCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
-              onAccept: () {
-                // Aksi saat tombol 'Terima' ditekan
-              },
-              onReject: () {
-                // Aksi saat tombol 'Tolak' ditekan
-              },
-            ),
-            SizedBox(height: 16),
-            BookingCard(
-              studentName: DummyData.studentName,
-              inputDate: DummyData.bookDate,
-              time: "${DummyData.jamMulai} - ${DummyData.jamSelesai} WIB",
-              ruangan: DummyData.ruangan,
-              groupSize: "${DummyData.jumlahPengguna} Orang",
-              onAccept: () {
-                // Aksi saat tombol 'Terima' ditekan
-              },
-              onReject: () {
-                // Aksi saat tombol 'Tolak' ditekan
-              },
-            ),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }

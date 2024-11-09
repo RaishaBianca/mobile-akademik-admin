@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
 import 'package:admin_fik_app/customstyle/buttonreject.dart';
-import 'package:admin_fik_app/data/dummy_data.dart'; // Ganti dengan path yang sesuai
+// import 'package:admin_fik_app/data/dummy_data.dart'; // Ganti dengan path yang sesuai
+import 'package:admin_fik_app/data/api_data.dart'; // Ganti dengan path yang sesuai
 
 class DetailpeminjamanPage extends StatelessWidget {
   final String studentName;
@@ -25,7 +26,7 @@ class DetailpeminjamanPage extends StatelessWidget {
     required this.jamSelesai,
     required this.jumlahPengguna,
     required this.keterangan,
-    required bool isAccepted,
+    required bool isAccepted, required String time,
   }) : super(key: key);
 
   @override
@@ -43,60 +44,62 @@ class DetailpeminjamanPage extends StatelessWidget {
         ),
         backgroundColor: Color(0xFFFF5833),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildRowWithDivider('Nama', studentName),
-            buildRowWithDivider('NIM', studentNim),
-            buildRowWithDivider('Tgl Input', inputDate),
-            buildRowWithDivider('Ruangan', ruangan),
-            buildRowWithDivider('Tgl Peminjaman', bookDate),
-            buildRowWithDivider('Jam Mulai', jamMulai),
-            buildRowWithDivider('Jam Selesai', jamSelesai),
-            buildRowWithDivider('Jml Pengguna', jumlahPengguna),
-            buildRowWithDivider('Keterangan', keterangan),
-            SizedBox(height: 16),
-            Text(
-              'Alasan Ditolak:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: reasonController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0x99FF5833)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0x99FF5833)),
-                ),
-                hintText: 'Masukkan alasan ditolak',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildRowWithDivider('Nama', studentName),
+              buildRowWithDivider('NIM', studentNim),
+              buildRowWithDivider('Tgl Input', inputDate),
+              buildRowWithDivider('Ruangan', ruangan),
+              buildRowWithDivider('Tgl Peminjaman', bookDate),
+              buildRowWithDivider('Jam Mulai', jamMulai),
+              buildRowWithDivider('Jam Selesai', jamSelesai),
+              buildRowWithDivider('Jml Pengguna', jumlahPengguna),
+              buildRowWithDivider('Keterangan', keterangan),
+              SizedBox(height: 16),
+              Text(
+                'Alasan Ditolak:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              maxLines: 3,
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ButtonAccept(
-                  label: 'Terima',
-                  onPressed: () {
-                    print("Diterima");
-                  },
+              SizedBox(height: 8),
+              TextField(
+                controller: reasonController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                  hintText: 'Masukkan alasan ditolak',
                 ),
-                SizedBox(width: 40),
-                ButtonReject(
-                  label: 'Tolak',
-                  onPressed: () {
-                    print("Ditolak dengan alasan: ${reasonController.text}");
-                  },
-                ),
-              ],
-            ),
-          ],
+                maxLines: 3,
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ButtonAccept(
+                    label: 'Terima',
+                    onPressed: () {
+                      print("Diterima");
+                    },
+                  ),
+                  SizedBox(width: 40),
+                  ButtonReject(
+                    label: 'Tolak',
+                    onPressed: () {
+                      print("Ditolak dengan alasan: ${reasonController.text}");
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
