@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 
 // final String base_url = 'http://192.168.0.174:8000/api/admin/';
-final String base_url = 'https://429b-180-252-160-189.ngrok-free.app/api/admin/';
+final String base_url = 'https://b08d-180-252-86-226.ngrok-free.app/api/admin/';
 // final String base_url = 'https://7861-125-162-165-72:8000.ngrok-free.app';
 late String endpoint;
 
@@ -22,7 +22,11 @@ Future<Map<String, dynamic>> login(String email, String password) async {
     'email': email,
     'password': password,
   });
-  return response.statusCode == 200 ? json.decode(response.body) : throw Exception('Failed to login');
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to login');
+  }
 }
 
 Future<List<Map<String, dynamic>>> getAllPeminjaman() async {

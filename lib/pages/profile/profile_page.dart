@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String name = '';
   String nim = '';
   String email = '';
+  bool isLoading = true; 
 
   @override
   void initState() {
@@ -25,37 +26,55 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('user_id');
-    if (userId != null) {
+    print(prefs.getString('id_admin'));
+    final adminId = prefs.getString('id_admin');
+    print(adminId);
+    if (adminId != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.64:8000/api/user/$userId'),
+          Uri.parse('https://b08d-180-252-86-226.ngrok-free.app/api/admin/$adminId'),
+          headers: {
+            'ngrok-skip-browser-warning': '69420',
+          },
         );
+        print(response.body);
 
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body);
+          print(userData);
           setState(() {
             name = userData['nama'];
-            nim = userData['id_user'];
+            nim = userData['id_admin'];
             email = userData['email'];
+            isLoading = false; 
           });
         } else {
           print('Failed to load user data');
+          setState(() {
+            isLoading = false; 
+          });
         }
       } catch (e) {
         print('Error: $e');
+        setState(() {
+          isLoading = false; 
+        });
       }
+    } else {
+      setState(() {
+        isLoading = false; 
+      });
     }
   }
 
-  // Future<void> _logout() async {
-  //   await FirebaseAuth.instance.signOut();
-  //   Navigator.pushAndRemoveUntil(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-  //         (Route<dynamic> route) => false,
-  //   );
-  // }
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); 
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,45 +82,47 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/sylus.jpg'),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator()) 
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('images/bg1.png'),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      name,
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildProfileField(label: 'Nama', value: name),
+                    const SizedBox(height: 20),
+                    _buildProfileField(label: 'NIM', value: nim),
+                    const SizedBox(height: 20),
+                    _buildProfileField(label: 'Email', value: email),
+                    const SizedBox(height: 20),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
+                    //     );
+                    //   },
+                    //   child: const Text('Edit Password'),
+                    // ),
+                    // const SizedBox(height: 20),
+                     ElevatedButton(
+                      onPressed: _logout,
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                name,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              _buildProfileField(label: 'Nama', value: name),
-              const SizedBox(height: 20),
-              _buildProfileField(label: 'NIM', value: nim),
-              const SizedBox(height: 20),
-              _buildProfileField(label: 'Email', value: email),
-              const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
-              //     );
-              //   },
-              //   child: const Text('Edit Password'),
-              // ),
-              // const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: _logout,
-              //   child: const Text('Logout'),
-              // ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 

@@ -26,25 +26,19 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+Future<void> _handleLogin() async {
   if (_formSignInKey.currentState!.validate()) {
-    final response = await login(_emailController.text, _passwordController.text);
-    if (response['statusCode'] == 200) {
-      final adminId = response['id_admin'];
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('admin_id', adminId);
-
+    try {
+      final response = await login(_emailController.text, _passwordController.text);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Berhasil masuk')),
+        SnackBar(content: Text('Login berhasil masuk')),
       );
-
-      Navigator.pushNamed(context, '/home');
-      print('Berhasil masuk');
-      print('Admin ID: $adminId');
-    } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('id_admin', response['id_admin']);
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal masuk')),
+        SnackBar(content: Text('Login gagal masuk')),
       );
     }
   }
