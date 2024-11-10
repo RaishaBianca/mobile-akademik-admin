@@ -18,6 +18,7 @@ class _KendalaselesaiPageState extends State<KendalaselesaiPage> {
 
   Future<List<Map<String, dynamic>>> fetchKendala() async {
     List<Map<String, dynamic>> allKendala = await api_data.getAllKendala();
+    print(allKendala.where((kendala) => kendala['status'] == 'approved').toList());
     return allKendala.where((kendala) => kendala['status'] == 'approved').toList();
   }
 
@@ -46,6 +47,7 @@ class _KendalaselesaiPageState extends State<KendalaselesaiPage> {
             return Center(child: Text('No data available'));
           } else {
             List<Map<String, dynamic>> kendalaList = snapshot.data!;
+            print(kendalaList);
             return ListView.builder(
               itemCount: kendalaList.length,
               itemBuilder: (context, index) {
@@ -55,7 +57,7 @@ class _KendalaselesaiPageState extends State<KendalaselesaiPage> {
                   nama_ruangan: kendala['nama_ruangan'],
                   status: kendala['status'],
                   tanggal: kendala['tanggal'],
-                  jenis_kendala: kendala['id_kendala'],
+                  jenis_kendala: kendala['jenis_kendala'],
                   bentuk_kendala: kendala['bentuk_kendala'],
                 );
               },

@@ -18,7 +18,8 @@ class _KendalabaruPageState extends State<KendalabaruPage> {
 
   Future<List<Map<String, dynamic>>> fetchKendala() async {
     List<Map<String, dynamic>> allKendala = await api_data.getAllKendala();
-    return allKendala.where((kendala) => kendala['status'] == 'rejected').toList();
+    print(allKendala.where((kendala) => kendala['status'] == 'pending').toList());
+    return allKendala.where((kendala) => kendala['status'] == 'pending').toList();
   }
 
   @override

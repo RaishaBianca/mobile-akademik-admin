@@ -16,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String name = '';
   String nim = '';
   String email = '';
-  bool isLoading = true; 
+  bool isLoading = true; // Add this variable to track loading state
 
   @override
   void initState() {
@@ -26,9 +26,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(prefs.getString('id_admin'));
+    
     final adminId = prefs.getString('id_admin');
-    print(adminId);
+    
     if (adminId != null) {
       try {
         final response = await http.get(
@@ -37,39 +37,47 @@ class _ProfilePageState extends State<ProfilePage> {
             'ngrok-skip-browser-warning': '69420',
           },
         );
-        print(response.body);
+    
 
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body);
-          print(userData);
-          setState(() {
-            name = userData['nama'];
-            nim = userData['id_admin'];
-            email = userData['email'];
-            isLoading = false; 
-          });
+    
+          if (mounted) {
+            setState(() {
+              name = userData['nama'];
+              nim = userData['id_admin'];
+              email = userData['email'];
+              isLoading = false; // Set loading to false after data is fetched
+            });
+          }
         } else {
           print('Failed to load user data');
-          setState(() {
-            isLoading = false; 
-          });
+          if (mounted) {
+            setState(() {
+              isLoading = false; // Set loading to false if there's an error
+            });
+          }
         }
       } catch (e) {
         print('Error: $e');
-        setState(() {
-          isLoading = false; 
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false; // Set loading to false if there's an error
+          });
+        }
       }
     } else {
-      setState(() {
-        isLoading = false; 
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false; // Set loading to false if adminId is null
+        });
+      }
     }
   }
 
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); 
+    await prefs.clear(); // Clear all stored data
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -83,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('Profile'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) 
+          ? Center(child: CircularProgressIndicator()) // Show loader if loading
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -105,17 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 20),
                     _buildProfileField(label: 'Email', value: email),
                     const SizedBox(height: 20),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
-                    //     );
-                    //   },
-                    //   child: const Text('Edit Password'),
-                    // ),
-                    // const SizedBox(height: 20),
-                     ElevatedButton(
+                    ElevatedButton(
                       onPressed: _logout,
                       child: const Text('Logout'),
                     ),
