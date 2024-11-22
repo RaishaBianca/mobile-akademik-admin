@@ -11,12 +11,24 @@ class JadwalkelasPage extends StatefulWidget {
 
 class _JadwalkelasPageState extends State<JadwalkelasPage> {
   late Future<List<Map<String, dynamic>>> _jadwalFuture;
+  List<Map<String, String>> ruanganList = [];
   String? selectedRoom;
 
   @override
   void initState() {
     super.initState();
     _jadwalFuture = fetchJadwal();
+    getRuangan();
+  }
+
+  Future<void> getRuangan() async {
+    var data = await api_data.getRuang('kelas');
+    setState(() {
+      ruanganList = List<Map<String, String>>.from(data.map((item) => {
+        'id_ruangan': item['id_ruangan'].toString(),
+        'nama_ruangan': item['nama_ruangan'].toString(),
+      }));
+    });
   }
 
   Future<List<Map<String, dynamic>>> fetchJadwal([String? room]) async {
@@ -114,60 +126,12 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                         child: DropdownButton<String>(
                           value: selectedRoom,
                           hint: Text("Pilih", style: TextStyle(color: Colors.white)),
-                          items: [
-                            DropdownMenuItem(
-                              value: "Ruang B2",
-                              child: Text("Test Ruangan Kelas B2", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 201",
-                              child: Text("KHD 201", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 202",
-                              child: Text("KHD 202", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 203",
-                              child: Text("KHD 203", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 201",
-                              child: Text("DS 201", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 202",
-                              child: Text("DS 202", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 203",
-                              child: Text("DS 203", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 301",
-                              child: Text("DS 301", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 302",
-                              child: Text("DS 302", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 303",
-                              child: Text("DS 303", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 401",
-                              child: Text("DS 401", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 402",
-                              child: Text("DS 402", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "DS 403",
-                              child: Text("DS 403", style: TextStyle(color: Colors.white)),
-                            ),
-                          ],
+                          items: ruanganList.map((room) {
+                            return DropdownMenuItem(
+                              value: room['nama_ruangan'],
+                              child: Text(room['nama_ruangan']!),
+                            );
+                          }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
                               selectedRoom = newValue;

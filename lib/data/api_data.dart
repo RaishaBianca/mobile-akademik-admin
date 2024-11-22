@@ -205,3 +205,11 @@ Future<int> verifikasiKode(String id, String status) async {
   print(response.body);
   return response.statusCode;
 }
+
+Future<List> getRuang(String tipe) async {
+  endpoint = 'ruangan?tipe=$tipe';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  var responseBody = json.decode(response.body);
+  return responseBody;
+}

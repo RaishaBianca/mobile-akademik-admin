@@ -11,12 +11,24 @@ class JadwallabPage extends StatefulWidget {
 
 class _JadwallabPageState extends State<JadwallabPage> {
   late Future<List<Map<String, dynamic>>> _jadwalFuture;
+  List<Map<String, String>> ruanganList = [];
   String? selectedRoom;
 
   @override
   void initState() {
     super.initState();
     _jadwalFuture = fetchJadwal();
+    getRuangan();
+  }
+
+  Future<void> getRuangan() async {
+    var data = await api_data.getRuang('lab');
+    setState(() {
+      ruanganList = List<Map<String, String>>.from(data.map((item) => {
+        'id_ruangan': item['id_ruangan'].toString(),
+        'nama_ruangan': item['nama_ruangan'].toString(),
+      }));
+    });
   }
 
   Future<List<Map<String, dynamic>>> fetchJadwal([String? room]) async {
@@ -114,40 +126,12 @@ class _JadwallabPageState extends State<JadwallabPage> {
                         child: DropdownButton<String>(
                           value: selectedRoom,
                           hint: Text("Pilih", style: TextStyle(color: Colors.white)),
-                          items: [
-                            DropdownMenuItem(
-                              value: "Ruang A1",
-                              child: Text("Test Ruangan Lab A1", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 301",
-                              child: Text("KHD 301 Lab Programming", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 302",
-                              child: Text("KHD 302 Lab Cybersecurity", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 303",
-                              child: Text("KHD 303 Lab Data Mining dan Data Science", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 304",
-                              child: Text("KHD 304 Lab Artificial Intelligence", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 401",
-                              child: Text("KHD 401 Lab Business Intelligence", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 402",
-                              child: Text("KHD 402 Lab Database", style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownMenuItem(
-                              value: "KHD 403",
-                              child: Text("KH3 402 Lab Internet of Things", style: TextStyle(color: Colors.white)),
-                            ),
-                          ],
+                          items: ruanganList.map((room) {
+                            return DropdownMenuItem(
+                              value: room['nama_ruangan'],
+                              child: Text(room['nama_ruangan']!),
+                            );
+                          }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
                               selectedRoom = newValue;
