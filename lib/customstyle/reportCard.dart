@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/data/dummy_report.dart';
+// import 'package:admin_fik_app/data/dummy_report.dart';
 import 'package:admin_fik_app/pages/pelaporan/detailkendala_page.dart';
 
 class ReportCard extends StatelessWidget {
+  final int id;
   final String nama_pelapor;
+  final String nim_nrp;
   final String tanggal;
   final String nama_ruangan;
   final String jenis_kendala;
   final String bentuk_kendala;
+  final String deskripsi_kendala;
   final String status; // Mengganti bool menjadi string untuk status
+  final String? keterangan_penyelesaian;
 
   const ReportCard({
     Key? key,
+    required this.id,
     required this.nama_pelapor,
+    required this.nim_nrp,
     required this.tanggal,
     required this.nama_ruangan,
     required this.jenis_kendala,
     required this.bentuk_kendala,
+    required this.deskripsi_kendala,
     required this.status, // Mengambil status sebagai string
+    this.keterangan_penyelesaian,
   }) : super(key: key);
 
   @override
@@ -29,14 +37,16 @@ class ReportCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) =>
                 DetailkendalaPage(
-                  nama_pelapor: DummyReport.nama_pelapor,
-                  nim_nrp: DummyReport.nim_nrp,
-                  tanggal: DummyReport.tanggal,
-                  nama_ruangan: DummyReport.nama_ruangan,
-                  jenis_kendala: DummyReport.jenis_kendala,
-                  bentuk_kendala: DummyReport.bentuk_kendala,
-                  deskripsi_kendala: DummyReport.deskripsi_kendala,
-                  status: DummyReport.status,
+                  id: id,
+                  nama_pelapor: nama_pelapor,
+                  nim_nrp: nim_nrp,
+                  tanggal: tanggal,
+                  nama_ruangan: nama_ruangan,
+                  jenis_kendala: jenis_kendala,
+                  bentuk_kendala: bentuk_kendala,
+                  deskripsi_kendala: deskripsi_kendala,
+                  status: status,
+                  keterangan_penyelesaian: keterangan_penyelesaian ?? '',
                 ),
           ),);
       },

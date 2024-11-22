@@ -19,8 +19,13 @@ class _JadwallabPageState extends State<JadwallabPage> {
     _jadwalFuture = fetchJadwal();
   }
 
-  Future<List<Map<String, dynamic>>> fetchJadwal() async {
+  Future<List<Map<String, dynamic>>> fetchJadwal([String? room]) async {
     List<Map<String, dynamic>> allJadwal = await api_data.getAllJadwal();
+    allJadwal = allJadwal.where((jadwal) => jadwal['tipe_ruang'] == 'lab').toList();
+    if (room != null) {
+      print(room);
+      allJadwal = allJadwal.where((jadwal) => jadwal['ruangan'] == room).toList();
+    }
     return allJadwal;
   }
 
@@ -111,6 +116,10 @@ class _JadwallabPageState extends State<JadwallabPage> {
                           hint: Text("Pilih", style: TextStyle(color: Colors.white)),
                           items: [
                             DropdownMenuItem(
+                              value: "Ruang A1",
+                              child: Text("Test Ruangan Lab A1", style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownMenuItem(
                               value: "KHD 301",
                               child: Text("KHD 301 Lab Programming", style: TextStyle(color: Colors.white)),
                             ),
@@ -142,6 +151,7 @@ class _JadwallabPageState extends State<JadwallabPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               selectedRoom = newValue;
+                              _jadwalFuture = fetchJadwal(selectedRoom);
                             });
                           },
                           dropdownColor: Color(0xFFFFBE33),

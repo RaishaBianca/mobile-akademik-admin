@@ -5,8 +5,29 @@ import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/peminjaman/menunggu_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/terkonfirmasi_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/semuadaftar_page.dart';
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
-class PeminjamanPage extends StatelessWidget {
+class PeminjamanPage extends StatefulWidget {
+  @override
+  _PeminjamanPageState createState() => _PeminjamanPageState();
+}
+
+class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProviderStateMixin {
+  final Future<List<Map<String, dynamic>>> peminjamanCount = api_data.getPeminjamanCount();
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +39,7 @@ class PeminjamanPage extends StatelessWidget {
           style: TextStyle(
             color: Color(0xFFFFFFFF),
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
@@ -43,142 +64,172 @@ class PeminjamanPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            TabBar.secondary(
+              controller: _tabController,
+              tabs: const <Widget>[
+                Tab(text: 'Peminjaman Lab'),
+                Tab(text: 'Peminjaman Kelas'),
+              ],
+            ),
             Expanded(
-              child: Container(
-                color: Colors.white, // Warna putih untuk konten utama
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
-                      children: [
-                        Text(
-                          'Peminjaman Ruang Lab Komputer FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 20), // Jarak antara teks dan tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  Card(
+                    // margin: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
                           children: [
-                            CustomButtonOne(
-                              label: 'Peminjaman Baru',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MenungguPage()),
-                                );
-                              },
-                              subText: '6', // Angka tambahan di bawah label
+                            Text(
+                              'Peminjaman Ruang Lab Komputer FIK',
+                              textAlign: TextAlign.left, // Teks rata kiri
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            CustomButtonOne(
-                              label: 'Terkonfirmasi',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TerkonfirmasiPage()),
-                                );
-                              },
-                              subText: '12', // Angka tambahan di bawah label
+                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              children: [
+                                CustomButtonOne(
+                                  label: 'Peminjaman Baru',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => MenungguPage(room: 'lab')),
+                                    );
+                                  },
+                                  subText: '6', // Angka tambahan di bawah label
+                                ),
+                                CustomButtonOne(
+                                  label: 'Terkonfirmasi',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'lab')),
+                                    );
+                                  },
+                                  subText: '12', // Angka tambahan di bawah label
+                                ),
+                              ],
                             ),
+                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              children: [
+                                CustomButtonTwo(
+                                  label: 'Lihat Semua Daftar',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'lab')),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 30), // Jarak antara tombol dan teks baru
+                            Text(
+                              'Statistika Peminjaman Lab Komputer FIK',
+                              textAlign: TextAlign.left, // Teks rata kiri
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10), // Jarak antara teks dan gambar grafik
+                            BarChart(),
                           ],
                         ),
-                        SizedBox(height: 20), // Jarak antara teks dan tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonTwo(
-                              label: 'Lihat Semua Daftar',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SemuadaftarPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30), // Jarak antara tombol dan teks baru
-                        Text(
-                          'Statistika Peminjaman Lab Komputer FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        BarChart(),
-                        SizedBox(height: 20),
-                        Text(
-                          'Peminjaman Ruang Kelas Komputer FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 20), // Jarak antara teks dan tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonOne(
-                              label: 'Peminjaman Baru',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MenungguPage()),
-                                );
-                              },
-                              subText: '6', // Angka tambahan di bawah label
-                            ),
-                            CustomButtonOne(
-                              label: 'Terkonfirmasi',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TerkonfirmasiPage()),
-                                );
-                              },
-                              subText: '12', // Angka tambahan di bawah label
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20), // Jarak antara teks dan tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonTwo(
-                              label: 'Lihat Semua Daftar',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SemuadaftarPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30), // Jarak antara tombol dan teks baru
-                        Text(
-                          'Statistika Peminjaman Ruang Kelas FIK',
-                          textAlign: TextAlign.left, // Teks rata kiri
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        BarChart(),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Card(
+                    // margin: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
+                          children: [
+                            Text(
+                              'Peminjaman Ruang Kelas Komputer FIK',
+                              textAlign: TextAlign.left, // Teks rata kiri
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              children: [
+                                CustomButtonOne(
+                                  label: 'Peminjaman Baru',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => MenungguPage(room: 'kelas')),
+                                    );
+                                  },
+                                  subText: '6', // Angka tambahan di bawah label
+                                ),
+                                CustomButtonOne(
+                                  label: 'Terkonfirmasi',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'kelas')),
+                                    );
+                                  },
+                                  subText: '12', // Angka tambahan di bawah label
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              children: [
+                                CustomButtonTwo(
+                                  label: 'Lihat Semua Daftar',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'kelas')),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 30), // Jarak antara tombol dan teks baru
+                            Text(
+                              'Statistika Peminjaman Ruang Kelas FIK',
+                              textAlign: TextAlign.left, // Teks rata kiri
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10), // Jarak antara teks dan gambar grafik
+                            BarChart(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            // Expanded(
+            //   child: Container(
+            //     color: Colors.white, // Warna putih untuk konten utama
+            //     child: 
+            //   ),
+            // ),
           ],
         ),
       ),

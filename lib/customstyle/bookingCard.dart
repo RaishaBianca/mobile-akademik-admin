@@ -5,6 +5,7 @@ import 'package:admin_fik_app/pages/peminjaman/detailpeminjaman_page.dart';
 import 'package:admin_fik_app/data/dummy_data.dart';
 
 class BookingCard extends StatelessWidget {
+  final int id;
   final String ruangan;
   final String studentName;
   final String inputDate;
@@ -18,6 +19,7 @@ class BookingCard extends StatelessWidget {
 
   const BookingCard({
     Key? key,
+    required this.id,
     required this.ruangan,
     required this.studentName,
     required this.inputDate,
@@ -38,6 +40,7 @@ class BookingCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailpeminjamanPage(
+              id: id,
               studentName: studentName,
               studentNim: studentNim,
               inputDate: inputDate,

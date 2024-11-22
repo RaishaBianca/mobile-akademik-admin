@@ -3,6 +3,10 @@ import 'package:admin_fik_app/customstyle/bookingCard.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class SemuadaftarPage extends StatefulWidget {
+  final String room;
+
+  SemuadaftarPage({required this.room});
+
   @override
   _SemuadaftarPageState createState() => _SemuadaftarPageState();
 }
@@ -17,7 +21,8 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
-    return await api_data.getAllPeminjaman();
+    List<Map<String, dynamic>> allPeminjaman = await api_data.getAllPeminjaman();
+    return allPeminjaman.where((peminjaman) => peminjaman['tipe_ruang'] == widget.room).toList();
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
@@ -64,6 +69,7 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                 var peminjaman = peminjamanList[index];
                 print(peminjaman);
                 return BookingCard(
+                  id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   inputDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim'],

@@ -1,18 +1,33 @@
-import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final String base_url = 'https://b08d-180-252-86-226.ngrok-free.app/api/admin/';
+final String base_url = 'http://127.0.0.1:8000/api/';
 late String endpoint;
+late SharedPreferences prefs;
 
-Map<String, String> _getHeaders() {
+Future<void> initializePreferences() async {
+  prefs = await SharedPreferences.getInstance();
+}
+
+Future<String?> getAccessToken() async {
+  await initializePreferences();
+  return prefs.getString('access_token');
+}
+
+Future<Map<String, String>> _getHeaders() async {
+  final accessToken = await getAccessToken();
+
   if (base_url.contains('ngrok')) {
     return {
+      'Authorization' : 'Bearer $accessToken',
       'ngrok-skip-browser-warning': '69420',
     };
   }
-  return {};
+  return {
+    'Authorization' : 'Bearer $accessToken',
+  };
 }
 
 Future<Map<String, dynamic>> login(String email, String password) async {
@@ -21,7 +36,8 @@ Future<Map<String, dynamic>> login(String email, String password) async {
   var response = await http.post(url, body: {
     'email': email,
     'password': password,
-  }, headers: _getHeaders());
+    'role': 'admin,admin_fakultas,admin_kelas',
+  });
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
@@ -32,7 +48,51 @@ Future<Map<String, dynamic>> login(String email, String password) async {
 Future<List<Map<String, dynamic>>> getAllPeminjaman() async {
   endpoint = 'peminjaman';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: _getHeaders());
+  var response = await http.get(url, 
+    headers: await _getHeaders()
+    );
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getPeminjamanLab() async {
+  endpoint = 'peminjaman/lab';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, 
+    headers: await _getHeaders()
+    );
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getPeminjamanKelas() async {
+  endpoint = 'peminjaman/kelas';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, 
+    headers: await _getHeaders()
+    );
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getPeminjamanCount() async {
+  endpoint = 'peminjaman/count';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, 
+    headers: await _getHeaders()
+    );
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -42,12 +102,12 @@ Future<List<Map<String, dynamic>>> getAllPeminjaman() async {
 }
 
 Future<int> verifikasiPeminjaman(String id, String status) async {
-  endpoint = 'verifikasi_peminjaman';
+  endpoint = 'peminjaman/verifikasi';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.post(url, body: {
     'id': id,
-    'status': status,
-  }, headers: _getHeaders());
+    'status': status == 'Terima' ? 'approved' : 'rejected',
+  }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
 }
@@ -55,7 +115,7 @@ Future<int> verifikasiPeminjaman(String id, String status) async {
 Future<List<Map<String, dynamic>>> getAllKendala() async {
   endpoint = 'kendala';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: _getHeaders());
+  var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -64,13 +124,38 @@ Future<List<Map<String, dynamic>>> getAllKendala() async {
   }
 }
 
-Future<int> verifikasiKendala(String id, String status) async {
-  endpoint = 'verifikasi_kendala';
+Future<List<Map<String, dynamic>>> getKendalaLab() async {
+  endpoint = 'kendala/lab';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getKendalaKelas() async {
+  endpoint = 'kendala/kelas';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<int> verifikasiKendala(String id, String status, String keterangan) async {
+  endpoint = 'kendala/verifikasi';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.post(url, body: {
     'id': id,
     'status': status,
-  }, headers: _getHeaders());
+    'keterangan_penyelesaian': keterangan,
+  }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
 }
@@ -78,7 +163,7 @@ Future<int> verifikasiKendala(String id, String status) async {
 Future<List<Map<String, dynamic>>> getAllJadwal() async {
   endpoint = 'jadwal';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: _getHeaders());
+  var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -93,7 +178,7 @@ Future<int> verifikasiJadwal(String id, String status) async {
   var response = await http.post(url, body: {
     'id': id,
     'status': status,
-  }, headers: _getHeaders());
+  }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
 }
@@ -101,7 +186,7 @@ Future<int> verifikasiJadwal(String id, String status) async {
 Future<List<Map<String, dynamic>>> getAllKode() async {
   endpoint = 'kode';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: _getHeaders());
+  var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -116,7 +201,7 @@ Future<int> verifikasiKode(String id, String status) async {
   var response = await http.post(url, body: {
     'id': id,
     'status': status,
-  }, headers: _getHeaders());
+  }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
 }

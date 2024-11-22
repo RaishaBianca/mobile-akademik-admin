@@ -3,6 +3,10 @@ import 'package:admin_fik_app/customstyle/bookingCard.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class MenungguPage extends StatefulWidget {
+  final String room;
+
+  MenungguPage({required this.room});
+
   @override
   _MenungguPageState createState() => _MenungguPageState();
 }
@@ -17,8 +21,13 @@ class _MenungguPageState extends State<MenungguPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
-    List<Map<String, dynamic>> allPeminjaman = await api_data.getAllPeminjaman();
-    return allPeminjaman.where((peminjaman) => peminjaman['status'] == 'pending').toList();
+    List<Map<String, dynamic>> peminjaman;
+    if(widget.room == 'lab') {
+      peminjaman = await api_data.getPeminjamanLab();
+    }else{
+      peminjaman = await api_data.getPeminjamanKelas();
+    }
+    return peminjaman.where((peminjaman) => peminjaman['status'] == 'pending').toList();
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
@@ -64,6 +73,7 @@ class _MenungguPageState extends State<MenungguPage> {
               itemBuilder: (context, index) {
                 var peminjaman = peminjamanList[index];
                 return BookingCard(
+                  id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   inputDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim'],
@@ -74,9 +84,21 @@ class _MenungguPageState extends State<MenungguPage> {
                   status: peminjaman['status'],
                   onAccept: () async {
                     await verifikasiPeminjaman(peminjaman['id'].toString(), 'approved');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                      content: Text('Berhasil menyimpan'),
+                      duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                   onReject: () async {
                     await verifikasiPeminjaman(peminjaman['id'].toString(), 'rejected');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                      content: Text('Berhasil menyimpan'),
+                      duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                 );
               },

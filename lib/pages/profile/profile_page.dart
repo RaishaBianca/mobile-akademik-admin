@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String name = '';
   String nim = '';
   String email = '';
+  String profile = '';
   bool isLoading = true; // Add this variable to track loading state
 
   @override
@@ -27,13 +28,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    final adminId = prefs.getString('id_admin');
+    final accessToken = prefs.getString('access_token');
     
-    if (adminId != null) {
+    if (accessToken != null) {
       try {
         final response = await http.get(
-          Uri.parse('https://b08d-180-252-86-226.ngrok-free.app/api/admin/$adminId'),
+          Uri.parse('http://127.0.0.1:8000/api/user'),
           headers: {
+            'Authorization': 'Bearer $accessToken',
             'ngrok-skip-browser-warning': '69420',
           },
         );
@@ -41,12 +43,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body);
-    
+
           if (mounted) {
             setState(() {
               name = userData['nama'];
-              nim = userData['id_admin'];
+              nim = userData['id'];
               email = userData['email'];
+              profile = userData['profil'];
               isLoading = false; // Set loading to false after data is fetched
             });
           }
@@ -97,9 +100,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('images/bg1.png'),
+                      // backgroundImage: AssetImage('images/bg1.png'),
+                      backgroundImage: Image.network('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
                     ),
                     const SizedBox(height: 20),
                     Text(

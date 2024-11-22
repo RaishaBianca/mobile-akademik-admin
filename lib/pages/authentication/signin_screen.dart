@@ -34,7 +34,7 @@ Future<void> _handleLogin() async {
         SnackBar(content: Text('Login berhasil masuk')),
       );
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('id_admin', response['id_admin']);
+      prefs.setString('access_token', response['token']);
       Navigator.pushReplacementNamed(context, '/home');
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(

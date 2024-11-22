@@ -3,6 +3,10 @@ import 'package:admin_fik_app/customstyle/reportCard.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class SemuakendalaPage extends StatefulWidget {
+  final String room;
+
+  SemuakendalaPage({required this.room});
+  
   @override
   _SemuakendalaPageState createState() => _SemuakendalaPageState();
 }
@@ -17,8 +21,13 @@ class _SemuakendalaPageState extends State<SemuakendalaPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchKendala() async {
-    List<Map<String, dynamic>> allKendala = await api_data.getAllKendala();
-    return allKendala.toList();
+    List<Map<String, dynamic>> kendala;
+    if(widget.room == 'lab') {
+      kendala = await api_data.getKendalaLab();
+    }else{
+      kendala = await api_data.getKendalaKelas();
+    }
+    return kendala;
   }
 
   @override
@@ -51,12 +60,16 @@ class _SemuakendalaPageState extends State<SemuakendalaPage> {
               itemBuilder: (context, index) {
                 var kendala = kendalaList[index];
                 return ReportCard(
+                  id: kendala['id'],
                   nama_pelapor: kendala['nama_pelapor'],
+                  nim_nrp: kendala['nim_nrp'],
                   nama_ruangan: kendala['nama_ruangan'],
                   status: kendala['status'],
                   tanggal: kendala['tanggal'],
                   jenis_kendala: kendala['jenis_kendala'],
                   bentuk_kendala: kendala['bentuk_kendala'],
+                  deskripsi_kendala: kendala['deskripsi_kendala'],
+                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'],
                 );
               },
             );

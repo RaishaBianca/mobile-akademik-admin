@@ -3,6 +3,10 @@ import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class TerkonfirmasiPage extends StatefulWidget {
+  final String room;
+
+  TerkonfirmasiPage({required this.room});
+
   @override
   _TerkonfirmasiPageState createState() => _TerkonfirmasiPageState();
 }
@@ -17,8 +21,13 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
-    List<Map<String, dynamic>> allPeminjaman = await api_data.getAllPeminjaman();
-    return allPeminjaman.where((peminjaman) => peminjaman['status'] == 'approved' || peminjaman['status'] == 'rejected').toList();
+    List<Map<String, dynamic>> peminjaman;
+    if(widget.room == 'lab') {
+      peminjaman = await api_data.getPeminjamanLab();
+    }else{
+      peminjaman = await api_data.getPeminjamanKelas();
+    }
+    return peminjaman.where((peminjaman) => peminjaman['status'] == 'approved' || peminjaman['status'] == 'rejected').toList();
   }
 
   @override
@@ -51,6 +60,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
               itemBuilder: (context, index) {
                 var peminjaman = peminjamanList[index];
                 return CardConfirmed(
+                  id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   ruangan: peminjaman['ruangan'],
                   groupSize: "${peminjaman['jumlah_orang']} Orang",

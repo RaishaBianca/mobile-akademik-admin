@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/pages/peminjaman/detailpeminjaman_page.dart';
 
 class CardConfirmed extends StatelessWidget {
+  final int id;
   final String studentName;
   final String inputDate;
   final String ruangan;
@@ -16,6 +17,7 @@ class CardConfirmed extends StatelessWidget {
 
   const CardConfirmed({
     Key? key,
+    required this.id,
     required this.studentName,
     required this.inputDate,
     required this.ruangan,
@@ -37,6 +39,7 @@ class CardConfirmed extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailpeminjamanPage(
+              id: id,
               studentName: studentName,
               studentNim: studentNim,
               inputDate: inputDate,
