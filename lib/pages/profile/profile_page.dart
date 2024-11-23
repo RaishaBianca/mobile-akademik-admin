@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     CircleAvatar(
                       radius: 50,
                       // backgroundImage: AssetImage('images/bg1.png'),
-                      backgroundImage: Image.network('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
+                      backgroundImage: Image.network(profile ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
                     ),
                     const SizedBox(height: 20),
                     Text(
