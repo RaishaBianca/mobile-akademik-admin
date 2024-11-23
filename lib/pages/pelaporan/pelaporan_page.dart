@@ -152,7 +152,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                               ),
                             ),
                             SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            BarChart(),
+                            BarChart(room: 'lab', type: 'kendala',),
                           ],
                         ),
                       ),
@@ -237,7 +237,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                               ),
                             ),
                             SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            BarChart(),
+                            BarChart(room: 'kelas', type: 'kendala'),
                           ],
                         ),
                       ),

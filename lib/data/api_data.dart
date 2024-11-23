@@ -213,3 +213,21 @@ Future<List> getRuang(String tipe) async {
   var responseBody = json.decode(response.body);
   return responseBody;
 }
+
+Future<List> getPeminjamanStatistik(String room) async {
+  endpoint = 'peminjaman/statistik?tipe=$room';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  // print(response.body);
+  var responseBody = json.decode(response.body);
+  return responseBody['data'];
+}
+
+Future<List> getKendalaStatistik(String room) async {
+  endpoint = 'kendala/statistik?tipe=$room';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  var responseBody = json.decode(response.body);
+  // print(responseBody['data']);
+  return responseBody['data'];
+}

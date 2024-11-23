@@ -118,7 +118,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        BarChart(),
+                        BarChart(room: 'lab', type: 'peminjaman',),
                         SizedBox(height: 30), // Jarak antara tombol dan teks baru
                         Text(
                           'Statistika Kepadatan Penggunaan Ruangan Kelas FIK',
@@ -129,7 +129,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           ),
                         ),
                         SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                        BarChart()
+                        BarChart(room: 'kelas', type: 'peminjaman')
                       ],
                     ),
                   ),

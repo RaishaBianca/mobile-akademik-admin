@@ -142,7 +142,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               ),
                             ),
                             SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            BarChart(),
+                            BarChart(room: 'lab', type: 'peminjaman'),
                           ],
                         ),
                       ),
@@ -215,7 +215,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               ),
                             ),
                             SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            BarChart(),
+                            BarChart(room: 'kelas', type: 'peminjaman'),
                           ],
                         ),
                       ),
