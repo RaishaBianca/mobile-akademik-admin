@@ -27,7 +27,7 @@ class _MenungguPageState extends State<MenungguPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    return peminjaman.where((peminjaman) => peminjaman['status'] == 'pending').toList();
+    return peminjaman.where((peminjaman) => peminjaman['status'] == 'menunggu').toList();
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
@@ -83,7 +83,7 @@ class _MenungguPageState extends State<MenungguPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'approved');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                       content: Text('Berhasil menyimpan'),
@@ -92,7 +92,7 @@ class _MenungguPageState extends State<MenungguPage> {
                     );
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'rejected');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                       content: Text('Berhasil menyimpan'),

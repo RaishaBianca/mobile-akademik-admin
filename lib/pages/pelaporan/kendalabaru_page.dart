@@ -27,7 +27,7 @@ class _KendalabaruPageState extends State<KendalabaruPage> {
     }else{
       kendala = await api_data.getKendalaKelas();
     }
-    return kendala.where((kendala) => kendala['status'] == 'pending').toList();
+    return kendala.where((kendala) => kendala['status'] == 'menunggu').toList();
   }
 
   @override

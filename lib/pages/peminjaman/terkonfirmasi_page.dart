@@ -27,7 +27,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    return peminjaman.where((peminjaman) => peminjaman['status'] == 'approved' || peminjaman['status'] == 'rejected').toList();
+    return peminjaman.where((peminjaman) => peminjaman['status'] == 'disetujui' || peminjaman['status'] == 'ditolak').toList();
   }
 
   @override
@@ -64,7 +64,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
                   studentName: peminjaman['nama_peminjam'],
                   ruangan: peminjaman['ruangan'],
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
-                  isAccepted: peminjaman['status'] == 'approved',
+                  isAccepted: peminjaman['status'] == 'disetujui',
                   studentNim: peminjaman['nim'],
                   bookDate: peminjaman['tanggal'],
                   jamMulai: peminjaman['jam_mulai'],

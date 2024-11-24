@@ -50,7 +50,7 @@ class BookingCard extends StatelessWidget {
               jamSelesai: time.split(' - ')[1].replaceAll(' WIB', ''),
               jumlahPengguna: groupSize,
               keterangan: keterangan,
-              isAccepted: status == 'approved',
+              isAccepted: status == 'disetujui',
               time: time,
             ),
           ),
@@ -117,7 +117,7 @@ class BookingCard extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if(status == 'pending')...[
+                      if(status == 'menunggu')...[
                         ButtonAccept(
                           label: 'Terima',
                           onPressed: () => onAccept(),
@@ -128,7 +128,7 @@ class BookingCard extends StatelessWidget {
                           onPressed: () => onReject(),
                         ),
                       ],
-                      if(status == 'approved')
+                      if(status == 'disetujui')
                         Text(
                           'Diterima',
                           style: TextStyle(
@@ -136,7 +136,7 @@ class BookingCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      if(status == 'rejected')
+                      if(status == 'ditolak')
                         Text(
                           'Ditolak',
                           style: TextStyle(

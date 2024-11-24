@@ -42,7 +42,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
   String? _lastSavedStatus;
   late TextEditingController reasonController;
   late String _deskripsi_kendala;
-  String statusDropdown = 'approved';
+  String statusDropdown = 'disetujui';
 
   @override
   void initState() {
@@ -147,11 +147,11 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                   },
                   items: [
                     DropdownMenuItem(
-                        value: 'approved',
+                        value: 'disetujui',
                         child: Text('Terima'),
                     ),
                     DropdownMenuItem(
-                        value: 'rejected',
+                        value: 'ditolak',
                         child: Text('Tolak'),
                     ),
                     DropdownMenuItem(

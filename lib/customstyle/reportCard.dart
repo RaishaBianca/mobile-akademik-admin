@@ -134,11 +134,11 @@ class ReportCard extends StatelessWidget {
   // Fungsi untuk menentukan warna berdasarkan status
   Color _getStatusColor() {
     switch (status) {
-      case 'Baru':
+      case 'menunggu':
         return Colors.green[500]!;
-      case 'Pengerjaan':
+      case 'dalam proses':
         return Colors.yellow[500]!;
-      case 'Selesai':
+      case 'selesai':
         return Colors.red[500]!;
       default:
         return Colors.grey; // Jika status tidak dikenali
@@ -147,11 +147,11 @@ class ReportCard extends StatelessWidget {
 
   String _mapStatus(String status) {
     switch (status) {
-      case 'Belum Dikerjakan':
-        return 'Baru';
-      case 'Sedang Dikerjakan':
-        return 'Pengerjaan';
-      case 'Selesai':
+      case 'menunggu':
+        return 'Menunggu';
+      case 'dalam proses':
+        return 'Dalam Proses';
+      case 'selesai':
         return 'Selesai';
       default:
         return 'Unknown';

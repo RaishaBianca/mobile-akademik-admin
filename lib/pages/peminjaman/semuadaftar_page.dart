@@ -79,10 +79,10 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'approved');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'rejected');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
                   },
                 );
               },

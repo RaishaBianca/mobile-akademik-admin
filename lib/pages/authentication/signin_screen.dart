@@ -16,12 +16,12 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController _identifierController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -29,7 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
 Future<void> _handleLogin() async {
   if (_formSignInKey.currentState!.validate()) {
     try {
-      final response = await login(_emailController.text, _passwordController.text);
+      final response = await login(_identifierController.text, _passwordController.text);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login berhasil masuk')),
       );
@@ -84,16 +84,16 @@ Future<void> _handleLogin() async {
                         height: 20,
                       ),
                       TextFormField(
-                        controller: _emailController, // Ensure controller is linked
+                        controller: _identifierController, // Ensure controller is linked
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Tolong Masukkan Email';
+                            return 'Tolong Masukkan Email/NIM Anda';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Email'),
-                          hintText: 'Masukkan email Anda',
+                          label: const Text('Email atau NIM'),
+                          hintText: 'Tolong Masukkan Email/NIM Anda',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),

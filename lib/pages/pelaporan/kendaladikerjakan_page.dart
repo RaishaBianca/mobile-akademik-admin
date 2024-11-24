@@ -27,7 +27,7 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
     }else{
       kendala = await api_data.getKendalaKelas();
     }
-    return kendala.where((kendala) => kendala['status'] == 'approved').toList();
+    return kendala.where((kendala) => kendala['status'] == 'dalam proses').toList();
   }
 
   @override

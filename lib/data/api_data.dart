@@ -30,13 +30,13 @@ Future<Map<String, String>> _getHeaders() async {
   };
 }
 
-Future<Map<String, dynamic>> login(String email, String password) async {
+Future<Map<String, dynamic>> login(String identifier, String password) async {
   endpoint = 'login';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.post(url, body: {
-    'email': email,
+    'identifier': identifier,
     'password': password,
-    'role': 'admin,admin_fakultas,admin_kelas',
+    'role': 'admin,admin_fakultas,admin_kelas,super_admin',
   });
   if (response.statusCode == 200) {
     return json.decode(response.body);
@@ -106,7 +106,7 @@ Future<int> verifikasiPeminjaman(String id, String status) async {
   var url = Uri.parse(base_url + endpoint);
   var response = await http.post(url, body: {
     'id': id,
-    'status': status == 'Terima' ? 'approved' : 'rejected',
+    'status': status == 'Terima' ? 'disetujui' : 'ditolak',
   }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
@@ -209,7 +209,7 @@ Future<int> verifikasiKode(String id, String status) async {
 Future<List> getRuang(String tipe) async {
   endpoint = 'ruangan?tipe=$tipe';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: await _getHeaders());
+  var response = await http.post(url, headers: await _getHeaders());
   var responseBody = json.decode(response.body);
   return responseBody;
 }
