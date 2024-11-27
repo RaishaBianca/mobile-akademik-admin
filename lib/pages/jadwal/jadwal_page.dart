@@ -4,7 +4,7 @@ import 'package:admin_fik_app/customstyle/custombutton.dart';
 import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwallab_page.dart';
-import 'package:admin_fik_app/pages/jadwal/kodedosenmk_page.dart';
+import 'package:admin_fik_app/pages/jadwal/profildosen_page.dart';
 
 import 'package:flutter_sales_graph/flutter_sales_graph.dart';
 
@@ -98,11 +98,11 @@ class _JadwalPageState extends State<JadwalPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
                           children: [
                             CustomButtonTwo(
-                              label: 'Lihat Kode Dosen dan Mata Kuliah',
+                              label: 'Lihat Profil Dosen',
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => KodedosenmkPage()),
+                                  MaterialPageRoute(builder: (context) => ProfildosenPage()),
                                 );
                               },
                             ),

@@ -26,53 +26,21 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    
-    final accessToken = prefs.getString('access_token');
-    
-    if (accessToken != null) {
-      try {
-        final response = await http.get(
-          Uri.parse('http://127.0.0.1:8000/api/user'),
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-            'ngrok-skip-browser-warning': '69420',
-          },
-        );
-    
+    final userData = await api_data.fetchUserData();
 
-        if (response.statusCode == 200) {
-          final userData = jsonDecode(response.body);
+    if (userData != null && mounted) {
+      setState(() {
+        name = userData['nama'];
+        nim = userData['id'];
+        email = userData['email'];
+        profile = userData['profile'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
-          if (mounted) {
-            setState(() {
-              name = userData['nama'];
-              nim = userData['id'];
-              email = userData['email'];
-              profile = userData['profil'];
-              isLoading = false; // Set loading to false after data is fetched
-            });
-          }
-        } else {
-          print('Failed to load user data');
-          if (mounted) {
-            setState(() {
-              isLoading = false; // Set loading to false if there's an error
-            });
-          }
-        }
-      } catch (e) {
-        print('Error: $e');
-        if (mounted) {
-          setState(() {
-            isLoading = false; // Set loading to false if there's an error
-          });
-        }
-      }
+        isLoading = false;
+      });
     } else {
       if (mounted) {
         setState(() {
-          isLoading = false; // Set loading to false if adminId is null
+          isLoading = false;
         });
       }
     }
@@ -91,40 +59,49 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Profil',
+          style: TextStyle(
+            color: Color(0xFFFFFFFF),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Color(0xFFFF5833),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // Show loader if loading
           : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      // backgroundImage: AssetImage('images/bg1.png'),
-                      backgroundImage: Image.network(profile ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      name,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'Nama', value: name),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'NIM', value: nim),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'Email', value: email),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _logout,
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                // backgroundImage: AssetImage('images/bg1.png'),
+                backgroundImage: Image.network(profile ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
               ),
-            ),
+              const SizedBox(height: 20),
+              Text(
+                name,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Nama', value: name),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'NIM', value: nim),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Email', value: email),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout,
+                child: const Text('Logout'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
