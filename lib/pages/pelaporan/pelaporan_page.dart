@@ -5,7 +5,7 @@ import 'package:admin_fik_app/pages/pelaporan/kendalabaru_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/kendaladikerjakan_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/kendalaselesai_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/semuakendala_page.dart';
-import 'package:admin_fik_app/pages/pelaporan/detailkendala_page.dart';
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class PelaporanPage extends StatefulWidget {
   @override
@@ -14,17 +14,41 @@ class PelaporanPage extends StatefulWidget {
 
 class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  int labsemua = 0;
+  int labbaru = 0;
+  int labdikerjakan = 0;
+  int labselesai = 0;
+  int kelassemua = 0;
+  int kelasbaru = 0;
+  int kelasdikerjakan = 0;
+  int kelasselesai = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fetchKendalaCount();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+
+  }
+
+  Future<void> _fetchKendalaCount() async {
+     var countData = await api_data.getKendalaCount();
+     setState(() {
+        labsemua = countData['lab_semua'];
+        labbaru = countData['lab_baru'];
+        labdikerjakan = countData['lab_dikerjakan'];
+        labselesai = countData['lab_selesai'];
+        kelassemua = countData['kelas_semua'];
+        kelasbaru = countData['kelas_baru'];
+        kelasdikerjakan = countData['kelas_dikerjakan'];
+        kelasselesai = countData['kelas_selesai'];
+     });
   }
 
   @override
@@ -102,7 +126,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => KendalabaruPage(room: 'lab')),
                                     );
                                   },
-                                  subText: '6', // Angka tambahan di bawah label
+                                  subText: labbaru.toString(),
                                 ),
                                 CustomButtonOne(
                                   label: 'Laporan Dikerjakan',
@@ -112,7 +136,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'lab')),
                                     );
                                   },
-                                  subText: '12', // Angka tambahan di bawah label
+                                  subText: labdikerjakan.toString(),
                                 ),
                               ],
                             ),
@@ -128,7 +152,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'lab')),
                                     );
                                   },
-                                  subText: '6', // Angka tambahan di bawah label
+                                  subText: labselesai.toString(),
                                 ),
                                 CustomButtonOne(
                                   label: 'Semua Laporan',
@@ -138,7 +162,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'lab')),
                                     );
                                   },
-                                  subText: '12', // Angka tambahan di bawah label
+                                  subText: labsemua.toString(),
                                 ),
                               ],
                             ),
@@ -187,7 +211,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                         MaterialPageRoute(builder: (context) => KendalabaruPage(room: 'kelas')),
                                       );
                                   },
-                                  subText: '6', // Angka tambahan di bawah label
+                                  subText: kelasbaru.toString(), // Angka tambahan di bawah label
                                 ),
                                 CustomButtonOne(
                                   label: 'Laporan Dikerjakan',
@@ -197,7 +221,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'kelas')),
                                     );
                                   },
-                                  subText: '12', // Angka tambahan di bawah label
+                                  subText: kelasdikerjakan.toString(), // Angka tambahan di bawah label
                                 ),
                               ],
                             ),
@@ -213,7 +237,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'kelas')),
                                     );
                                   },
-                                  subText: '6', // Angka tambahan di bawah label
+                                  subText: kelasselesai.toString(), // Angka tambahan di bawah label
                                 ),
                                 CustomButtonOne(
                                   label: 'Semua Laporan',
@@ -223,7 +247,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                                       MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'kelas')),
                                     );
                                   },
-                                  subText: '12', // Angka tambahan di bawah label
+                                  subText: kelassemua.toString(), // Angka tambahan di bawah label
                                 ),
                               ],
                             ),

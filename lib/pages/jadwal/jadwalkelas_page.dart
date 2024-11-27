@@ -13,16 +13,19 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
   late Future<List<Map<String, dynamic>>> _jadwalFuture;
   List<Map<String, String>> ruanganList = [];
   String? selectedRoom;
+  String? selectedDay;
 
   @override
   void initState() {
     super.initState();
-    _jadwalFuture = fetchJadwal();
+    _jadwalFuture = fetchJadwal(); // Initial fetch without filters
     getRuangan();
+    selectedDay = _getDayOfWeek(DateTime.now());
   }
 
   Future<void> getRuangan() async {
     var data = await api_data.getRuang('kelas');
+
     setState(() {
       ruanganList = List<Map<String, String>>.from(data.map((item) => {
         'id_ruangan': item['id_ruangan'].toString(),
@@ -31,59 +34,29 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
     });
   }
 
-  Future<List<Map<String, dynamic>>> fetchJadwal([String? room]) async {
+  Future<List<Map<String, dynamic>>> fetchJadwal() async {
     List<Map<String, dynamic>> allJadwal = await api_data.getAllJadwal();
     allJadwal = allJadwal.where((jadwal) => jadwal['tipe_ruang'] == 'kelas').toList();
-    if (room != null) {
-      print(room);
-      allJadwal = allJadwal.where((jadwal) => jadwal['ruangan'] == room).toList();
+
+    if (selectedRoom != null) {
+      print("Selected Room: $selectedRoom");
+      allJadwal = allJadwal.where((jadwal) => jadwal['id_ruang'] == selectedRoom).toList();
+      print("All Jadwal: $allJadwal");
     }
+    if (selectedDay != null) {
+      print("Selected Day: $selectedDay");
+      allJadwal = allJadwal.where((jadwal) => jadwal['hari'] == selectedDay).toList();
+      print("All Jadwal: $allJadwal");
+    }
+    print("All Jadwal: $allJadwal");
     return allJadwal;
   }
 
-  // // Dummy data list untuk dosen dan mata kuliah
-  // final List<Map<String, String>> jadwalmkList = [
-  //   {
-  //     'ruangan': 'KHD Kelas 201',
-  //     'hari': 'Senin',
-  //     'jamMulai': '07:00',
-  //     'jamSelesai': '09:00',
-  //     'namaMatkul': 'Kalkulus',
-  //     'kodeMatkul': 'SSI123456789',
-  //     'namaDosen': 'John Doe',
-  //     'kodeDosen': 'SSI987654321',
-  //   },
-  //   {
-  //     'ruangan': 'KHD Kelas 301',
-  //     'hari': 'Senin',
-  //     'jamMulai': '09:30',
-  //     'jamSelesai': '12:00',
-  //     'namaMatkul': 'Pemrograman',
-  //     'kodeMatkul': 'INF123456780',
-  //     'namaDosen': 'Jane Smith',
-  //     'kodeDosen': 'IF987654322',
-  //   },
-  //   {
-  //     'ruangan': 'DS Kelas 401',
-  //     'hari': 'Selasa',
-  //     'jamMulai': '07:00',
-  //     'jamSelesai': '09:00',
-  //     'namaMatkul': 'Sistem Operasi',
-  //     'kodeMatkul': 'DSI123456781',
-  //     'namaDosen': 'Michael Johnson',
-  //     'kodeDosen': 'DSI987654323',
-  //   },
-  //   {
-  //     'ruangan': 'DS Kelas 402',
-  //     'hari': 'Selasa',
-  //     'jamMulai': '09:30',
-  //     'jamSelesai': '12:00',
-  //     'namaMatkul': 'Jaringan Komputer',
-  //     'kodeMatkul': 'SSD123456782',
-  //     'namaDosen': 'Emily Davis',
-  //     'kodeDosen': 'SSD987654324',
-  //   },
-  // ];
+  void updateJadwal() {
+    setState(() {
+      _jadwalFuture = fetchJadwal();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,17 +80,21 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //use easy date timeline
-                  EasyDateTimeLine(initialDate: DateTime.now()),
+                  EasyDateTimeLine(
+                    initialDate: DateTime.now(),
+                    onDateChange: (date) {
+                      setState(() {
+                        selectedDay = _getDayOfWeek(date);
+                        updateJadwal(); // Update jadwal when day changes
+                      });
+                    },
+                  ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // SizedBox(width: 8),
                       Text("Ruang Kelas: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      // SizedBox(width: 20),
                       Container(
-                        // width: 200,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
                           color: Color(0x99FF5833),
@@ -128,14 +105,16 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                           hint: Text("Pilih", style: TextStyle(color: Colors.white)),
                           items: ruanganList.map((room) {
                             return DropdownMenuItem(
-                              value: room['nama_ruangan'],
-                              child: Text(room['nama_ruangan']!),
+                              value: room['id_ruangan'],
+                              child: Text(room['id_ruangan']!),
                             );
                           }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
                               selectedRoom = newValue;
-                              _jadwalFuture = fetchJadwal(selectedRoom);
+                              print('Selected Room: $selectedRoom');
+                              print('Selected Day: $selectedDay');
+                              updateJadwal(); // Update jadwal when room changes
                             });
                           },
                           dropdownColor: Color(0xFFFFBE33),
@@ -183,7 +162,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                                 kodeMatkul: jadwal['kodeMatkul']!,
                                 namaDosen: jadwal['namaDosen']!,
                                 kodeDosen: jadwal['kodeDosen']!,
-                                ruangan: jadwal['ruangan']!,
+                                ruangan: jadwal['id_ruang']!,
                               ),
                             ],
                           ),
@@ -198,5 +177,10 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
         ),
       ),
     );
+  }
+
+  String _getDayOfWeek(DateTime date) {
+    List<String> days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    return days[date.weekday % 7];
   }
 }

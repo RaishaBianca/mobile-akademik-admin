@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
           if (mounted) {
             setState(() {
               name = userData['nama'];
-              nim = userData['id'];
+              nim = userData['nim_nrp'];
               email = userData['email'];
               profile = userData['profil'];
               isLoading = false; // Set loading to false after data is fetched
