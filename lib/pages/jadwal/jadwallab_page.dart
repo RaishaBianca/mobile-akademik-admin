@@ -18,7 +18,8 @@ class _JadwallabPageState extends State<JadwallabPage> {
   @override
   void initState() {
     super.initState();
-    _jadwalFuture = fetchJadwal(); // Initial fetch without filters
+    selectedDay = _getDayOfWeek(DateTime.now());
+    _jadwalFuture = fetchJadwal();
     getRuangan();
   }
 
