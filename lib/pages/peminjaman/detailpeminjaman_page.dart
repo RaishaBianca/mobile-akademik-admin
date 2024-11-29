@@ -43,7 +43,7 @@ class DetailpeminjamanPage extends StatefulWidget {
   Future<void> _handlePost() async {
     api_data.verifikasiPeminjaman(
       widget.id.toString(),
-      statusDropdown
+      statusDropdown,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(

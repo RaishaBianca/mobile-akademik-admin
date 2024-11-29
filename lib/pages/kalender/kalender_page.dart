@@ -1,43 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/monthCard.dart';
-import 'package:admin_fik_app/data/api_data.dart' as api_data;
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class KalenderPage extends StatefulWidget {
-  const KalenderPage({super.key});
-
   @override
   _KalenderPageState createState() => _KalenderPageState();
 }
 
 class _KalenderPageState extends State<KalenderPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  late Future<Map<String, List<Map<String, dynamic>>>> _kalenderFuture;
+  TabController? _tabController;
+  String? localPath;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _kalenderFuture = fetchKalender();
+    _loadPdf('Universitas');
+    _tabController!.addListener(() {
+      if (_tabController!.indexIsChanging) {
+        _loadPdf(_tabController!.index == 0 ? 'Universitas' : 'Fakultas');
+      }
+    });
   }
 
-  Future<Map<String, List<Map<String, dynamic>>>> fetchKalender() async {
-    return await api_data.getKalender();
-  }
+  Future<void> _loadPdf(String category) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/academic_calendar.pdf');
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+    // Load the appropriate PDF based on the selected category
+    final pdfAsset = category == 'Universitas'
+        ? 'assets/assets/KALENDER-AKADEMIK-2024-2025.pdf'
+        : 'assets/assets/KALENDER-AKADEMIK-FIK-2024-2025.pdf';
+
+    final data = await DefaultAssetBundle.of(context).load(pdfAsset);
+    await file.writeAsBytes(data.buffer.asUint8List());
+
+    setState(() {
+      localPath = file.path;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Kalendar Akademik',
+          'Kalender Akademik',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
             fontSize: 24,
@@ -45,32 +55,36 @@ class _KalenderPageState extends State<KalenderPage> with SingleTickerProviderSt
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search, color: Colors.white),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            TabBar.secondary(
+            TabBar(
               controller: _tabController,
-              indicatorWeight: 2.0,
-              labelColor: Color(0xFFFF5833),
-              unselectedLabelColor: Colors.black,
-              tabs: const <Widget>[
-                Tab(text: 'Kalender FIK'),
-                Tab(text: 'Kalender Universitas'),
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              labelStyle: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontFamily: 'Poppins',
+              ),
+              tabs: [
+                Tab(text: 'Universitas'),
+                Tab(text: 'Fakultas'),
               ],
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: <Widget>[
-                  _buildKalenderFIK(),
-                  _buildKalenderUniversitas(),
+                children: [
+                  localPath != null
+                      ? PDFView(filePath: localPath!)
+                      : Center(child: CircularProgressIndicator()),
+                  localPath != null
+                      ? PDFView(filePath: localPath!)
+                      : Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),
@@ -80,64 +94,9 @@ class _KalenderPageState extends State<KalenderPage> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildKalenderFIK() {
-    return FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
-      future: _kalenderFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No data available'));
-        } else {
-          Map<String, List<Map<String, dynamic>>> kalenderMap = snapshot.data!;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: kalenderMap.entries.map((entry) {
-                String monthYear = entry.key;
-                List<Map<String, dynamic>> events = entry.value;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      monthYear,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xFFFF5833),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Image.network('https://radarlambar.bacakoran.co/upload/e6951955785e896859feadacd94e8715.jpg'),
-                    SizedBox(height: 20),
-                    ...events.map((event) {
-                      return MonthCard(
-                        kegiatan: event['kegiatan'],
-                        tgl_mulai: event['tgl_mulai'],
-                        tgl_selesai: event['tgl_selesai'],
-                      );
-                    }).toList(),
-                    SizedBox(height: 36),
-                  ],
-                );
-              }).toList(),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildKalenderUniversitas() {
-    return SafeArea(
-      child: Center(
-        child: Text(
-          'Kalender Universitas content goes here',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 }

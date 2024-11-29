@@ -1,9 +1,6 @@
 import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
-import 'package:admin_fik_app/customstyle/buttonreject.dart';
-import 'package:admin_fik_app/customstyle/statusdropdown.dart';
-// import 'package:admin_fik_app/data/dummy_report.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class DetailkendalaPage extends StatefulWidget {
@@ -42,7 +39,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
   String? _lastSavedStatus;
   late TextEditingController reasonController;
   late String _deskripsi_kendala;
-  String statusDropdown = 'disetujui';
+  String statusDropdown = 'menunggu';
 
   @override
   void initState() {
@@ -147,15 +144,15 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                   },
                   items: [
                     DropdownMenuItem(
-                        value: 'disetujui',
-                        child: Text('Terima'),
+                        value: 'menunggu',
+                        child: Text('Menunggu'),
                     ),
                     DropdownMenuItem(
-                        value: 'ditolak',
-                        child: Text('Tolak'),
+                        value: 'dalam proses',
+                        child: Text('Dalam Proses'),
                     ),
                     DropdownMenuItem(
-                        value: 'finished',
+                        value: 'selesai',
                         child: Text('Selesai'),
                     ),
                   ],

@@ -1,30 +1,45 @@
-// import 'package:flutter/material.dart';
-// import 'package:class_leap/src/screens/welcome/profile_detail_screen.dart';
-// import 'package:class_leap/src/utils/data/profile_dosen_data.dart';
-// import 'package:class_leap/src/custom_style/search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/dosenCard.dart';
-import 'package:admin_fik_app/customstyle/mkCard.dart';
+import 'package:admin_fik_app/pages/jadwal/profiledetail_page.dart';
+import 'package:admin_fik_app/customstyle/customsearchbar.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
+import 'package:admin_fik_app/pages/jadwal/jadwal_page.dart';
 
 class ProfildosenPage extends StatefulWidget {
   const ProfildosenPage({super.key});
 
   @override
-  _ProfiledosenPageState createState() => _ProfildosenPageState();
+  _ProfildosenPageState createState() => _ProfildosenPageState();
 }
 
 class _ProfildosenPageState extends State<ProfildosenPage> {
   String searchQuery = '';
-  String selectedJurusan = 'All';
+  String selectedIdprodi = 'All';
+  late Future<List<Map<String, dynamic>>> _profilesFuture;
 
-  List<Map<String, String>> get filteredProfiles {
-    return profiles.where((profile) {
-      final matchesSearch = profile['name']!.toLowerCase().contains(searchQuery.toLowerCase());
-      final matchesJurusan = selectedJurusan == 'All' || profile['jurusan'] == selectedJurusan;
-      return matchesSearch && matchesJurusan;
-    }).toList();
-  }
+@override
+void initState() {
+  super.initState();
+  _profilesFuture = fetchProfiles();
+}
+
+Future<List<Map<String, dynamic>>> fetchProfiles() async {
+  var data = await api_data.getAllProfildosen();
+  return List<Map<String, dynamic>>.from(data.map((item) => {
+    'nama': item['nama'].toString()?? 'Unknown',
+    'imageurl': item['imageurl'].toString() ?? '',
+    'NIP': item['nip'].toString() ?? 'Unknown',
+    'NIDN': item['nidn'].toString() ?? 'Unknown',
+    'email': item['email'].toString() ?? 'Unknown',
+    'jabatan_fungsi': item['jabatan_fungsi'].toString() ?? 'Unknown',
+    'kepakaran': item['kepakaran'].toString() ?? 'Unknown',
+    'id_gscholar': item['id_gscholar'].toString() ?? 'Unknown',
+    'id_sinta': item['id_sinta'].toString() ?? 'Unknown',
+    'id_scopus': item['id_scopus'].toString() ?? 'Unknown',
+    'id_prodi': item['id_prodi'].toString() ?? 'Unknown',
+  }));
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +75,10 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
                 ),
                 const SizedBox(width: 10),
                 DropdownButton<String>(
-                  value: selectedJurusan,
+                  value: selectedIdprodi,
                   onChanged: (value) {
                     setState(() {
-                      selectedJurusan = value!;
+                      selectedIdprodi = value!;
                     });
                   },
                   items: [
@@ -84,52 +99,72 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
           ),
           const SizedBox(height: 30),
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(10.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-              ),
-              itemCount: filteredProfiles.length,
-              itemBuilder: (context, index) {
-                final profile = filteredProfiles[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfiledetailPage(
-                          name: profile['name']!,
-                          imageUrl: profile['imageUrl']!,
-                          NIP: profile['NIP']!,
-                          email: profile['email']!,
-                          jabatan: profile['jabatan']!,
-                          keahlian: profile['keahlian']!,
-                          googlescholar: profile['googlescholar'] ?? 'Unknown',
-                          sinta: profile['sinta'] ?? 'Unknown',
-                          scopus: profile['scopus'] ?? 'Unknown',
-                        ),
+          child: FutureBuilder<List<Map<String, dynamic>>>(
+            future: _profilesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No data available'));
+              } else {
+                List<Map<String, String>> profiles = List<Map<String, String>>.from(snapshot.data!);
+                var filteredProfiles = profiles.where((profile) {
+                  final matchesSearch = profile['nama']!.toLowerCase().contains(searchQuery.toLowerCase());
+                  final matchesIdprodi = selectedIdprodi == 'All' || profile['id_prodi'] == selectedIdprodi;
+                  return matchesSearch && matchesIdprodi;
+                }).toList();
+                return GridView.builder(
+                  padding: const EdgeInsets.all(10.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                  ),
+                  itemCount: filteredProfiles.length,
+                  itemBuilder: (context, index) {
+                    final profile = filteredProfiles[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfiledetailPage(
+                              nama: profile['nama']!,
+                              imageUrl: profile['imageurl']!,
+                              NIP: profile['NIP']!,
+                              NIDN: profile['NIDN']!,
+                              email: profile['email']!,
+                              jabatan_fungsi: profile['jabatan_fungsi']!,
+                              kepakaran: profile['kepakaran']!,
+                              id_gscholar: profile['id_gscholar'] ?? 'Unknown',
+                              id_sinta: profile['id_sinta'] ?? 'Unknown',
+                              id_scopus: profile['id_scopus'] ?? 'Unknown',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(profile['imageurl']!),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            profile['nama']!,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(profile['imageUrl']!),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        profile['name']!,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
                 );
-              },
-            ),
+              }
+            },
           ),
+        )
         ],
       ),
     );

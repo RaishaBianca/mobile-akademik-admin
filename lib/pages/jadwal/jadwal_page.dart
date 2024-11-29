@@ -21,7 +21,7 @@ class _JadwalPageState extends State<JadwalPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // automaticallyImplyLeading: false, // Disable back button
+        automaticallyImplyLeading: false, // Disable back button
         title: Text(
           'Jadwal',
           style: TextStyle(

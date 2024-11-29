@@ -40,6 +40,9 @@ dependencies:
   flutter_sales_graph: ^0.0.2
   http: ^1.2.2
   shared_preferences: ^2.3.2
+  url_launcher: ^6.0.20
+  flutter_pdfview: ^1.0.0+15
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +78,8 @@ flutter:
     - assets/images/Mei25.png
     - assets/images/Jun25.png
     - assets/images/Jul25.png
+    - assets/KALENDER-AKADEMIK-2024-2025.pdf
+    - assets/KALENDER-AKADEMIK-FIK-2024-2025.pdf
 #    - images/Des_24.png
 #    - images/Jan_25.png
 #    - images/Nov_24.png

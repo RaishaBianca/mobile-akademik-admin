@@ -83,7 +83,7 @@ class _MenungguPageState extends State<MenungguPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Terima');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                       content: Text('Berhasil menyimpan'),
@@ -92,7 +92,7 @@ class _MenungguPageState extends State<MenungguPage> {
                     );
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Tolak');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                       content: Text('Berhasil menyimpan'),

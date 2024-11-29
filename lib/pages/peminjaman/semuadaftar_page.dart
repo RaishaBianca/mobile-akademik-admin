@@ -72,17 +72,17 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   inputDate: peminjaman['tanggal'],
-                  studentNim: peminjaman['nim'],
+                  studentNim: peminjaman['nim_nrp'],
                   keterangan : peminjaman['keterangan'],
                   time: "${peminjaman['jam_mulai']} - ${peminjaman['jam_selesai']} WIB",
                   ruangan: peminjaman['ruangan'],
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Terima');
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Tolak');
                   },
                 );
               },

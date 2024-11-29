@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:admin_fik_app/data/dummy_report.dart';
 import 'package:admin_fik_app/pages/pelaporan/detailkendala_page.dart';
 
 class ReportCard extends StatelessWidget {

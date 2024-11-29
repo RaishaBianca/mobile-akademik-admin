@@ -21,10 +21,12 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
     selectedDay = _getDayOfWeek(DateTime.now());
     _jadwalFuture = fetchJadwal();
     getRuangan();
+    selectedDay = _getDayOfWeek(DateTime.now());
   }
 
   Future<void> getRuangan() async {
     var data = await api_data.getRuang('kelas');
+
     setState(() {
       ruanganList = List<Map<String, String>>.from(data.map((item) => {
         'id_ruangan': item['id_ruangan'].toString(),

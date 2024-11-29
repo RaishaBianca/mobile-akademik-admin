@@ -30,11 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (userData != null && mounted) {
       setState(() {
-        name = userData['nama'];
-        nim = userData['id'];
-        email = userData['email'];
-        profile = userData['profile'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-
+        name = userData['nama']!;
+        nim = userData['nim_nrp']!;
+        email = userData['email']!;
+        profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         isLoading = false;
       });
     } else {
@@ -47,11 +46,38 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Clear all stored data
-    Navigator.pushReplacement(
+    //await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+          (Route<dynamic> route) => false,
+    );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Keluar'),
+          content: const Text('Apakah yakin ingin keluar?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Batalkan'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _logout(); // Perform logout
+              },
+              child: const Text('Keluar'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -60,15 +86,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          'Profil',
-          style: TextStyle(
-            color: Color(0xFFFFFFFF),
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        title: const Text('Profil', style: TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        )),
+        backgroundColor: const Color(0xFFFF5833),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Set all icons to white
         ),
-        backgroundColor: Color(0xFFFF5833),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // Show loader if loading
@@ -95,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildProfileField(label: 'Email', value: email),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _logout,
+                onPressed: _showLogoutConfirmationDialog,
                 child: const Text('Logout'),
               ),
             ],
