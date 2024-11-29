@@ -63,6 +63,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
           children: [
             TabBar.secondary(
               controller: _tabController,
+              labelColor: Color(0xFFFF5833),
+              unselectedLabelColor: Colors.black,
               tabs: const <Widget>[
                 Tab(text: 'Peminjaman Lab'),
                 Tab(text: 'Peminjaman Kelas'),

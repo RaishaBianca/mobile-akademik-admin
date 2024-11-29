@@ -26,7 +26,7 @@ class _JadwalPageState extends State<JadwalPage> {
           'Jadwal',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),

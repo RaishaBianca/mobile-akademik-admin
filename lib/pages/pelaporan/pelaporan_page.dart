@@ -61,7 +61,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
           'Pelaporan Kendala/Kerusakan Ruangan',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -89,6 +89,8 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
           children: [
             TabBar.secondary(
               controller: _tabController,
+              labelColor: Color(0xFFFF5833),
+              unselectedLabelColor: Colors.black,
               tabs: const <Widget>[
                 Tab(text: 'Pelaporan Lab'),
                 Tab(text: 'Pelaporan Kelas'),

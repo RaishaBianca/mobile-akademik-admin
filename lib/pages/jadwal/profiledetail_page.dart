@@ -41,7 +41,7 @@ class ProfiledetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(nama, style: TextStyle(
-          fontSize: 18,
+          fontSize: 20,
           color: Color(0xFFFFFFFF),
           fontWeight: FontWeight.bold,
         ),),
@@ -69,8 +69,8 @@ class ProfiledetailPage extends StatelessWidget {
             SizedBox(height: 10),
             Table(
               columnWidths: {
-                0: FixedColumnWidth(160.0),
-                1: FlexColumnWidth(),
+                0: FixedColumnWidth(160.0), // Width for the first column
+                1: FlexColumnWidth(), // Flexible width for the second column
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
@@ -84,6 +84,10 @@ class ProfiledetailPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(NIP, style: TextStyle(fontSize: 14)),
                     ),
+                  ],
+                ),
+                TableRow(
+                  children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text('NIDN:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
@@ -104,7 +108,10 @@ class ProfiledetailPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: InkWell(
                         onTap: () => _launchURL('mailto:$email'),
-                        child: Text(email, style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline)),
+                        child: Text(
+                          email,
+                          style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline),
+                        ),
                       ),
                     ),
                   ],
@@ -141,11 +148,14 @@ class ProfiledetailPage extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: id_gscholar.contains('-')
+                      child: id_gscholar.isEmpty
                           ? Text(id_gscholar, style: TextStyle(fontSize: 14))
                           : InkWell(
                         onTap: () => _launchURL('https://scholar.google.com/citations?user=$id_gscholar'),
-                        child: Text(id_gscholar, style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline)),
+                        child: Text(
+                          id_gscholar,
+                          style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline),
+                        ),
                       ),
                     ),
                   ],
@@ -158,11 +168,14 @@ class ProfiledetailPage extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: id_sinta.contains('-')
+                      child: id_sinta.isEmpty
                           ? Text(id_sinta, style: TextStyle(fontSize: 14))
                           : InkWell(
                         onTap: () => _launchURL('https://sinta.kemdikbud.go.id/authors/profile/$id_sinta'),
-                        child: Text(id_sinta, style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline)),
+                        child: Text(
+                          id_sinta,
+                          style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline),
+                        ),
                       ),
                     ),
                   ],
@@ -175,17 +188,21 @@ class ProfiledetailPage extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: id_scopus.contains('-')
+                      child: id_scopus.isEmpty
                           ? Text(id_scopus, style: TextStyle(fontSize: 14))
                           : InkWell(
                         onTap: () => _launchURL('https://www.scopus.com/authid/detail.uri?authorId=$id_scopus'),
-                        child: Text(id_scopus, style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline)),
+                        child: Text(
+                          id_scopus,
+                          style: TextStyle(fontSize: 14, color: Colors.blue, decoration: TextDecoration.underline),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
+
           ],
         ),
       ),

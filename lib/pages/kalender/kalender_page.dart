@@ -50,7 +50,7 @@ class _KalenderPageState extends State<KalenderPage> with SingleTickerProviderSt
           'Kalender Akademik',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -61,15 +61,8 @@ class _KalenderPageState extends State<KalenderPage> with SingleTickerProviderSt
           children: [
             TabBar(
               controller: _tabController,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              labelStyle: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontFamily: 'Poppins',
-              ),
+              labelColor: Color(0xFFFF5833),
+              unselectedLabelColor: Colors.black,
               tabs: [
                 Tab(text: 'Universitas'),
                 Tab(text: 'Fakultas'),
