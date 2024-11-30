@@ -86,6 +86,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
         title: Text(
           "Detail Laporan Kendala",
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

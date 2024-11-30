@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final String base_url = 'https://e29f-112-215-171-253.ngrok-free.app/api/';
+final String base_url = 'https://02a6-180-252-92-160.ngrok-free.app/api/';
 late String endpoint;
 late SharedPreferences prefs;
 

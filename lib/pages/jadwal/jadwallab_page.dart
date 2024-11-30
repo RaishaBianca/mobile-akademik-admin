@@ -67,6 +67,7 @@ class _JadwallabPageState extends State<JadwallabPage> {
         title: Text(
           'Penggunaan Ruang Lab',
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     JadwalPage(),
     PeminjamanPage(),
     PelaporanPage(),
-    KalenderPage(),
+    //KalenderPage(),
     ProfilePage(),
   ];
 
@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ClassLeap',
+      title: 'Admin FIK: Lab-Kelas',
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -88,10 +88,10 @@ class _MyAppState extends State<MyApp> {
                   icon: Icon(Icons.warning_amber_rounded),
                   label: 'Pelaporan',
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_rounded),
-                  label: 'Kalender',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Icon(Icons.calendar_month_rounded),
+                //   label: 'Kalender',
+                // ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.account_circle_rounded),
                   label: 'Profil',

@@ -38,6 +38,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
         title: Text(
           'Daftar Sudah Dikonfirmasi',
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

@@ -52,7 +52,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
           'Peminjaman Ruangan',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),

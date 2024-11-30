@@ -67,6 +67,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
         title: Text(
           'Penggunaan Ruang Kelas',
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

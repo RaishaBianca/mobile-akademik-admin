@@ -65,6 +65,7 @@ class DetailpeminjamanPage extends StatefulWidget {
         title: Text(
           "Detail Peminjaman",
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

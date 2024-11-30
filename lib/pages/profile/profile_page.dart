@@ -88,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         title: const Text('Profil', style: TextStyle(
           color: Colors.white,
-          fontSize: 24,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
         )),
         backgroundColor: const Color(0xFFFF5833),

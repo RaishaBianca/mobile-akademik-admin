@@ -38,6 +38,7 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
         title: Text(
           'Daftar Laporan Kendala Dikerjakan',
           style: TextStyle(
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

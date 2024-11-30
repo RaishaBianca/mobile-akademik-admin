@@ -12,23 +12,27 @@ class ProfildosenPage extends StatefulWidget {
 
 class _ProfildosenPageState extends State<ProfildosenPage> {
   String searchQuery = '';
-  String selectedIdprodi = 'All';
+  String selectedProdi = 'All';
   late Future<List<Map<String, dynamic>>> _profilesFuture;
+  List<Map<String, dynamic>> profiles = [];
+  List<String> prodiList = ['All'];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _profilesFuture = fetchProfiles();
+    _profilesFuture = _fetchProfiles();
   }
 
-  Future<List<Map<String, dynamic>>> fetchProfiles() async {
+  Future<List<Map<String, dynamic>>> _fetchProfiles() async {
     var data = await api_data.getAllProfildosen();
-    return List<Map<String, dynamic>>.from(data.map((item) => {
+    profiles = List<Map<String, dynamic>>.from(data.map((item) => {
       'nama': item['nama'].toString() ?? 'Unknown',
       'imageurl': item['imageurl'].toString() ?? '',
       'NIP': item['nip'].toString() ?? 'Unknown',
       'NIDN': item['nidn'].toString() ?? 'Unknown',
       'email': item['email'].toString() ?? 'Unknown',
+      'jabatan': item['jabatan'].toString() ?? 'Unknown',
       'jabatan_fungsi': item['jabatan_fungsi'].toString() ?? 'Unknown',
       'kepakaran': item['kepakaran'].toString() ?? 'Unknown',
       'id_gscholar': item['id_gscholar'].toString() ?? 'Unknown',
@@ -36,6 +40,23 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
       'id_scopus': item['id_scopus'].toString() ?? 'Unknown',
       'id_prodi': item['id_prodi'].toString() ?? 'Unknown',
     }));
+    _extractProdiList();
+    return profiles;
+  }
+
+  void _extractProdiList() {
+    final prodiSet = profiles.map((profile) => profile['id_prodi'].toString()).toSet();
+    setState(() {
+      prodiList = ['All', ...prodiSet];
+    });
+  }
+
+  List<Map<String, dynamic>> get filteredProfiles {
+    return profiles.where((profile) {
+      final matchesSearch = profile['nama']!.toLowerCase().contains(searchQuery.toLowerCase());
+      final matchesProdi = selectedProdi == 'All' || profile['id_prodi'] == selectedProdi;
+      return matchesSearch && matchesProdi;
+    }).toList();
   }
 
   @override
@@ -43,10 +64,10 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Dosen Fakultas Ilmu Komputer',
+          'Dosen FIK',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -55,87 +76,88 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
           color: Colors.white, // Set all icons to white
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _profilesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No profiles found.'));
+          } else {
+            final profiles = filteredProfiles;
+            return Column(
               children: [
-                Expanded(
-                  child: CustomSearchBar(
-                    onSearch: (query) {
-                      setState(() {
-                        searchQuery = query;
-                      });
-                    },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomSearchBar(
+                          onSearch: (query) {
+                            setState(() {
+                              searchQuery = query;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        child: DropdownButton<String>(
+                          value: selectedProdi,
+                          isExpanded: true,
+                          items: prodiList.map((String value) {
+                            return DropdownMenuItem<String>(
+                                value: value,
+                                child: selectedProdi == value
+                                    ? Text(
+                                  value,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                                    : Flexible(child: Text(
+                                  value,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.visible,
+                                ))
+
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedProdi = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: selectedIdprodi,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedIdprodi = value!;
-                    });
-                  },
-                  items: [
-                    'All',
-                    'S1 Informatika',
-                    'S1 Sistem Informasi',
-                    'D3 Sistem Informasi',
-                    'S1 Sains Data',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 30),
-          Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: _profilesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No data available'));
-                } else {
-                  List<Map<String, String>> profiles = List<Map<String, String>>.from(snapshot.data!);
-                  var filteredProfiles = profiles.where((profile) {
-                    final matchesSearch = profile['nama']!.toLowerCase().contains(searchQuery.toLowerCase());
-                    final matchesIdprodi = selectedIdprodi == 'All' ||
-                        profile['id_prodi']!.toLowerCase().trim() == selectedIdprodi.toLowerCase().trim();
-                    return matchesSearch && matchesIdprodi;
-                  }).toList();
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
-                    ),
-                    itemCount: filteredProfiles.length,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: profiles.length,
                     itemBuilder: (context, index) {
-                      final profile = filteredProfiles[index];
-                      return GestureDetector(
+                      final profile = profiles[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(profile['imageurl'] ?? ''),
+                        ),
+                        title: Text(profile['nama'] ?? 'Unknown'),
+                        subtitle: Text(profile['jabatan'] ?? 'Unknown'),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProfiledetailPage(
-                                nama: profile['nama']!,
-                                imageUrl: profile['imageurl']!,
-                                NIP: profile['NIP']!,
-                                NIDN: profile['NIDN']!,
-                                email: profile['email']!,
-                                jabatan_fungsi: profile['jabatan_fungsi']!,
-                                kepakaran: profile['kepakaran']!,
+                                // id_prodi: profile['id_prodi'] ?? 'Unknown',
+                                nama: profile['nama'] ?? 'Unknown',
+                                imageUrl: profile['imageurl'] ?? "",
+                                NIP: profile['NIP'] ?? 'Unknown',
+                                NIDN: profile['NIDN'] ?? 'Unknown',
+                                email: profile['email'] ?? 'Unknown',
+                                // jabatan: profile['jabatan'] ?? 'Unknown',
+                                jabatan_fungsi: profile['jabatan_fungsi'] ?? 'Unknown',
+                                kepakaran: profile['kepakaran'] ?? 'Unknown',
                                 id_gscholar: profile['id_gscholar'] ?? 'Unknown',
                                 id_sinta: profile['id_sinta'] ?? 'Unknown',
                                 id_scopus: profile['id_scopus'] ?? 'Unknown',
@@ -143,27 +165,14 @@ class _ProfildosenPageState extends State<ProfildosenPage> {
                             ),
                           );
                         },
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(profile['imageurl']!),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              profile['nama']!,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
                       );
                     },
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
