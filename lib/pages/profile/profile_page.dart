@@ -14,7 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = '';
-  String nim = '';
+  // String nim = '';
   String email = '';
   String profile = '';
   bool isLoading = true; // Add this variable to track loading state
@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userData != null && mounted) {
       setState(() {
         name = userData['nama']!;
-        nim = userData['nim_nrp']!;
+        // nim = userData['nim_nrp']!;
         email = userData['email']!;
         profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         isLoading = false;
@@ -115,8 +115,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 20),
               _buildProfileField(label: 'Nama', value: name),
-              const SizedBox(height: 20),
-              _buildProfileField(label: 'NIM', value: nim),
+              // const SizedBox(height: 20),
+              // _buildProfileField(label: 'NIM', value: nim),
               const SizedBox(height: 20),
               _buildProfileField(label: 'Email', value: email),
               const SizedBox(height: 20),

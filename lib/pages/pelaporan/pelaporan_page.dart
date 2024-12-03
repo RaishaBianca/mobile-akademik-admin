@@ -58,7 +58,7 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
       appBar: AppBar(
         automaticallyImplyLeading: false, // Disable back button
         title: Text(
-          'Pelaporan Kendala/Kerusakan Ruangan',
+          'Pelaporan Kendala Ruang Lab dan Kelas',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
             fontSize: 20,

@@ -2,10 +2,9 @@ import 'package:admin_fik_app/pages/peminjaman/menunggu_page.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
 import 'package:admin_fik_app/customstyle/buttonreject.dart';
-// import 'package:admin_fik_app/data/dummy_data.dart'; // Ganti dengan path yang sesuai
-import 'package:admin_fik_app/data/api_data.dart' as api_data; // Ganti dengan path yang sesuai
+import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
-const List<String> list = <String>['Terima', 'Tolak'];
+const List<String> list = <String>['disetujui', 'ditolak'];
 class DetailpeminjamanPage extends StatefulWidget {
   final int id;
   final String studentName;
@@ -41,9 +40,10 @@ class DetailpeminjamanPage extends StatefulWidget {
   TextEditingController reasonController = TextEditingController();
 
   Future<void> _handlePost() async {
-    api_data.verifikasiPeminjaman(
+    await api_data.verifikasiPeminjaman(
       widget.id.toString(),
       statusDropdown,
+      reasonController.text,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(

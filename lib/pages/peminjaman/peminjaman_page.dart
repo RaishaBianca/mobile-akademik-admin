@@ -49,7 +49,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Peminjaman Ruangan',
+          'Peminjaman Ruang Lab dan Kelas',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
             fontSize: 20,

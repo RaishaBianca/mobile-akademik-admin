@@ -26,7 +26,7 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, status);
+    int statusCode = await api_data.verifikasiPeminjaman(id, status, '');
     if (statusCode == 200) {
       print('Peminjaman $id $status');
       setState(() {
@@ -80,10 +80,10 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Terima');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Tolak');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
                   },
                 );
               },

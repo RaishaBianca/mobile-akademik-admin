@@ -30,8 +30,8 @@ class _MenungguPageState extends State<MenungguPage> {
     return peminjaman.where((peminjaman) => peminjaman['status'] == 'menunggu').toList();
   }
 
-  Future<int> verifikasiPeminjaman(String id, String status) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, status);
+  Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan) async {
+    int statusCode = await api_data.verifikasiPeminjaman(id, status, alasanPenolakan);
     if (statusCode == 200) {
       print('Peminjaman $id $status');
       setState(() {
@@ -84,20 +84,20 @@ class _MenungguPageState extends State<MenungguPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Terima');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui', '');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                      content: Text('Berhasil menyimpan'),
-                      duration: Duration(seconds: 2),
+                        content: Text('Berhasil menyimpan'),
+                        duration: Duration(seconds: 2),
                       ),
                     );
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'Tolak');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak', 'Alasan penolakan belum diisi');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                      content: Text('Berhasil menyimpan'),
-                      duration: Duration(seconds: 2),
+                        content: Text('Berhasil menyimpan'),
+                        duration: Duration(seconds: 2),
                       ),
                     );
                   },

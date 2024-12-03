@@ -1,11 +1,8 @@
 import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombutton.dart';
-import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwallab_page.dart';
-import 'package:admin_fik_app/pages/jadwal/profildosen_page.dart';
-
 import 'package:flutter_sales_graph/flutter_sales_graph.dart';
 
 class JadwalPage extends StatefulWidget {
@@ -31,23 +28,6 @@ class _JadwalPageState extends State<JadwalPage> {
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
-        //   child: Container(
-        //     color: Colors.transparent,
-        //     child: Container(
-        //       height: 4.0,
-        //       decoration: BoxDecoration(
-        //         border: Border(
-        //           bottom: BorderSide(
-        //             color: Color(0xFFFFBE33), // Color of the bottom border
-        //             width: 2.0, // Width of the bottom border
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
       body: SafeArea(
         child: Column(
@@ -88,21 +68,6 @@ class _JadwalPageState extends State<JadwalPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ), // Tutup Row
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonTwo(
-                              label: 'Lihat Profil Dosen',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ProfildosenPage()),
                                 );
                               },
                             ),

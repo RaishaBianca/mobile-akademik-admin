@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final String base_url = 'https://02a6-180-252-92-160.ngrok-free.app/api/';
+final String base_url = 'https://ed65-180-252-89-111.ngrok-free.app/api/';
 late String endpoint;
 late SharedPreferences prefs;
 
@@ -135,12 +135,16 @@ Future<Map<String, dynamic>> getKendalaCount() async {
   }
 }
 
-Future<int> verifikasiPeminjaman(String id, String status) async {
+Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan) async {
   endpoint = 'peminjaman/verifikasi';
   var url = Uri.parse(base_url + endpoint);
+  print(id);
+  print(status);
+  print(alasanPenolakan);
   var response = await http.post(url, body: {
     'id': id,
     'status': status,
+    'alasan_penolakan': alasanPenolakan,
   }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
