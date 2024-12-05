@@ -26,7 +26,7 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, status, '');
+    int statusCode = await api_data.verifikasiPeminjaman(id, status, '', '', '', '');
     if (statusCode == 200) {
       print('Peminjaman $id $status');
       setState(() {

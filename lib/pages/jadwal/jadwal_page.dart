@@ -42,7 +42,7 @@ class _JadwalPageState extends State<JadwalPage> {
                       crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
                       children: [
                         Text(
-                          'Jadwal Penggunaan Ruangan FIK UPN Veteran Jakarta',
+                          'Jadwal Penggunaan Ruang Lab dan Kelas FIK UPN Veteran Jakarta',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
                             fontSize: 18,

@@ -155,16 +155,16 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                           child: Row(
                             children: [
                               JamCard(
-                                jamMulai: jadwal['jamMulai']!,
-                                jamSelesai: jadwal['jamSelesai']!,
+                                jamMulai: jadwal['jamMulai']??'Unknown',
+                                jamSelesai: jadwal['jamSelesai']??'Unknown',
                               ),
                               SizedBox(width: 10),
                               JadwalCard(
-                                namaMatkul: jadwal['namaMatkul']!,
-                                kodeMatkul: jadwal['kodeMatkul']!,
-                                namaDosen: jadwal['namaDosen']!,
-                                kodeDosen: jadwal['kodeDosen']!,
-                                ruangan: jadwal['id_ruang']!,
+                                namaMatkul: jadwal['namaMatkul']??'Unknown',
+                                kodeMatkul: jadwal['kodeMatkul']??'Unknown',
+                                namaDosen: jadwal['namaDosen']??'Unknown',
+                                kodeDosen: jadwal['kodeDosen']??'Unknown',
+                                ruangan: jadwal['id_ruang']??'Unknown',
                               ),
                             ],
                           ),

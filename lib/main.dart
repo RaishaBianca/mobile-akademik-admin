@@ -6,6 +6,8 @@ import 'package:admin_fik_app/pages/peminjaman/peminjaman_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
 import 'package:admin_fik_app/pages/profile/profile_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
+// import 'pusher_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +21,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // late PusherService pusherService;
   int _selectedIndex = 0; // Menyimpan indeks halaman yang dipilih
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   pusherService = PusherService();
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   pusherService.disconnect();
+  //   super.dispose();
+  // }
 
   // Daftar halaman yang ditampilkan berdasarkan indeks
   final List<Widget> _pages = [
@@ -29,7 +44,6 @@ class _MyAppState extends State<MyApp> {
     ProfilePage(),
   ];
 
-  // Fungsi untuk mengganti halaman saat tombol BottomNavigationBar diklik
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -38,7 +52,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<bool> _onWillPop() async {
     // Exit the app when back button is pressed
-    return true;
+    SystemNavigator.pop();
+    return false;
   }
 
   @override

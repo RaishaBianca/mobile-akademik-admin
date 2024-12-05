@@ -1,9 +1,11 @@
 import 'package:admin_fik_app/pages/authentication/welcome_screen.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
+import 'package:admin_fik_app/pages/profile/editprofile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,10 +16,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = '';
-  // String nim = '';
   String email = '';
   String profile = '';
   bool isLoading = true; // Add this variable to track loading state
+  File? image;
 
   @override
   void initState() {
@@ -31,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userData != null && mounted) {
       setState(() {
         name = userData['nama']!;
-        // nim = userData['nim_nrp']!;
         email = userData['email']!;
         profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         isLoading = false;
@@ -81,6 +82,21 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _navigateToEditProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfilePage(
+          name: name,
+          email: email,
+          profile: profile,
+        ),
+      ),
+    ).then((_) {
+      _fetchUserData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +135,20 @@ class _ProfilePageState extends State<ProfilePage> {
               // _buildProfileField(label: 'NIM', value: nim),
               const SizedBox(height: 20),
               _buildProfileField(label: 'Email', value: email),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfilePage(
+                      name: name,
+                      email: email,
+                      profile: profile,
+                    )),
+                  );
+                },
+                child: const Text('Edit Profil'),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _showLogoutConfirmationDialog,

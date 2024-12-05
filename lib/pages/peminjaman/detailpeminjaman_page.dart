@@ -5,6 +5,8 @@ import 'package:admin_fik_app/customstyle/buttonreject.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 const List<String> list = <String>['disetujui', 'ditolak'];
+const List<String> roomTypes = <String>['lab', 'kelas'];
+
 class DetailpeminjamanPage extends StatefulWidget {
   final int id;
   final String studentName;
@@ -16,6 +18,7 @@ class DetailpeminjamanPage extends StatefulWidget {
   final String jamSelesai;
   final String jumlahPengguna;
   final String keterangan;
+  final bool isAccepted;
 
   const DetailpeminjamanPage({
     Key? key,
@@ -29,37 +32,76 @@ class DetailpeminjamanPage extends StatefulWidget {
     required this.jamSelesai,
     required this.jumlahPengguna,
     required this.keterangan,
-    required bool isAccepted, required String time,
+    required this.isAccepted, required String time,
   }) : super(key: key);
+
   @override
   _DetailpeminjamanPageState createState() => _DetailpeminjamanPageState();
-  }
-  
-  class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
+}
+
+class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
   String statusDropdown = list.first;
+  String selectedRoomType = roomTypes.first;
+  String? selectedRoom;
+  List<Map<String, String>> ruanganList = [];
+  bool isLoadingRuangan = false;
   TextEditingController reasonController = TextEditingController();
+  TextEditingController jamMulaiController = TextEditingController();
+  TextEditingController jamSelesaiController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    jamMulaiController.text = widget.jamMulai;
+    jamSelesaiController.text = widget.jamSelesai;
+    selectedRoom = widget.ruangan;
+    getRuangan(selectedRoomType);
+  }
+
+  Future<void> getRuangan(String roomType) async {
+    setState(() {
+      isLoadingRuangan = true;
+    });
+
+    var data = await api_data.getRuang(roomType);
+
+    setState(() {
+      ruanganList = List<Map<String, String>>.from(data.map((item) => {
+        'id_ruangan': item['id_ruangan'].toString(),
+        'nama_ruangan': item['nama_ruangan'].toString(),
+      }));
+      isLoadingRuangan = false;
+
+      // Ensure selectedRoom is in the list
+      if (!ruanganList.any((room) => room['id_ruangan'] == selectedRoom)) {
+        selectedRoom = null;
+      }
+    });
+  }
 
   Future<void> _handlePost() async {
     await api_data.verifikasiPeminjaman(
       widget.id.toString(),
       statusDropdown,
       reasonController.text,
+      jamMulaiController.text,
+      jamSelesaiController.text,
+      selectedRoom ?? '',
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-      content: Text('Berhasil menyimpan'),
-      duration: Duration(seconds: 2),
+        content: Text('Berhasil menyimpan'),
+        duration: Duration(seconds: 2),
       ),
     );
-    //close widget
+    // Close widget
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -76,15 +118,24 @@ class DetailpeminjamanPage extends StatefulWidget {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildRowWithDivider('Nama', widget.studentName),
               buildRowWithDivider('NIM', widget.studentNim),
               buildRowWithDivider('Tgl Input', widget.inputDate),
-              buildRowWithDivider('Ruangan', widget.ruangan),
+              buildDropdownRow('Tipe Ruang', roomTypes, selectedRoomType, (String? newValue) {
+                setState(() {
+                  selectedRoomType = newValue!;
+                  getRuangan(selectedRoomType);
+                });
+              }, false),
+              buildDropdownRow('Ruang', ruanganList.map((room) => room['id_ruangan']!).toList(), selectedRoom, (String? newValue) {
+                setState(() {
+                  selectedRoom = newValue;
+                });
+              }, isLoadingRuangan),
               buildRowWithDivider('Tgl Peminjaman', widget.bookDate),
-              buildRowWithDivider('Jam Mulai', widget.jamMulai),
-              buildRowWithDivider('Jam Selesai', widget.jamSelesai),
+              buildEditableRow('Jam Mulai', jamMulaiController),
+              buildEditableRow('Jam Selesai', jamSelesaiController),
               buildRowWithDivider('Jml Pengguna', widget.jumlahPengguna),
               buildRowWithDivider('Keterangan', widget.keterangan),
               SizedBox(height: 16),
@@ -138,22 +189,89 @@ class DetailpeminjamanPage extends StatefulWidget {
                     label: 'Simpan',
                     onPressed: () {
                       _handlePost();
-                      // print("id: ${widget.id}");
                     },
                   ),
-                  // SizedBox(width: 40),
-                  // ButtonReject(
-                  //   label: 'Tolak',
-                  //   onPressed: () {
-                  //     print("Ditolak dengan alasan: ${reasonController.text}");
-                  //   },
-                  // ),
                 ],
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildEditableRow(String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 160,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: TextFormField(
+                controller: controller,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Divider(color: Color(0x99FF5833)),
+      ],
+    );
+  }
+
+  Widget buildDropdownRow(String label, List<String> items, String? selectedItem, ValueChanged<String?> onChanged, bool isLoading) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 160,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: DropdownButton<String>(
+                value: selectedItem,
+                hint: Text("Pilih", style: TextStyle(color: Colors.black)),
+                items: items.map((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                onChanged: isLoading ? null : onChanged,
+                dropdownColor: Color(0xFFFFBE33),
+                underline: SizedBox(),
+              ),
+            ),
+          ],
+        ),
+        Divider(color: Color(0x99FF5833)),
+      ],
     );
   }
 
@@ -178,7 +296,6 @@ class DetailpeminjamanPage extends StatefulWidget {
                 value,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.normal,
                 ),
               ),
             ),

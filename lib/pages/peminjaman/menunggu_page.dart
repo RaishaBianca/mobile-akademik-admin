@@ -30,8 +30,8 @@ class _MenungguPageState extends State<MenungguPage> {
     return peminjaman.where((peminjaman) => peminjaman['status'] == 'menunggu').toList();
   }
 
-  Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, status, alasanPenolakan);
+  Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan, String jamMulai, String jamSelesai, String idRuang) async {
+    int statusCode = await api_data.verifikasiPeminjaman(id, status, alasanPenolakan, jamMulai, jamSelesai, idRuang);
     if (statusCode == 200) {
       print('Peminjaman $id $status');
       setState(() {
@@ -84,7 +84,7 @@ class _MenungguPageState extends State<MenungguPage> {
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui', '');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui', '', '', '', '');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Berhasil menyimpan'),
@@ -93,7 +93,13 @@ class _MenungguPageState extends State<MenungguPage> {
                     );
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak', 'Alasan penolakan belum diisi');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(),
+                        'ditolak',
+                        'Alasan penolakan belum diisi',
+                        peminjaman['jam_mulai'] ?? '',
+                        peminjaman['jam_selesai'] ?? '',
+                        peminjaman['id_ruang'] ?? '',
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Berhasil menyimpan'),
