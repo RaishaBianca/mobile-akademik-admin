@@ -67,7 +67,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
         title: Text(
           'Penggunaan Ruang Kelas',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -95,7 +95,7 @@ class _JadwalkelasPageState extends State<JadwalkelasPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Ruang Kelas: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text("Ruang Kelas: ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(

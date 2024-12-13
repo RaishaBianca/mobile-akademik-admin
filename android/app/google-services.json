@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "478482507446",
-    "project_id": "claeapthesis",
-    "storage_bucket": "claeapthesis.appspot.com"
+    "project_number": "999521686248",
+    "project_id": "fikmobileadmin",
+    "storage_bucket": "fikmobileadmin.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:478482507446:android:cc76596a3ba5c5d05aa817",
+        "mobilesdk_app_id": "1:999521686248:android:4948e5690f5f23347e2f5d",
         "android_client_info": {
-          "package_name": "com.example.class_leap"
+          "package_name": "com.example.admin_fik_app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB_n1_uHwaWw8Qk5KLB_cppwjOWAgMJgRE"
+          "current_key": "AIzaSyDoZvYLeYpNy_295npikgaOG4OOXCMpL-U"
         }
       ],
       "services": {

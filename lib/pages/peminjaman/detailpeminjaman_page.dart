@@ -107,7 +107,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
         title: Text(
           "Detail Peminjaman",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -211,7 +211,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -248,7 +248,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -286,7 +286,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -295,7 +295,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                 ),
               ),
             ),

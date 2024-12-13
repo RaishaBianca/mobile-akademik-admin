@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         title: const Text('Profil', style: TextStyle(
           color: Colors.white,
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
         )),
         backgroundColor: const Color(0xFFFF5833),
@@ -167,11 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
         ),
         Text(
           value,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 12),
         ),
       ],
     );

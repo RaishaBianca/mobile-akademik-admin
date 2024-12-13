@@ -15,8 +15,8 @@ class CustomButtonOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 180,
-      height: 80, // Update tinggi untuk menampung subText jika ada
+      width: double.infinity,
+      height: 100, // Update tinggi untuk menampung subText jika ada
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -34,7 +34,7 @@ class CustomButtonOne extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).elevatedButtonTheme.style?.textStyle?.resolve({}) ??
                   const TextStyle( // Fallback text style jika tidak ada di tema
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

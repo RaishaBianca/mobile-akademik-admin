@@ -52,7 +52,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
           'Peminjaman Ruang Lab dan Kelas',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -85,7 +85,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               'Peminjaman Ruang Lab Komputer FIK',
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -93,25 +93,30 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Peminjaman Baru',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => MenungguPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labBaru.toString(),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Peminjaman Baru',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => MenungguPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labBaru.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Terkonfirmasi',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labTerkonfirmasi.toString(),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Terkonfirmasi',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labTerkonfirmasi.toString(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -119,14 +124,16 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonTwo(
-                                  label: 'Lihat Semua Daftar',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'lab')),
-                                    );
-                                  },
+                                Expanded(
+                                  child: CustomButtonTwo(
+                                    label: 'Lihat Semua Daftar',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'lab')),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -135,7 +142,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               'Statistika Peminjaman Lab Komputer FIK',
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -157,7 +164,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               'Peminjaman Ruang Kelas Komputer FIK',
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -165,25 +172,30 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Peminjaman Baru',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => MenungguPage(room: 'kelas')),
-                                    );
-                                  },
-                                  subText: kelasBaru.toString(),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Peminjaman Baru',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => MenungguPage(room: 'kelas')),
+                                      );
+                                    },
+                                    subText: kelasBaru.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Terkonfirmasi',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'kelas')),
-                                    );
-                                  },
-                                  subText: kelasTerkonfirmasi.toString(),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Terkonfirmasi',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'kelas')),
+                                      );
+                                    },
+                                    subText: kelasTerkonfirmasi.toString(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -191,14 +203,16 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonTwo(
-                                  label: 'Lihat Semua Daftar',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'kelas')),
-                                    );
-                                  },
+                                Expanded(
+                                  child: CustomButtonTwo(
+                                    label: 'Lihat Semua Daftar',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'kelas')),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -207,7 +221,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                               'Statistika Peminjaman Ruang Kelas FIK',
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

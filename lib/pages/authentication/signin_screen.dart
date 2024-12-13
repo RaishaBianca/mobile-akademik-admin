@@ -98,7 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Text(
                         'Selamat Datang Kembali',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 24.0,
                           fontWeight: FontWeight.w900,
                           color: lightColorScheme.primary,
                         ),
@@ -115,9 +115,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Email atau NIM'),
+                          label: const Text('Email atau NIM', style: TextStyle(fontSize: 14)),
                           hintText: 'Tolong Masukkan Email/NIM Anda',
                           hintStyle: const TextStyle(
+                            fontSize: 14,
                             color: Colors.black26,
                           ),
                           border: OutlineInputBorder(
@@ -148,9 +149,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Kata Sandi'),
+                          label: const Text('Kata Sandi', style: TextStyle(fontSize: 14)),
                           hintText: 'Masukkan kata sandi Anda',
                           hintStyle: const TextStyle(
+                            fontSize: 14,
                             color: Colors.black26,
                           ),
                           border: OutlineInputBorder(

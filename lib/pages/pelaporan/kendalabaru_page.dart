@@ -38,7 +38,7 @@ class _KendalabaruPageState extends State<KendalabaruPage> {
         title: Text(
           'Daftar Laporan Kendala Baru',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

@@ -51,7 +51,7 @@ class _MenungguPageState extends State<MenungguPage> {
         title: Text(
           'Daftar Belum Dikonfirmasi',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

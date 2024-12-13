@@ -12,7 +12,7 @@ class CustomButtonTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 360,
+      width: double.infinity,
       height: 60,
       child: ElevatedButton(
         onPressed: onPressed,
@@ -28,7 +28,7 @@ class CustomButtonTwo extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context).elevatedButtonTheme.style?.textStyle?.resolve({}) ??
               const TextStyle( // Fallback text style jika tidak ada di tema
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

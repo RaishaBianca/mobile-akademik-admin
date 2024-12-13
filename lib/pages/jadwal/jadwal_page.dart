@@ -23,7 +23,7 @@ class _JadwalPageState extends State<JadwalPage> {
           'Jadwal',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -45,31 +45,36 @@ class _JadwalPageState extends State<JadwalPage> {
                           'Jadwal Penggunaan Ruang Lab dan Kelas FIK UPN Veteran Jakarta',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 20), // Jarak antara teks dan tombol
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            CustomButton(
-                              label: 'Lihat Jadwal Lab Komputer',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => JadwallabPage()),
-                                );
-                              },
+                            Expanded(
+                              child: CustomButton(
+                                label: 'Lihat Jadwal Lab Komputer',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => JadwallabPage()),
+                                  );
+                                },
+                              ),
                             ),
-                            CustomButton(
-                              label: 'Lihat Jadwal Ruang Kelas',
-                              onPressed: () {
-                                Navigator.push(
+                            SizedBox(width: 10), // Add some space between the buttons
+                            Expanded(
+                              child: CustomButton(
+                                label: 'Lihat Jadwal Ruang Kelas',
+                                onPressed: () {
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -78,7 +83,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           'Statistika Kepadatan Penggunaan Ruangan Lab Komputer FIK',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -89,7 +94,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           'Statistika Kepadatan Penggunaan Ruangan Kelas FIK',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -38,7 +38,7 @@ class _KendalaselesaiPageState extends State<KendalaselesaiPage> {
         title: Text(
           'Daftar Laporan Kendala Selesai',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

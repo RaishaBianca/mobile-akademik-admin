@@ -7,9 +7,20 @@ import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
 import 'package:admin_fik_app/pages/profile/profile_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:admin_fik_app/data/firebase_options.dart';
 // import 'pusher_service.dart';
 
-void main() {
+// void main() {
+//   runApp(const MyApp());
+// }
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    name: 'admin-fik-app',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

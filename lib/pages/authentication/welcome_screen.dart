@@ -28,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                       TextSpan(
                         text: 'Selamat Datang di ClassLeap\n',
                         style: TextStyle(
-                          fontSize: 45.0,
+                          fontSize: 36.0,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                         text:
                         '\nSolusi lengkap untuk manajemen Laboratorium dan Ruang Kelas Anda',
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 16.0,
                           color: Colors.white,
                         ),
                       ),
@@ -50,7 +50,7 @@ class WelcomeScreen extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Align(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.centerRight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

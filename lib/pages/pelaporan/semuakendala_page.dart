@@ -38,7 +38,7 @@ class _SemuakendalaPageState extends State<SemuakendalaPage> {
         title: Text(
           'Semua Daftar Laporan Kendala',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

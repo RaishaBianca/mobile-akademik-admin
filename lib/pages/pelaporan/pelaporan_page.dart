@@ -34,21 +34,20 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
   void dispose() {
     _tabController.dispose();
     super.dispose();
-
   }
 
   Future<void> _fetchKendalaCount() async {
-     var countData = await api_data.getKendalaCount();
-     setState(() {
-        labsemua = countData['lab_semua'];
-        labbaru = countData['lab_baru'];
-        labdikerjakan = countData['lab_dikerjakan'];
-        labselesai = countData['lab_selesai'];
-        kelassemua = countData['kelas_semua'];
-        kelasbaru = countData['kelas_baru'];
-        kelasdikerjakan = countData['kelas_dikerjakan'];
-        kelasselesai = countData['kelas_selesai'];
-     });
+    var countData = await api_data.getKendalaCount();
+    setState(() {
+      labsemua = countData['lab_semua'];
+      labbaru = countData['lab_baru'];
+      labdikerjakan = countData['lab_dikerjakan'];
+      labselesai = countData['lab_selesai'];
+      kelassemua = countData['kelas_semua'];
+      kelasbaru = countData['kelas_baru'];
+      kelasdikerjakan = countData['kelas_dikerjakan'];
+      kelasselesai = countData['kelas_selesai'];
+    });
   }
 
   @override
@@ -56,33 +55,16 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable back button
+        automaticallyImplyLeading: false,
         title: Text(
           'Pelaporan Kendala Ruang Lab dan Kelas',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
-        //   child: Container(
-        //     color: Colors.transparent,
-        //     child: Container(
-        //       height: 4.0,
-        //       decoration: BoxDecoration(
-        //         border: Border(
-        //           bottom: BorderSide(
-        //             color: Color(0xFFFFBE33), // Color of the bottom border
-        //             width: 2.0, // Width of the bottom border
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
       body: SafeArea(
         child: Column(
@@ -101,168 +83,185 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                 controller: _tabController,
                 children: <Widget>[
                   Card(
-                    // margin: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Pelaporan Ruang Lab Komputer FIK',
-                              textAlign: TextAlign.left, // Teks rata kiri
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            SizedBox(height: 20),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Laporan Baru',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => KendalabaruPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labbaru.toString(),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Baru',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => KendalabaruPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labbaru.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Laporan Dikerjakan',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labdikerjakan.toString(),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Dikerjakan',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labdikerjakan.toString(),
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            SizedBox(height: 20),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Laporan Selesai',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labselesai.toString(),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Selesai',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labselesai.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Semua Laporan',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'lab')),
-                                    );
-                                  },
-                                  subText: labsemua.toString(),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Semua Laporan',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'lab')),
+                                      );
+                                    },
+                                    subText: labsemua.toString(),
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 30), // Jarak antara tombol dan teks baru
+                            SizedBox(height: 30),
                             Text(
                               'Statistika Pelaporan Lab Komputer FIK',
-                              textAlign: TextAlign.left, // Teks rata kiri
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            BarChart(room: 'lab', type: 'kendala',),
+                            SizedBox(height: 10),
+                            BarChart(room: 'lab', type: 'kendala'),
                           ],
                         ),
                       ),
                     ),
                   ),
                   Card(
-                    // margin: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Pelaporan Ruang Kelas FIK',
-                              textAlign: TextAlign.left, // Teks rata kiri
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10), // Jarak antara teks dan gambar grafik
-                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            SizedBox(height: 20),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Laporan Baru',
-                                  onPressed: () {
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Baru',
+                                    onPressed: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context) => KendalabaruPage(room: 'kelas')),
                                       );
-                                  },
-                                  subText: kelasbaru.toString(), // Angka tambahan di bawah label
+                                    },
+                                    subText: kelasbaru.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Laporan Dikerjakan',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'kelas')),
-                                    );
-                                  },
-                                  subText: kelasdikerjakan.toString(), // Angka tambahan di bawah label
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Dikerjakan',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => KendaladikerjakanPage(room: 'kelas')),
+                                      );
+                                    },
+                                    subText: kelasdikerjakan.toString(),
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20), // Jarak antara teks dan tombol
+                            SizedBox(height: 20),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CustomButtonOne(
-                                  label: 'Laporan Selesai',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'kelas')),
-                                    );
-                                  },
-                                  subText: kelasselesai.toString(), // Angka tambahan di bawah label
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Laporan Selesai',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => KendalaselesaiPage(room: 'kelas')),
+                                      );
+                                    },
+                                    subText: kelasselesai.toString(),
+                                  ),
                                 ),
-                                CustomButtonOne(
-                                  label: 'Semua Laporan',
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'kelas')),
-                                    );
-                                  },
-                                  subText: kelassemua.toString(), // Angka tambahan di bawah label
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButtonOne(
+                                    label: 'Semua Laporan',
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => SemuakendalaPage(room: 'kelas')),
+                                      );
+                                    },
+                                    subText: kelassemua.toString(),
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 30), // Jarak antara tombol dan teks baru
+                            SizedBox(height: 30),
                             Text(
                               'Statistika Pelaporan Ruang Kelas FIK',
-                              textAlign: TextAlign.left, // Teks rata kiri
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10), // Jarak antara teks dan gambar grafik
+                            SizedBox(height: 10),
                             BarChart(room: 'kelas', type: 'kendala'),
                           ],
                         ),
@@ -272,12 +271,6 @@ class _PelaporanPageState extends State<PelaporanPage> with SingleTickerProvider
                 ],
               ),
             ),
-            // Expanded(
-            //   child: Container(
-            //     color: Colors.white, // Warna putih untuk konten utama
-            //     child: 
-            //   ),
-            // ),
           ],
         ),
       ),

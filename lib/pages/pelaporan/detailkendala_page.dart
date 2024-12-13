@@ -86,7 +86,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
         title: Text(
           "Detail Laporan Kendala",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -110,7 +110,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                 SizedBox(height: 16),
                 Text(
                   'Keterangan Pengerjaan:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -202,7 +202,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -211,7 +211,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
               ),
