@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:http_parser/http_parser.dart';
 
-final String base_url = 'https://df6e-125-161-90-127.ngrok-free.app/api/';
+final String base_url = 'https://9e19-103-147-92-254.ngrok-free.app/api/';
 late String endpoint;
 late SharedPreferences prefs;
 

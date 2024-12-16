@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/pages/authentication/welcome_screen.dart';
 import 'package:admin_fik_app/pages/authentication/signin_screen.dart';
@@ -21,6 +22,8 @@ void main() async{
     name: 'admin-fik-app',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print(fcmToken);
   runApp(const MyApp());
 }
 
