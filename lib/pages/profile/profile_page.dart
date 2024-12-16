@@ -27,9 +27,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     final accessToken = prefs.getString('access_token');
-    
+
     if (accessToken != null) {
       try {
         final response = await http.get(
@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
             'ngrok-skip-browser-warning': '69420',
           },
         );
-    
+
 
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body);
@@ -96,35 +96,35 @@ class _ProfilePageState extends State<ProfilePage> {
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // Show loader if loading
           : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      // backgroundImage: AssetImage('images/bg1.png'),
-                      backgroundImage: Image.network(profile ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      name,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'Nama', value: name),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'NIM', value: nim),
-                    const SizedBox(height: 20),
-                    _buildProfileField(label: 'Email', value: email),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _logout,
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                // backgroundImage: AssetImage('images/bg1.png'),
+                backgroundImage: Image.network(profile ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png').image,
               ),
-            ),
+              const SizedBox(height: 20),
+              Text(
+                name,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Nama', value: name),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'NIM', value: nim),
+              const SizedBox(height: 20),
+              _buildProfileField(label: 'Email', value: email),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout,
+                child: const Text('Logout'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MonthCard extends StatelessWidget {
-  final String month;
-  final String imagePath;
-  final String description;
+  final String kegiatan;
+  final String tgl_mulai;
+  final String tgl_selesai;
 
   const MonthCard({
     Key? key,
-    required this.month,
-    required this.imagePath,
-    required this.description,
+    required this.kegiatan,
+    required this.tgl_mulai,
+    required this.tgl_selesai,
   }) : super(key: key);
 
   @override
@@ -17,34 +17,15 @@ class MonthCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          month,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color(0xFFFF5833),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 10),
-        Container(
-          height: 100,
-          width: double.infinity,
-          child: Image.asset(
-            imagePath,
-            fit: BoxFit.cover,
-          ),
-        ),
         SizedBox(height: 10),
         Text(
-          description,
+          "$tgl_mulai - $tgl_selesai : $kegiatan,",
           textAlign: TextAlign.left,
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 36),
       ],
     );
   }

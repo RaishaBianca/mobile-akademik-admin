@@ -241,3 +241,19 @@ Future<List> getKendalaStatistik(String room) async {
   // print(responseBody['data']);
   return responseBody['data'];
 }
+
+Future<Map<String, List<Map<String, dynamic>>>> getKalender() async {
+  endpoint = 'kalender';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> responseBody = json.decode(response.body);
+    return responseBody.map((key, value) => MapEntry(
+        key,
+        List<Map<String, dynamic>>.from(value.map((item) => Map<String, dynamic>.from(item)))
+    ));
+  } else {
+    throw Exception('Failed to load kalender data');
+  }
+}
