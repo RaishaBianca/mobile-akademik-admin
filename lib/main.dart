@@ -10,21 +10,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:admin_fik_app/data/firebase_options.dart';
-// import 'pusher_service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:admin_fik_app/data/api_data.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     name: 'admin-fik-app',
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print(fcmToken);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message: ${message.messageId}');
 }
 
 class MyApp extends StatefulWidget {
@@ -35,21 +37,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // late PusherService pusherService;
   int _selectedIndex = 0; // Menyimpan indeks halaman yang dipilih
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   pusherService = PusherService();
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   pusherService.disconnect();
-  //   super.dispose();
-  // }
-
   // Daftar halaman yang ditampilkan berdasarkan indeks
   final List<Widget> _pages = [
     JadwalPage(),
@@ -68,6 +56,46 @@ class _MyAppState extends State<MyApp> {
     // Exit the app when back button is pressed
     SystemNavigator.pop();
     return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance.getToken().then((token) {
+      print('FCM Token: $token');
+      saveTokenToServer(token);
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        // Show a dialog or a snackbar
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(message.notification!.title ?? 'Notification'),
+            content: Text(message.notification!.body ?? 'No body'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      // Handle the notification tap
+      setState(() {
+        _selectedIndex = 1; // Navigate to the Peminjaman page
+      });
+    });
   }
 
   @override

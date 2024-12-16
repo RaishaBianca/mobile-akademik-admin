@@ -320,3 +320,58 @@ Future<List> getKendalaStatistik(String room) async {
   // print(responseBody['data']);
   return responseBody['data'];
 }
+
+Future<void> saveTokenToServer(String? token) async {
+  if (token == null) return;
+
+  // endpoint = 'save-fcm-token';
+  // var url = Uri.parse(base_url + endpoint);
+
+  final String endpoint = 'save-fcm-token';
+  final String url = base_url + endpoint;
+
+  print('Saving FCM token to server');
+  print('FCM Token: $token');
+
+  // final response = await await http.post(url, body: {
+  //   'fcm_token': token,
+  // }, headers: await _getHeaders());
+  // print(response.body);
+  //
+  // if (response.statusCode == 200) {
+  //   print('FCM token saved successfully');
+  // } else {
+  //   print('Failed to save FCM token');
+  // }
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: await _getHeaders(),
+    body: jsonEncode({'fcm_token': token}),
+  );
+
+  if (response.statusCode == 200) {
+    print('FCM token saved successfully');
+  } else if (response.statusCode == 302 || response.statusCode == 301) {
+    // Handle redirect
+    final redirectUrl = response.headers['location'];
+    if (redirectUrl != null) {
+      final redirectResponse = await http.post(
+        Uri.parse(redirectUrl),
+        headers: await _getHeaders(),
+        body: jsonEncode({'fcm_token': token}),
+      );
+
+      if (redirectResponse.statusCode == 200) {
+        print('FCM token saved successfully after redirect');
+      } else {
+        print('Failed to save FCM token after redirect');
+      }
+    } else {
+      print('Redirect URL is null');
+    }
+  } else {
+    print('Failed to save FCM token');
+  }
+}
+
