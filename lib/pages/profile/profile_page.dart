@@ -1,9 +1,11 @@
 import 'package:admin_fik_app/pages/authentication/welcome_screen.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
+import 'package:admin_fik_app/pages/profile/editprofile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,10 +16,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = '';
-  String nim = '';
   String email = '';
   String profile = '';
   bool isLoading = true; // Add this variable to track loading state
+  File? image;
 
   @override
   void initState() {
@@ -40,58 +42,98 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         );
 
-
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body);
-
-          if (mounted) {
+          if (userData != null && mounted) {
             setState(() {
-              name = userData['nama'];
-              nim = userData['nim_nrp'];
-              email = userData['email'];
-              profile = userData['profil'];
-              isLoading = false; // Set loading to false after data is fetched
+              name = userData['nama']!;
+              email = userData['email']!;
+              profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+              isLoading = false;
             });
           }
         } else {
-          print('Failed to load user data');
           if (mounted) {
             setState(() {
-              isLoading = false; // Set loading to false if there's an error
+              isLoading = false; // Set loading to false if adminId is null
             });
           }
         }
       } catch (e) {
-        print('Error: $e');
         if (mounted) {
           setState(() {
-            isLoading = false; // Set loading to false if there's an error
+            isLoading = false; // Set loading to false on error
           });
         }
-      }
-    } else {
-      if (mounted) {
-        setState(() {
-          isLoading = false; // Set loading to false if adminId is null
-        });
       }
     }
   }
 
   Future<void> _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Clear all stored data
-    Navigator.pushReplacement(
+    //await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+          (Route<dynamic> route) => false,
     );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Keluar'),
+          content: const Text('Apakah yakin ingin keluar?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Batalkan'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _logout(); // Perform logout
+              },
+              child: const Text('Keluar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToEditProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfilePage(
+          name: name,
+          email: email,
+          profile: profile,
+        ),
+      ),
+    ).then((_) {
+      _fetchUserData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        automaticallyImplyLeading: false,
+        title: const Text('Profil', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        )),
+        backgroundColor: const Color(0xFFFF5833),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Set all icons to white
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // Show loader if loading
@@ -112,13 +154,18 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 20),
               _buildProfileField(label: 'Nama', value: name),
-              const SizedBox(height: 20),
-              _buildProfileField(label: 'NIM', value: nim),
+              // const SizedBox(height: 20),
+              // _buildProfileField(label: 'NIM', value: nim),
               const SizedBox(height: 20),
               _buildProfileField(label: 'Email', value: email),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _logout,
+                onPressed: _navigateToEditProfile,
+                child: const Text('Edit Profil'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _showLogoutConfirmationDialog,
                 child: const Text('Logout'),
               ),
             ],
@@ -134,11 +181,11 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
         ),
         Text(
           value,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 12),
         ),
       ],
     );

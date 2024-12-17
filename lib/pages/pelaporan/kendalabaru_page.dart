@@ -36,8 +36,9 @@ class _KendalabaruPageState extends State<KendalabaruPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Daftar Laporan Kendala Selesai',
+          'Daftar Laporan Kendala Baru',
           style: TextStyle(
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

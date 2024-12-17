@@ -1,11 +1,8 @@
 import 'package:admin_fik_app/customstyle/barchart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/custombutton.dart';
-import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwalkelas_page.dart';
 import 'package:admin_fik_app/pages/jadwal/jadwallab_page.dart';
-import 'package:admin_fik_app/pages/jadwal/profildosen_page.dart';
-
 import 'package:flutter_sales_graph/flutter_sales_graph.dart';
 
 class JadwalPage extends StatefulWidget {
@@ -21,33 +18,16 @@ class _JadwalPageState extends State<JadwalPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // automaticallyImplyLeading: false, // Disable back button
+        automaticallyImplyLeading: false, // Disable back button
         title: Text(
           'Jadwal',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
-            fontSize: 24,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color(0xFFFF5833),
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(4.0), // Height of the bottom border
-        //   child: Container(
-        //     color: Colors.transparent,
-        //     child: Container(
-        //       height: 4.0,
-        //       decoration: BoxDecoration(
-        //         border: Border(
-        //           bottom: BorderSide(
-        //             color: Color(0xFFFFBE33), // Color of the bottom border
-        //             width: 2.0, // Width of the bottom border
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
       body: SafeArea(
         child: Column(
@@ -62,49 +42,39 @@ class _JadwalPageState extends State<JadwalPage> {
                       crossAxisAlignment: CrossAxisAlignment.start, // Mengatur teks dan elemen lainnya rata kiri
                       children: [
                         Text(
-                          'Jadwal Penggunaan Ruangan FIK UPN Veteran Jakarta',
+                          'Jadwal Penggunaan Ruang Lab dan Kelas FIK UPN Veteran Jakarta',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 20), // Jarak antara teks dan tombol
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            CustomButton(
-                              label: 'Lihat Jadwal Lab Komputer',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => JadwallabPage()),
-                                );
-                              },
+                            Expanded(
+                              child: CustomButton(
+                                label: 'Lihat Jadwal Lab Komputer',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => JadwallabPage()),
+                                  );
+                                },
+                              ),
                             ),
-                            CustomButton(
-                              label: 'Lihat Jadwal Ruang Kelas',
-                              onPressed: () {
-                                Navigator.push(
+                            SizedBox(width: 10), // Add some space between the buttons
+                            Expanded(
+                              child: CustomButton(
+                                label: 'Lihat Jadwal Ruang Kelas',
+                                onPressed: () {
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => JadwalkelasPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ), // Tutup Row
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur spasi antar tombol
-                          children: [
-                            CustomButtonTwo(
-                              label: 'Lihat Profil Dosen',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ProfildosenPage()),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -113,7 +83,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           'Statistika Kepadatan Penggunaan Ruangan Lab Komputer FIK',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -124,7 +94,7 @@ class _JadwalPageState extends State<JadwalPage> {
                           'Statistika Kepadatan Penggunaan Ruangan Kelas FIK',
                           textAlign: TextAlign.left, // Teks rata kiri
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:http_parser/http_parser.dart';
 
-final String base_url = 'http://127.0.0.1:8000/api/';
+final String base_url = 'https://659c-180-252-88-66.ngrok-free.app/api/';
 late String endpoint;
 late SharedPreferences prefs;
 
@@ -45,10 +50,72 @@ Future<Map<String, dynamic>> login(String identifier, String password) async {
   }
 }
 
+Future<Map<String, dynamic>?> fetchUserData() async {
+  endpoint = 'user';
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final accessToken = prefs.getString('access_token');
+  if (accessToken != null) {
+    try {
+      final response = await http.get(
+        Uri.parse(base_url + endpoint),
+        headers: await _getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        return userData;
+      } else {
+        print('Failed to load user data');
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+  return null;
+}
+
+Future<void> updateProfile(String name, String email, File image) async {
+  const String endpoint = 'user/update';
+  final String url = base_url + endpoint;
+  final headers = await _getHeaders();
+
+  try {
+    var request = http.MultipartRequest('POST', Uri.parse(url))
+      ..headers.addAll(headers)
+      ..fields['nama'] = name
+      ..fields['email'] = email;
+
+    if (image.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        image.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+    }
+    print(name);
+    print(email);
+
+    var response = await request.send().timeout(Duration(seconds: 30));
+
+    if (response.statusCode == 200) {
+      print('Profile updated successfully');
+    } else {
+      print('Failed to update profile: ${response.statusCode}');
+      print('Response body: ${await response.stream.bytesToString()}');
+      throw Exception('Failed to update profile');
+    }
+  } catch (e) {
+    print('Error updating profile: $e');
+    throw Exception('Error updating profile');
+  }
+}
+
 Future<List<Map<String, dynamic>>> getAllPeminjaman() async {
   endpoint = 'peminjaman';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, 
+  var response = await http.get(url,
     headers: await _getHeaders()
     );
   if (response.statusCode == 200) {
@@ -62,7 +129,7 @@ Future<List<Map<String, dynamic>>> getAllPeminjaman() async {
 Future<List<Map<String, dynamic>>> getPeminjamanLab() async {
   endpoint = 'peminjaman/lab';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, 
+  var response = await http.get(url,
     headers: await _getHeaders()
     );
   if (response.statusCode == 200) {
@@ -76,7 +143,7 @@ Future<List<Map<String, dynamic>>> getPeminjamanLab() async {
 Future<List<Map<String, dynamic>>> getPeminjamanKelas() async {
   endpoint = 'peminjaman/kelas';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, 
+  var response = await http.get(url,
     headers: await _getHeaders()
     );
   if (response.statusCode == 200) {
@@ -109,12 +176,22 @@ Future<Map<String, dynamic>> getKendalaCount() async {
   }
 }
 
-Future<int> verifikasiPeminjaman(String id, String status) async {
+Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan, String jamMulai, String jamSelesai, String idRuang) async {
   endpoint = 'peminjaman/verifikasi';
   var url = Uri.parse(base_url + endpoint);
+  print(id);
+  print(status);
+  print(alasanPenolakan);
+  print(jamMulai);
+  print(jamSelesai);
+  print(idRuang);
   var response = await http.post(url, body: {
     'id': id,
     'status': status,
+    'alasan_penolakan': alasanPenolakan,
+    'jam_mulai': jamMulai,
+    'jam_selesai': jamSelesai,
+    'id_ruang': idRuang,
   }, headers: await _getHeaders());
   print(response.body);
   return response.statusCode;
@@ -174,6 +251,8 @@ Future<List<Map<String, dynamic>>> getAllJadwal() async {
   var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
+    print(data);
+    print(data.length);
     return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception('Failed to load data');
@@ -242,18 +321,40 @@ Future<List> getKendalaStatistik(String room) async {
   return responseBody['data'];
 }
 
-Future<Map<String, List<Map<String, dynamic>>>> getKalender() async {
-  endpoint = 'kalender';
+Future<void> saveTokenToServer(String? token) async {
+  if (token == null) return;
+  endpoint = 'save-fcm-token';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: await _getHeaders());
+
+  print('Saving FCM token to server');
+  print('FCM Token: $token');
+
+  final response = await http.post(url, body: {
+    'fcm_token' : token,
+  }, headers: await _getHeaders());
 
   if (response.statusCode == 200) {
-    Map<String, dynamic> responseBody = json.decode(response.body);
-    return responseBody.map((key, value) => MapEntry(
-        key,
-        List<Map<String, dynamic>>.from(value.map((item) => Map<String, dynamic>.from(item)))
-    ));
+    print('FCM token saved successfully');
+  } else if (response.statusCode == 302 || response.statusCode == 301) {
+    // Handle redirect
+    final redirectUrl = response.headers['location'];
+    if (redirectUrl != null) {
+      final redirectResponse = await http.post(
+        Uri.parse(redirectUrl),
+        headers: await _getHeaders(),
+        body: jsonEncode({'fcm_token': token}),
+      );
+
+      if (redirectResponse.statusCode == 200) {
+        print('FCM token saved successfully after redirect');
+      } else {
+        print('Failed to save FCM token after redirect');
+      }
+    } else {
+      print('Redirect URL is null');
+    }
   } else {
-    throw Exception('Failed to load kalender data');
+    print('Failed to save FCM token');
   }
 }
+

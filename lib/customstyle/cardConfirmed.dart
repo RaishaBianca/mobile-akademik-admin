@@ -121,7 +121,7 @@ class CardConfirmed extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      isAccepted ? 'Diterima' : 'Ditolak',
+                      isAccepted ? 'disetujui' : 'ditolak',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

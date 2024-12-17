@@ -11,6 +11,7 @@ class BarChart extends StatefulWidget {
     required this.room,
     required this.type
   });
+
   @override
   _BarChartState createState() => _BarChartState();
 }
@@ -27,18 +28,17 @@ class _BarChartState extends State<BarChart> {
   Future<void> getStatistik() async {
     List<double> data;
     if (widget.type == 'peminjaman') {
-      data = List<double>.from(await api_data.getPeminjamanStatistik(widget.room));
+      data = List<double>.from((await api_data.getPeminjamanStatistik(widget.room)).map((e) => e.toDouble()));
     } else {
-      data = List<double>.from(await api_data.getKendalaStatistik(widget.room));
+      data = List<double>.from((await api_data.getKendalaStatistik(widget.room)).map((e) => e.toDouble()));
     }
-    
+
     setState(() {
       dataChart = List<double>.from(data);
       while (dataChart.length < 5) {
-        dataChart.add(0);
+        dataChart.add(0.0);
       }
     });
-    // print(dataChart);
   }
 
   @override
@@ -48,19 +48,19 @@ class _BarChartState extends State<BarChart> {
       decoration: BoxDecoration(
         color: Colors.white, // Background color
         border: Border.all(
-          color: Color(0xFFFFBE33), // Border color
+          color: const Color(0xFFFFBE33), // Border color
           width: 2.0, // Border width
         ),
         borderRadius: BorderRadius.circular(12), // Optional: Rounded corners
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Center(
           child: FlutterSalesGraph(
             salesData: dataChart,
             labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'],
             maxBarHeight: 250.0,
-            barWidth: 45.0,
+            barWidth: 44.0,
             colors: [Color(0xFFFFBE33), Color(0xFF3374FF), Color(0xFFFF3374)],
             dateLineHeight: 20.0,
           ),

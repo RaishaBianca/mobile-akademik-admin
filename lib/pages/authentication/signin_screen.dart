@@ -2,7 +2,6 @@ import 'package:admin_fik_app/pages/authentication/signup_screen.dart';
 import 'package:admin_fik_app/customstyle/custom_scaffold.dart';
 import 'package:admin_fik_app/customstyle/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:admin_fik_app/data/api_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,29 +19,59 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('remember_me') ?? false) {
+      _identifierController.text = prefs.getString('identifier') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+      rememberPassword = true;
+    }
+  }
+
+  Future<void> _handleLogin() async {
+    if (_formSignInKey.currentState!.validate()) {
+      try {
+        final response = await login(_identifierController.text, _passwordController.text);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login berhasil masuk')),
+        );
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('access_token', response['token']);
+        if (rememberPassword) {
+          prefs.setBool('remember_me', true);
+          prefs.setString('identifier', _identifierController.text);
+          prefs.setString('password', _passwordController.text);
+        } else {
+          prefs.remove('remember_me');
+          prefs.remove('identifier');
+          prefs.remove('password');
+        }
+        String? fcmToken = prefs.getString('fcm_token');
+        print('FCM Token: $fcmToken');
+        if (fcmToken != null) {
+          print('FCM Token: $fcmToken');
+          await saveTokenToServer(fcmToken);
+        }
+        Navigator.pushReplacementNamed(context, '/home');
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login gagal masuk')),
+        );
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
-
-Future<void> _handleLogin() async {
-  if (_formSignInKey.currentState!.validate()) {
-    try {
-      final response = await login(_identifierController.text, _passwordController.text);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login berhasil masuk')),
-      );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('access_token', response['token']);
-      Navigator.pushReplacementNamed(context, '/home');
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login gagal masuk')),
-      );
-    }
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +104,7 @@ Future<void> _handleLogin() async {
                       Text(
                         'Selamat Datang Kembali',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 24.0,
                           fontWeight: FontWeight.w900,
                           color: lightColorScheme.primary,
                         ),
@@ -84,7 +113,7 @@ Future<void> _handleLogin() async {
                         height: 20,
                       ),
                       TextFormField(
-                        controller: _identifierController, // Ensure controller is linked
+                        controller: _identifierController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Tolong Masukkan Email/NIM Anda';
@@ -92,9 +121,10 @@ Future<void> _handleLogin() async {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Email atau NIM'),
+                          label: const Text('Email atau NIM', style: TextStyle(fontSize: 14)),
                           hintText: 'Tolong Masukkan Email/NIM Anda',
                           hintStyle: const TextStyle(
+                            fontSize: 14,
                             color: Colors.black26,
                           ),
                           border: OutlineInputBorder(
@@ -115,7 +145,7 @@ Future<void> _handleLogin() async {
                         height: 20,
                       ),
                       TextFormField(
-                        controller: _passwordController, // Ensure controller is linked
+                        controller: _passwordController,
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -125,9 +155,10 @@ Future<void> _handleLogin() async {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Kata Sandi'),
+                          label: const Text('Kata Sandi', style: TextStyle(fontSize: 14)),
                           hintText: 'Masukkan kata sandi Anda',
                           hintStyle: const TextStyle(
+                            fontSize: 14,
                             color: Colors.black26,
                           ),
                           border: OutlineInputBorder(
@@ -167,15 +198,6 @@ Future<void> _handleLogin() async {
                               ),
                             ],
                           ),
-                          // GestureDetector(
-                          //   child: Text(
-                          //     'Forgot password?',
-                          //     style: TextStyle(
-                          //       fontWeight: FontWeight.bold,
-                          //       color: lightColorScheme.primary,
-                          //     ),
-                          //   ),
-                          // )
                         ],
                       ),
                       const SizedBox(
@@ -192,79 +214,6 @@ Future<void> _handleLogin() async {
                           child: const Text('Masuk', style: TextStyle(color: Colors.white)),
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Expanded(
-                      //       child: Divider(
-                      //         thickness: 0.7,
-                      //         color: Colors.grey.withOpacity(0.5),
-                      //       ),
-                      //     ),
-                      //     const Padding(
-                      //       padding: EdgeInsets.symmetric(
-                      //           vertical: 0, horizontal: 10),
-                      //       child: Text(
-                      //         'Sign up with',
-                      //         style: TextStyle(
-                      //           color: Colors.black45,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     Expanded(
-                      //       child: Divider(
-                      //         thickness: 0.7,
-                      //         color: Colors.grey.withOpacity(0.5),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     IconButton(
-                      //       onPressed: () {},
-                      //       icon: const Icon(
-                      //         Icons.facebook,
-                      //         color: Colors.blue,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     const Text(
-                      //       'Don\'t have an account?',
-                      //       style: TextStyle(
-                      //         color: Colors.black45,
-                      //       ),
-                      //     ),
-                      //     GestureDetector(
-                      //       onTap: () {
-                      //         Navigator.push(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (e) => const SignUpScreen()));
-                      //       },
-                      //       child: Text(
-                      //         'Sign up',
-                      //         style: TextStyle(
-                      //           color: lightColorScheme.primary,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),

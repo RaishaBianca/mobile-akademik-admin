@@ -1,9 +1,6 @@
 import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
-import 'package:admin_fik_app/customstyle/buttonreject.dart';
-import 'package:admin_fik_app/customstyle/statusdropdown.dart';
-// import 'package:admin_fik_app/data/dummy_report.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class DetailkendalaPage extends StatefulWidget {
@@ -89,6 +86,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
         title: Text(
           "Detail Laporan Kendala",
           style: TextStyle(
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -112,7 +110,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                 SizedBox(height: 16),
                 Text(
                   'Keterangan Pengerjaan:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -204,7 +202,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -213,7 +211,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
               ),

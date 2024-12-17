@@ -18,7 +18,8 @@ class _JadwallabPageState extends State<JadwallabPage> {
   @override
   void initState() {
     super.initState();
-    _jadwalFuture = fetchJadwal(); // Initial fetch without filters
+    selectedDay = _getDayOfWeek(DateTime.now());
+    _jadwalFuture = fetchJadwal();
     getRuangan();
     selectedDay = _getDayOfWeek(DateTime.now());
   }
@@ -66,6 +67,7 @@ class _JadwallabPageState extends State<JadwallabPage> {
         title: Text(
           'Penggunaan Ruang Lab',
           style: TextStyle(
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -93,7 +95,7 @@ class _JadwallabPageState extends State<JadwallabPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Ruang Lab: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text("Ruang Lab: ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
@@ -158,11 +160,11 @@ class _JadwallabPageState extends State<JadwallabPage> {
                               ),
                               SizedBox(width: 10),
                               JadwalCard(
-                                namaMatkul: jadwal['namaMatkul']!,
-                                kodeMatkul: jadwal['kodeMatkul']!,
-                                namaDosen: jadwal['namaDosen']!,
-                                kodeDosen: jadwal['kodeDosen']!,
-                                ruangan: jadwal['id_ruang']!,
+                                namaMatkul: jadwal['namaMatkul']??'Unknown',
+                                kodeMatkul: jadwal['kodeMatkul']??'Unknown',
+                                namaDosen: jadwal['namaDosen']??'Unknown',
+                                kodeDosen: jadwal['kodeDosen']??'Unknown',
+                                ruangan: jadwal['id_ruang']??'Unknown',
                               ),
                             ],
                           ),

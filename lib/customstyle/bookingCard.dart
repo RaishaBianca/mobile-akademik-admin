@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
 import 'package:admin_fik_app/customstyle/buttonreject.dart';
 import 'package:admin_fik_app/pages/peminjaman/detailpeminjaman_page.dart';
-import 'package:admin_fik_app/data/dummy_data.dart';
 
 class BookingCard extends StatelessWidget {
   final int id;
@@ -74,7 +73,7 @@ class BookingCard extends StatelessWidget {
                   Text(
                     studentName,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
