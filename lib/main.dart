@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/pages/authentication/welcome_screen.dart';
@@ -10,24 +11,74 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:admin_fik_app/data/firebase_options.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:admin_fik_app/data/api_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     name: 'admin-fik-app',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Request notification permissions
+  await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false
+  );
+
+  // Create notification channel
+  if (Platform.isAndroid) {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      description: 'This channel is used for important notifications.',
+      importance: Importance.max,
+      playSound: true,
+      enableVibration: true,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    name: 'admin-fik-app',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  print('Background service initialized');
   print('Handling a background message: ${message.messageId}');
+  print('Message data: ${message.data}');
+  print('Message notification: ${message.notification?.title}');
+
+  await flutterLocalNotificationsPlugin.show(
+    message.hashCode,
+    message.notification?.title,
+    message.notification?.body,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        'high_importance_channel',
+        'High Importance Notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -38,14 +89,75 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0; // Menyimpan indeks halaman yang dipilih
-  // Daftar halaman yang ditampilkan berdasarkan indeks
+  int _selectedIndex = 0;
   final List<Widget> _pages = [
     JadwalPage(),
     PeminjamanPage(),
     PelaporanPage(),
     ProfilePage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _initNotifications();
+    _setupFCM();
+  }
+
+  Future<void> _initNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+    InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _setupFCM() {
+    // Get FCM token
+    FirebaseMessaging.instance.getToken().then((token) async {
+      print('FCM Token: $token');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('fcm_token', token!);
+    });
+
+    // Listen for token refresh
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      print('FCM Token Refreshed: $token');
+    });
+
+    // Handle foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      print('Message notification: ${message.notification}');
+
+      if (message.notification != null) {
+        flutterLocalNotificationsPlugin.show(
+          message.hashCode,
+          message.notification!.title,
+          message.notification!.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'high_importance_channel',
+              'High Importance Notifications',
+              importance: Importance.max,
+              priority: Priority.high,
+            ),
+          ),
+        );
+      }
+    });
+
+    // Handle notification open
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      setState(() {
+        _selectedIndex = 1; // Navigate to Peminjaman page
+      });
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -54,50 +166,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _onWillPop() async {
-    // Exit the app when back button is pressed
     SystemNavigator.pop();
     return false;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    FirebaseMessaging.instance.getToken().then((token) async {
-      print('FCM Token: $token');
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('fcm_token', token!);
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-        // Show a dialog or a snackbar
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(message.notification!.title ?? 'Notification'),
-            content: Text(message.notification!.body ?? 'No body'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      // Handle the notification tap
-      setState(() {
-        _selectedIndex = 1; // Navigate to the Peminjaman page
-      });
-    });
   }
 
   @override
@@ -108,9 +178,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFFFF5833), // Primary color
-          secondary: Color(0xFFFFBE33), // Secondary color
-          tertiary: Color(0xFFFF3374), // Tertiary color
+          primary: Color(0xFFFF5833),
+          secondary: Color(0xFFFFBE33),
+          tertiary: Color(0xFFFF3374),
         ),
       ),
       home: const WelcomeScreen(),
@@ -119,23 +189,23 @@ class _MyAppState extends State<MyApp> {
         '/home': (context) => WillPopScope(
           onWillPop: _onWillPop,
           child: Scaffold(
-            body: _pages[_selectedIndex], // Menampilkan halaman berdasarkan indeks
+            body: _pages[_selectedIndex],
             bottomNavigationBar: Container(
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
-                    color: Color(0xFFFF5833), // Color of the top border
-                    width: 2.0, // Width of the top border
+                    color: Color(0xFFFF5833),
+                    width: 2.0,
                   ),
                 ),
               ),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: Color(0xFFFFFFFF),
-                selectedItemColor: Color(0xFFFF5833), // Warna icon dan text yang dipilih
-                unselectedItemColor: Color(0x66FF5833), // Warna icon dan text yang tidak dipilih
-                currentIndex: _selectedIndex, // Indeks yang aktif
-                onTap: _onItemTapped, // Mengubah indeks saat diklik
+                selectedItemColor: Color(0xFFFF5833),
+                unselectedItemColor: Color(0x66FF5833),
+                currentIndex: _selectedIndex,
+                onTap: _onItemTapped,
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.calendar_today_rounded),

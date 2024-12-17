@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "999521686248",
-    "project_id": "fikmobileadmin",
-    "storage_bucket": "fikmobileadmin.firebasestorage.app"
+    "project_number": "199686756907",
+    "project_id": "peminjaman-ruangan-upnvj",
+    "storage_bucket": "peminjaman-ruangan-upnvj.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:999521686248:android:4948e5690f5f23347e2f5d",
+        "mobilesdk_app_id": "1:199686756907:android:8493e0cc1df0388522286e",
         "android_client_info": {
           "package_name": "com.example.admin_fik_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDoZvYLeYpNy_295npikgaOG4OOXCMpL-U"
+          "current_key": "AIzaSyCoxSDmmVMSyHUyK9_ocdQCIePiAsUD2g0"
         }
       ],
       "services": {
