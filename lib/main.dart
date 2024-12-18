@@ -14,8 +14,8 @@ import 'package:admin_fik_app/data/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+// FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,20 +32,20 @@ void main() async {
       provisional: false
   );
 
-  if (Platform.isAndroid) {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel',
-      'High Importance Notifications',
-      description: 'This channel is used for important notifications.',
-      importance: Importance.max,
-      playSound: true,
-      enableVibration: true,
-    );
-
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-  }
+  // if (Platform.isAndroid) {
+  //   const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  //     'high_importance_channel',
+  //     'High Importance Notifications',
+  //     description: 'This channel is used for important notifications.',
+  //     importance: Importance.max,
+  //     playSound: true,
+  //     enableVibration: true,
+  //   );
+  //
+  //   await flutterLocalNotificationsPlugin
+  //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  //       ?.createNotificationChannel(channel);
+  // }
 
   // Set FCM foreground notification presentation options
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -95,48 +95,65 @@ class _MyAppState extends State<MyApp> {
     _setupFCM();
   }
 
-  Future<void> _initNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
-
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (details) {
-        // Handle notification tap here if needed
-        setState(() {
-          _selectedIndex = 1; // Navigate to Peminjaman page
-        });
-      },
-    );
-  }
+  // Future<void> _initNotifications() async {
+  //   const AndroidInitializationSettings initializationSettingsAndroid =
+  //   AndroidInitializationSettings('@mipmap/ic_launcher');
+  //
+  //   const InitializationSettings initializationSettings =
+  //   InitializationSettings(android: initializationSettingsAndroid);
+  //
+  //   await flutterLocalNotificationsPlugin.initialize(
+  //     initializationSettings,
+  //     onDidReceiveNotificationResponse: (details) {
+  //       // Handle notification tap here if needed
+  //       setState(() {
+  //         _selectedIndex = 1; // Navigate to Peminjaman page
+  //       });
+  //     },
+  //   );
+  // }
 
   void _setupFCM() {
+    // Get FCM token
     FirebaseMessaging.instance.getToken().then((token) async {
       print('FCM Token: $token');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('fcm_token', token!);
     });
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-      print('FCM Token Refreshed: $token');
-    });
-
-    // Let FCM handle the notification display
+    // Handle foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
       print('Message notification: ${message.notification}');
+
+      // Remove the manual notification creation since FCM will handle it
+      // DO NOT call flutterLocalNotificationsPlugin.show()
     });
 
+    // Handle notification open
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       setState(() {
         _selectedIndex = 1; // Navigate to Peminjaman page
       });
     });
+  }
+
+  @pragma('vm:entry-point')
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp(
+      name: 'admin-fik-app',
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    print('Background service initialized');
+    print('Handling a background message: ${message.messageId}');
+    print('Message data: ${message.data}');
+    print('Message notification: ${message.notification?.title}');
+
+    // Remove this
+    // await flutterLocalNotificationsPlugin.show(...)
   }
 
   void _onItemTapped(int index) {
