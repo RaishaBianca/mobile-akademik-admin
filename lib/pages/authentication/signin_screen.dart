@@ -51,6 +51,12 @@ class _SignInScreenState extends State<SignInScreen> {
           prefs.remove('identifier');
           prefs.remove('password');
         }
+        String? fcmToken = prefs.getString('fcm_token');
+        print('FCM Token: $fcmToken');
+        if (fcmToken != null) {
+          print('FCM Token: $fcmToken');
+          await saveTokenToServer(fcmToken);
+        }
         Navigator.pushReplacementNamed(context, '/home');
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
