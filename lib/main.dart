@@ -7,6 +7,7 @@ import 'package:admin_fik_app/pages/jadwal/jadwal_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/peminjaman_page.dart';
 import 'package:admin_fik_app/pages/pelaporan/pelaporan_page.dart';
 import 'package:admin_fik_app/pages/profile/profile_page.dart';
+import 'package:admin_fik_app/pages/kalender/kalender_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -85,6 +86,7 @@ class _MyAppState extends State<MyApp> {
     JadwalPage(),
     PeminjamanPage(),
     PelaporanPage(),
+    KalenderPage(),
     ProfilePage(),
   ];
 
@@ -215,6 +217,10 @@ class _MyAppState extends State<MyApp> {
                   BottomNavigationBarItem(
                     icon: Icon(Icons.warning_amber_rounded),
                     label: 'Pelaporan',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_month_outlined),
+                    label: 'Kalender',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle_rounded),
