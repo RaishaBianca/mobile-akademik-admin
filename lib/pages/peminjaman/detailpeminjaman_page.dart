@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
 import 'package:admin_fik_app/customstyle/buttonreject.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
+import 'package:url_launcher/url_launcher.dart';
+import '';
 
 const List<String> list = <String>['disetujui', 'ditolak'];
 const List<String> roomTypes = <String>['lab', 'kelas'];
@@ -10,6 +12,7 @@ const List<String> roomTypes = <String>['lab', 'kelas'];
 class DetailpeminjamanPage extends StatefulWidget {
   final int id;
   final String studentName;
+  final String no_tlp;
   final String studentNim;
   final String inputDate;
   final String ruangan;
@@ -24,6 +27,7 @@ class DetailpeminjamanPage extends StatefulWidget {
     Key? key,
     required this.id,
     required this.studentName,
+    required this.no_tlp,
     required this.studentNim,
     required this.inputDate,
     required this.ruangan,
@@ -100,6 +104,15 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
     Navigator.of(context).pop();
   }
 
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Tidak dapat launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,6 +133,24 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
           child: Column(
             children: [
               buildRowWithDivider('Nama', widget.studentName),
+              Row(
+                children: [
+                  Container(
+                    width: 160,
+                    child: const Text('No. Telp', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _launchURL('https://wa.me/${widget.no_tlp}'),
+                      child: Text(widget.no_tlp, style: const TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(color: const Color(0x99FF5833)),
               buildRowWithDivider('NIM', widget.studentNim),
               buildRowWithDivider('Tgl Input', widget.inputDate),
               buildDropdownRow('Tipe Ruang', roomTypes, selectedRoomType, (String? newValue) {
@@ -200,7 +231,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
     );
   }
 
-  Widget buildEditableRow(String label, TextEditingController controller) {
+  Widget buildEditableRow(String label, TextEditingController controller, {bool isPhoneNumber = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -306,3 +337,29 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
     );
   }
 }
+//             Expanded(
+//               child: isPhoneNumber
+//                   ? InkWell(
+//                 onTap: () => _launchURL('https://wa.me/$value'),
+//                 child: Text(
+//                   value,
+//                   style: const TextStyle(
+//                     color: Colors.blue,
+//                     decoration: TextDecoration.underline,
+//                   ),
+//                 ),
+//               )
+//                   : Text(
+//                 value,
+//                 style: TextStyle(
+//                   fontSize: 12,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//         Divider(color: Color(0x99FF5833)),
+//       ],
+//     );
+//   }
+// }

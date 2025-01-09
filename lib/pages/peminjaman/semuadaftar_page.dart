@@ -72,6 +72,7 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                 return BookingCard(
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
+                  no_tlp: peminjaman['no_tlp'],
                   inputDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim_nrp'],
                   keterangan : peminjaman['keterangan'],

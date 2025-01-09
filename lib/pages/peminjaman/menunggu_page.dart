@@ -76,6 +76,7 @@ class _MenungguPageState extends State<MenungguPage> {
                 return BookingCard(
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
+                  no_tlp: peminjaman['no_tlp'],
                   inputDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim'],
                   keterangan: peminjaman['keterangan'],

@@ -4,6 +4,7 @@ import 'package:admin_fik_app/pages/peminjaman/detailpeminjaman_page.dart';
 class CardConfirmed extends StatelessWidget {
   final int id;
   final String studentName;
+  final String no_tlp;
   final String inputDate;
   final String ruangan;
   final bool isAccepted;
@@ -19,6 +20,7 @@ class CardConfirmed extends StatelessWidget {
     Key? key,
     required this.id,
     required this.studentName,
+    required this.no_tlp,
     required this.inputDate,
     required this.ruangan,
     required this.groupSize,
@@ -41,6 +43,7 @@ class CardConfirmed extends StatelessWidget {
             builder: (context) => DetailpeminjamanPage(
               id: id,
               studentName: studentName,
+              no_tlp: no_tlp,
               studentNim: studentNim,
               inputDate: inputDate,
               ruangan: ruangan,

@@ -63,6 +63,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
                 return CardConfirmed(
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
+                  no_tlp: peminjaman['no_tlp'],
                   ruangan: peminjaman['ruangan'],
                   groupSize: "${peminjaman['jumlah_orang']} Orang",
                   isAccepted: peminjaman['status'] == 'disetujui',

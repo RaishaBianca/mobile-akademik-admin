@@ -7,6 +7,7 @@ class BookingCard extends StatelessWidget {
   final int id;
   final String ruangan;
   final String studentName;
+  final String no_tlp;
   final String inputDate;
   final String time;
   final String groupSize;
@@ -21,6 +22,7 @@ class BookingCard extends StatelessWidget {
     required this.id,
     required this.ruangan,
     required this.studentName,
+    required this.no_tlp,
     required this.inputDate,
     required this.studentNim,
     required this.keterangan,
@@ -41,6 +43,7 @@ class BookingCard extends StatelessWidget {
             builder: (context) => DetailpeminjamanPage(
               id: id,
               studentName: studentName,
+              no_tlp: no_tlp,
               studentNim: studentNim,
               inputDate: inputDate,
               ruangan: ruangan,
