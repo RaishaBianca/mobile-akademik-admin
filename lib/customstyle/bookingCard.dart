@@ -8,12 +8,16 @@ class BookingCard extends StatelessWidget {
   final String ruangan;
   final String studentName;
   final String no_tlp;
+  final String grup_pengguna;
   final String inputDate;
+  final String bookDate;
   final String time;
-  final String groupSize;
+  final int groupSize;
   final String status;
   final String studentNim;
   final String keterangan;
+  final String alasanPenolakan;
+  final String catatan_kejadian;
   final Function onAccept;
   final Function onReject;
 
@@ -23,12 +27,16 @@ class BookingCard extends StatelessWidget {
     required this.ruangan,
     required this.studentName,
     required this.no_tlp,
+    required this.grup_pengguna,
     required this.inputDate,
+    required this.bookDate,
     required this.studentNim,
     required this.keterangan,
     required this.time,
     required this.groupSize,
     required this.status,
+    required this.alasanPenolakan,
+    required this.catatan_kejadian,
     required this.onAccept,
     required this.onReject,
   }) : super(key: key);
@@ -45,14 +53,18 @@ class BookingCard extends StatelessWidget {
               studentName: studentName,
               no_tlp: no_tlp,
               studentNim: studentNim,
+              grup_pengguna: grup_pengguna,
               inputDate: inputDate,
               ruangan: ruangan,
-              bookDate: inputDate, // Replace with actual data if available
+              bookDate: bookDate,
               jamMulai: time.split(' - ')[0],
               jamSelesai: time.split(' - ')[1].replaceAll(' WIB', ''),
               jumlahPengguna: groupSize,
               keterangan: keterangan,
+              alasanPenolakan: alasanPenolakan,
+              catatan_kejadian: catatan_kejadian,
               isAccepted: status == 'disetujui',
+              is_active: true,
               time: time,
             ),
           ),
@@ -111,7 +123,7 @@ class BookingCard extends StatelessWidget {
                         children: [
                           Icon(Icons.group),
                           SizedBox(width: 12),
-                          Text(groupSize),
+                          Text(groupSize.toString() + ' Orang'),
                         ],
                       ),
                     ],
@@ -130,7 +142,7 @@ class BookingCard extends StatelessWidget {
                           onPressed: () => onReject(),
                         ),
                       ],
-                      if(status == 'disetujui')
+                      if(status == 'accepted')
                         Text(
                           'Diterima',
                           style: TextStyle(
@@ -138,7 +150,7 @@ class BookingCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      if(status == 'ditolak')
+                      if(status == 'rejected')
                         Text(
                           'Ditolak',
                           style: TextStyle(

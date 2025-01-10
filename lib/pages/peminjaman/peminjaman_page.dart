@@ -5,6 +5,10 @@ import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/peminjaman/menunggu_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/terkonfirmasi_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/semuadaftar_page.dart';
+import 'package:admin_fik_app/pages/peminjaman/ongoing_page.dart';
+import 'package:admin_fik_app/pages/peminjaman/completed_page.dart';
+import 'package:admin_fik_app/pages/peminjaman/kelastersedia_page.dart';
+import 'package:admin_fik_app/pages/peminjaman/labtersedia_page.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class PeminjamanPage extends StatefulWidget {
@@ -14,10 +18,10 @@ class PeminjamanPage extends StatefulWidget {
 
 class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  int labTerkonfirmasi = 0;
-  int labBaru = 0;
-  int kelasTerkonfirmasi = 0;
-  int kelasBaru = 0;
+  Map<String, Map<String, int>> peminjamanCounts = {
+    'lab': {'pending': 0, 'confirmed': 0, 'ongoing': 0, 'closed': 0},
+    'kelas': {'pending': 0, 'confirmed': 0, 'ongoing': 0, 'closed': 0}
+  };
 
   @override
   void initState() {
@@ -33,13 +37,110 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
   }
 
   Future<void> _fetchPeminjamanCount() async {
-    var countData = await api_data.getPeminjamanCount();
+    final countData = await api_data.getPeminjamanCount();
     setState(() {
-      labTerkonfirmasi = countData['lab_confirmed'];
-      labBaru = countData['lab_pending'];
-      kelasTerkonfirmasi = countData['kelas_confirmed'];
-      kelasBaru = countData['kelas_pending'];
+      peminjamanCounts = {
+        'lab': Map<String, int>.from(countData['lab']),
+        'kelas': Map<String, int>.from(countData['kelas'])
+      };
     });
+  }
+
+  Widget _buildRoomSection(String roomType) {
+    final String title = roomType == 'lab' ? 'Lab Komputer' : 'Kelas';
+    return Card(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Peminjaman Ruang $title FIK',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButtonOne(
+                      label: 'Dalam Antrian',
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MenungguPage(room: roomType)),
+                      ),
+                      subText: peminjamanCounts[roomType]!['pending'].toString(),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: CustomButtonOne(
+                      label: 'Diterima/Ditolak',
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: roomType)),
+                      ),
+                      subText: peminjamanCounts[roomType]!['confirmed'].toString(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButtonOne(
+                      label: 'Dalam Proses',
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => OngoingPage(room: roomType)),
+                      ),
+                      subText: peminjamanCounts[roomType]!['ongoing'].toString(),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: CustomButtonOne(
+                      label: 'Selesai',
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CompletedPage(room: roomType)),
+                      ),
+                      subText: peminjamanCounts[roomType]!['closed'].toString(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              CustomButtonTwo(
+                label: 'Lihat Semua Daftar',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SemuadaftarPage(room: roomType)),
+                ),
+              ),
+              SizedBox(height: 20),
+              CustomButtonTwo(
+                label: 'Lihat Ruang ${roomType == 'lab' ? 'Lab' : 'Kelas'} Tersedia',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => roomType == 'lab' ? LabtersediaPage() : KelastersediaPage(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+              Text(
+                'Statistika Peminjaman ${roomType == 'lab' ? 'Lab Komputer' : 'Ruang Kelas'} FIK',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              BarChart(room: roomType, type: 'peminjaman'),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -51,7 +152,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
         title: Text(
           'Peminjaman Ruang Lab dan Kelas',
           style: TextStyle(
-            color: Color(0xFFFFFFFF),
+            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -74,164 +175,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  Card(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Peminjaman Ruang Lab Komputer FIK',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: CustomButtonOne(
-                                    label: 'Peminjaman Baru',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => MenungguPage(room: 'lab')),
-                                      );
-                                    },
-                                    subText: labBaru.toString(),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: CustomButtonOne(
-                                    label: 'Terkonfirmasi',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'lab')),
-                                      );
-                                    },
-                                    subText: labTerkonfirmasi.toString(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: CustomButtonTwo(
-                                    label: 'Lihat Semua Daftar',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'lab')),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                            Text(
-                              'Statistika Peminjaman Lab Komputer FIK',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            BarChart(room: 'lab', type: 'peminjaman'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Peminjaman Ruang Kelas Komputer FIK',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: CustomButtonOne(
-                                    label: 'Peminjaman Baru',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => MenungguPage(room: 'kelas')),
-                                      );
-                                    },
-                                    subText: kelasBaru.toString(),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: CustomButtonOne(
-                                    label: 'Terkonfirmasi',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => TerkonfirmasiPage(room: 'kelas')),
-                                      );
-                                    },
-                                    subText: kelasTerkonfirmasi.toString(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: CustomButtonTwo(
-                                    label: 'Lihat Semua Daftar',
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => SemuadaftarPage(room: 'kelas')),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                            Text(
-                              'Statistika Peminjaman Ruang Kelas FIK',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            BarChart(room: 'kelas', type: 'peminjaman'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildRoomSection('lab'),
+                  _buildRoomSection('kelas'),
                 ],
               ),
             ),

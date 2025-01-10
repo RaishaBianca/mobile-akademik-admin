@@ -100,6 +100,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                buildRowWithDivider('ID', widget.id.toString()),
                 buildRowWithDivider('Nama', widget.nama_pelapor),
                 buildRowWithDivider('NIM', widget.nim_nrp),
                 buildRowWithDivider('Tgl Input', widget.tanggal),

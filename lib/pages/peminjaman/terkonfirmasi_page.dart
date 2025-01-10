@@ -27,7 +27,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    return peminjaman.where((peminjaman) => peminjaman['status'] == 'disetujui' || peminjaman['status'] == 'ditolak').toList();
+    return peminjaman.where((peminjaman) => peminjaman['id_status'] == '5' || peminjaman['id_status'] == '6').toList();
   }
 
   @override
@@ -36,7 +36,7 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Daftar Sudah Dikonfirmasi',
+          'Daftar Diterima/Ditolak',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white,
@@ -64,16 +64,19 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   no_tlp: peminjaman['no_tlp'],
+                  grup_pengguna: peminjaman['grup_pengguna'],
                   ruangan: peminjaman['ruangan'],
-                  groupSize: "${peminjaman['jumlah_orang']} Orang",
-                  isAccepted: peminjaman['status'] == 'disetujui',
+                  groupSize: peminjaman['jumlah_orang'],
+                  isAccepted: peminjaman['id_status'] == '6',
                   studentNim: peminjaman['nim'],
-                  bookDate: peminjaman['tanggal'],
+                  bookDate: peminjaman['tgl_pinjam'],
                   jamMulai: peminjaman['jam_mulai'],
                   jamSelesai: peminjaman['jam_selesai'],
                   keterangan: peminjaman['keterangan'],
+                  alasanPenolakan: peminjaman['alasan_penolakan'],
+                  catatan_kejadian: peminjaman['catatan_kejadian'],
                   inputDate: peminjaman['tanggal'],
-                  jumlahPengguna: "${peminjaman['jumlah_orang']} Orang",
+                  // jumlahPengguna: "${peminjaman['jumlah_orang']} Orang",
                 );
               },
             );

@@ -6,7 +6,7 @@ import 'package:admin_fik_app/data/api_data.dart' as api_data;
 import 'package:url_launcher/url_launcher.dart';
 import '';
 
-const List<String> list = <String>['disetujui', 'ditolak'];
+const List<String> list = <String>['accepted', 'rejected'];
 const List<String> roomTypes = <String>['lab', 'kelas'];
 
 class DetailpeminjamanPage extends StatefulWidget {
@@ -14,14 +14,18 @@ class DetailpeminjamanPage extends StatefulWidget {
   final String studentName;
   final String no_tlp;
   final String studentNim;
+  final String grup_pengguna;
   final String inputDate;
   final String ruangan;
   final String bookDate;
   final String jamMulai;
   final String jamSelesai;
-  final String jumlahPengguna;
+  final int jumlahPengguna;
   final String keterangan;
+  final String alasanPenolakan;
+  final String catatan_kejadian;
   final bool isAccepted;
+  final bool is_active;
 
   const DetailpeminjamanPage({
     Key? key,
@@ -29,6 +33,7 @@ class DetailpeminjamanPage extends StatefulWidget {
     required this.studentName,
     required this.no_tlp,
     required this.studentNim,
+    required this.grup_pengguna,
     required this.inputDate,
     required this.ruangan,
     required this.bookDate,
@@ -36,7 +41,10 @@ class DetailpeminjamanPage extends StatefulWidget {
     required this.jamSelesai,
     required this.jumlahPengguna,
     required this.keterangan,
+    required this.alasanPenolakan,
+    required this.catatan_kejadian,
     required this.isAccepted, required String time,
+    required this.is_active,
   }) : super(key: key);
 
   @override
@@ -52,6 +60,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
   TextEditingController reasonController = TextEditingController();
   TextEditingController jamMulaiController = TextEditingController();
   TextEditingController jamSelesaiController = TextEditingController();
+  TextEditingController catatanKejadianController = TextEditingController();
 
   @override
   void initState() {
@@ -59,6 +68,8 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
     jamMulaiController.text = widget.jamMulai;
     jamSelesaiController.text = widget.jamSelesai;
     selectedRoom = widget.ruangan;
+    reasonController.text = widget.alasanPenolakan;
+    catatanKejadianController.text = widget.catatan_kejadian;
     getRuangan(selectedRoomType);
   }
 
@@ -88,6 +99,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
       widget.id.toString(),
       statusDropdown,
       reasonController.text,
+      catatanKejadianController.text,
       jamMulaiController.text,
       jamSelesaiController.text,
       selectedRoom ?? '',
@@ -132,6 +144,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
+              buildRowWithDivider('ID', widget.id.toString()),
               buildRowWithDivider('Nama', widget.studentName),
               Row(
                 children: [
@@ -152,6 +165,7 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               ),
               Divider(color: const Color(0x99FF5833)),
               buildRowWithDivider('NIM', widget.studentNim),
+              buildRowWithDivider('Grup Pengguna', widget.grup_pengguna),
               buildRowWithDivider('Tgl Input', widget.inputDate),
               buildDropdownRow('Tipe Ruang', roomTypes, selectedRoomType, (String? newValue) {
                 setState(() {
@@ -167,7 +181,8 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               buildRowWithDivider('Tgl Peminjaman', widget.bookDate),
               buildEditableRow('Jam Mulai', jamMulaiController),
               buildEditableRow('Jam Selesai', jamSelesaiController),
-              buildRowWithDivider('Jml Pengguna', widget.jumlahPengguna),
+              buildRowWithDivider('Jml Pengguna', widget.jumlahPengguna.toString()),
+              buildRowWithDivider('Status', widget.is_active ? 'true' : 'false'),
               buildRowWithDivider('Keterangan', widget.keterangan),
               SizedBox(height: 16),
               Text(
@@ -186,6 +201,27 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
                     borderSide: BorderSide(color: Color(0x99FF5833)),
                   ),
                   hintText: 'Masukkan alasan ditolak',
+                ),
+                maxLines: 3,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Catatan Kejadian:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              SizedBox(height: 8),
+              TextField(
+                controller: catatanKejadianController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0x99FF5833)),
+                  ),
+                  hintText: 'Masukkan catatan kejadian',
                 ),
                 maxLines: 3,
               ),

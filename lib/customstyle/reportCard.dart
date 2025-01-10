@@ -23,7 +23,7 @@ class ReportCard extends StatelessWidget {
     required this.jenis_kendala,
     required this.bentuk_kendala,
     required this.deskripsi_kendala,
-    required this.status, // Mengambil status sebagai string
+    required this.status,
     this.keterangan_penyelesaian,
   }) : super(key: key);
 

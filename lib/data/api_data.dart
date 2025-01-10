@@ -158,8 +158,68 @@ Future<Map<String, dynamic>> getPeminjamanCount() async {
   endpoint = 'peminjaman/count';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.get(url, headers: await _getHeaders());
+  print(response.body);
   if (response.statusCode == 200) {
     return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<int> verifikasiPeminjaman(String id, String id_status, String alasanPenolakan, String catatanKejadian, String jamMulai, String jamSelesai, String idRuang) async {
+  endpoint = 'peminjaman/verifikasi';
+  var url = Uri.parse(base_url + endpoint);
+  print(id);
+  print(id_status);
+  print(alasanPenolakan);
+  print(catatanKejadian);
+  print(jamMulai);
+  print(jamSelesai);
+  print(idRuang);
+  var response = await http.post(url, body: {
+    'id': id,
+    'id_status': id_status,
+    'alasan_penolakan': alasanPenolakan,
+    'catatan_kejadian' : catatanKejadian,
+    'jam_mulai': jamMulai,
+    'jam_selesai': jamSelesai,
+    'id_ruang': idRuang,
+  }, headers: await _getHeaders());
+  print(response.body);
+  return response.statusCode;
+}
+
+Future<List<Map<String, dynamic>>> getAllRuangantersedia(String jamMulai, String jamSelesai, String tglPinjam, String tipeRuang) async {
+  endpoint = 'ruangan/status';
+  var url = Uri.parse(base_url + endpoint);
+  print('data $jamMulai $jamSelesai $tglPinjam $tipeRuang');
+  
+  var response = await http.post(url, 
+    body: {
+      'jam_mulai': jamMulai,
+      'jam_selesai': jamSelesai,
+      'tgl_pinjam': tglPinjam,
+      'tipe_ruang': tipeRuang
+    }, 
+    headers: await _getHeaders()
+  );
+  print(response.body);
+
+  if (response.statusCode == 200) {
+    var responseBody = json.decode(response.body);
+    return responseBody.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getAllKendala() async {
+  endpoint = 'kendala';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception('Failed to load data');
   }
@@ -171,39 +231,6 @@ Future<Map<String, dynamic>> getKendalaCount() async {
   var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     return json.decode(response.body);
-  } else {
-    throw Exception('Failed to load data');
-  }
-}
-
-Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan, String jamMulai, String jamSelesai, String idRuang) async {
-  endpoint = 'peminjaman/verifikasi';
-  var url = Uri.parse(base_url + endpoint);
-  print(id);
-  print(status);
-  print(alasanPenolakan);
-  print(jamMulai);
-  print(jamSelesai);
-  print(idRuang);
-  var response = await http.post(url, body: {
-    'id': id,
-    'status': status,
-    'alasan_penolakan': alasanPenolakan,
-    'jam_mulai': jamMulai,
-    'jam_selesai': jamSelesai,
-    'id_ruang': idRuang,
-  }, headers: await _getHeaders());
-  print(response.body);
-  return response.statusCode;
-}
-
-Future<List<Map<String, dynamic>>> getAllKendala() async {
-  endpoint = 'kendala';
-  var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: await _getHeaders());
-  if (response.statusCode == 200) {
-    List<dynamic> data = json.decode(response.body);
-    return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception('Failed to load data');
   }

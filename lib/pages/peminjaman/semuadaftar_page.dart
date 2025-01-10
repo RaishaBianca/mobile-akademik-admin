@@ -26,7 +26,7 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
   }
 
   Future<int> verifikasiPeminjaman(String id, String status) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, status, '', '', '', '');
+    int statusCode = await api_data.verifikasiPeminjaman(id, status, '', '', '', '', '');
     if (statusCode == 200) {
       print('Peminjaman $id $status');
       setState(() {
@@ -73,18 +73,22 @@ class _SemuadaftarPageState extends State<SemuadaftarPage> {
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   no_tlp: peminjaman['no_tlp'],
+                  grup_pengguna: peminjaman['grup_pengguna'],
                   inputDate: peminjaman['tanggal'],
+                  bookDate: peminjaman['tgl_pinjam'],
                   studentNim: peminjaman['nim_nrp'],
                   keterangan : peminjaman['keterangan'],
+                  alasanPenolakan: peminjaman['alasan_penolakan'],
+                  catatan_kejadian: peminjaman['catatan_kejadian'],
                   time: "${peminjaman['jam_mulai']} - ${peminjaman['jam_selesai']} WIB",
                   ruangan: peminjaman['ruangan'],
-                  groupSize: "${peminjaman['jumlah_orang']} Orang",
+                  groupSize: peminjaman['jumlah_orang'],
                   status: peminjaman['status'],
                   onAccept: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'disetujui');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'accepted');
                   },
                   onReject: () async {
-                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'ditolak');
+                    await verifikasiPeminjaman(peminjaman['id'].toString(), 'rejected');
                   },
                 );
               },

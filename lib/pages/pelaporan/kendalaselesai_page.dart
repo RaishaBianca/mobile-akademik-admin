@@ -27,7 +27,7 @@ class _KendalaselesaiPageState extends State<KendalaselesaiPage> {
     }else{
       kendala = await api_data.getKendalaKelas();
     }
-    return kendala.where((kendala) => kendala['status'] == 'selesai').toList();
+    return kendala.where((kendala) => kendala['status'] == 'resolved').toList();
   }
 
   @override

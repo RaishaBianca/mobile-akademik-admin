@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/pages/peminjaman/detailpeminjaman_page.dart';
 
-class CardConfirmed extends StatelessWidget {
+class BookstatusCard extends StatelessWidget {
   final int id;
   final String studentName;
   final String no_tlp;
@@ -14,12 +14,15 @@ class CardConfirmed extends StatelessWidget {
   final String bookDate;
   final String jamMulai;
   final String jamSelesai;
+  final String time;
   // final String jumlahPengguna;
   final String keterangan;
   final String alasanPenolakan;
   final String catatan_kejadian;
+  final bool is_active;
+  final String status;
 
-  const CardConfirmed({
+  const BookstatusCard({
     Key? key,
     required this.id,
     required this.studentName,
@@ -33,10 +36,13 @@ class CardConfirmed extends StatelessWidget {
     required this.bookDate,
     required this.jamMulai,
     required this.jamSelesai,
+    required this.time,
     // required this.jumlahPengguna,
     required this.keterangan,
     required this.alasanPenolakan,
     required this.catatan_kejadian,
+    required this.is_active,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -64,7 +70,8 @@ class CardConfirmed extends StatelessWidget {
               alasanPenolakan: alasanPenolakan,
               catatan_kejadian: catatan_kejadian,
               isAccepted: isAccepted,
-              is_active: true || false,
+              is_active: is_active,
+              // status: status,
             ),
           ),
         );
@@ -131,11 +138,11 @@ class CardConfirmed extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     decoration: BoxDecoration(
-                      color: isAccepted ? Colors.green[500] : Colors.red[500],
+                      color: is_active ? Colors.green[500] : Colors.red[500],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      isAccepted ? 'accepted' : 'rejected',
+                      is_active ? 'true' : 'false',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
