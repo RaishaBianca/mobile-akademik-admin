@@ -4,7 +4,6 @@ import 'package:admin_fik_app/customstyle/custombuttonone.dart';
 import 'package:admin_fik_app/customstyle/custombuttontwo.dart';
 import 'package:admin_fik_app/pages/peminjaman/menunggu_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/terkonfirmasi_page.dart';
-import 'package:admin_fik_app/pages/peminjaman/semuadaftar_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/ongoing_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/completed_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/kelastersedia_page.dart';
@@ -110,14 +109,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                     ),
                   ),
                 ],
-              ),
-              SizedBox(height: 20),
-              CustomButtonTwo(
-                label: 'Lihat Semua Daftar',
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SemuadaftarPage(room: roomType)),
-                ),
               ),
               SizedBox(height: 20),
               CustomButtonTwo(

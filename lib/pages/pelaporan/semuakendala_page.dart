@@ -70,7 +70,7 @@ class _SemuakendalaPageState extends State<SemuakendalaPage> {
                   jenis_kendala: kendala['jenis_kendala'],
                   bentuk_kendala: kendala['bentuk_kendala'],
                   deskripsi_kendala: kendala['deskripsi_kendala'],
-                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'],
+                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'] ?? '',
                 );
               },
             );

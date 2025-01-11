@@ -176,18 +176,41 @@ Future<int> verifikasiPeminjaman(String id, String id_status, String alasanPenol
   print(jamMulai);
   print(jamSelesai);
   print(idRuang);
-  var response = await http.post(url, body: {
-    'id': id,
-    'id_status': id_status,
-    'alasan_penolakan': alasanPenolakan,
-    'catatan_kejadian' : catatanKejadian,
-    'jam_mulai': jamMulai,
-    'jam_selesai': jamSelesai,
-    'id_ruang': idRuang,
-  }, headers: await _getHeaders());
-  print(response.body);
-  return response.statusCode;
+
+  try {
+    final headers = await _getHeaders();
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    
+    var response = await http.post(
+      url,
+      headers: headers,
+      body: {
+        'id': id,
+        'id_status': id_status,
+        'alasan_penolakan': alasanPenolakan,
+        'catatan_kejadian': catatanKejadian,
+        'jam_mulai': jamMulai,
+        'jam_selesai': jamSelesai,
+        // 'id_ruang': idRuang,
+        'ruangan' : idRuang,
+      }
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      var errorBody = json.decode(response.body);
+      throw Exception('Failed to verify peminjaman: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in verifikasiPeminjaman: $e');
+    throw e;
+  }
 }
+
 
 Future<List<Map<String, dynamic>>> getAllRuangantersedia(String jamMulai, String jamSelesai, String tglPinjam, String tipeRuang) async {
   endpoint = 'ruangan/status';
@@ -248,6 +271,19 @@ Future<List<Map<String, dynamic>>> getKendalaLab() async {
   }
 }
 
+Future<List<Map<String, dynamic>>> getStatus({bool isActive = true}) async {
+  endpoint = 'status';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  print("fetch status");
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to get status data');
+  }
+}
+
 Future<List<Map<String, dynamic>>> getKendalaKelas() async {
   endpoint = 'kendala/kelas';
   var url = Uri.parse(base_url + endpoint);
@@ -260,16 +296,45 @@ Future<List<Map<String, dynamic>>> getKendalaKelas() async {
   }
 }
 
-Future<int> verifikasiKendala(String id, String status, String keterangan) async {
+Future<int> verifikasiKendala(String id, String id_status, String keterangan) async {
   endpoint = 'kendala/verifikasi';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.post(url, body: {
-    'id': id,
-    'status': status,
-    'keterangan_penyelesaian': keterangan,
-  }, headers: await _getHeaders());
-  print(response.body);
-  return response.statusCode;
+  print(id);
+  print(id_status);
+  print(keterangan);
+  // var response = await http.post(url, body: {
+  //   'id': id,
+  //   'id_status': id_status,
+  //   'keterangan_penyelesaian': keterangan,
+  // }, headers: await _getHeaders());
+  // print(response.body);
+  // return response.statusCode;
+  try {
+    final headers = await _getHeaders();
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
+    var response = await http.post(
+        url,
+        headers: headers,
+        body: {
+          'id': id,
+          'id_status': id_status,
+          'keterangan_penyelesaian': keterangan,
+        }
+        );
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          return response.statusCode;
+        } else {
+        var errorBody = json.decode(response.body);
+        throw Exception('Failed to verify kendala: ${response.statusCode}');
+        }
+      } catch (e) {
+      print('Error in verifikasiKendala: $e');
+      throw e;
+      }
 }
 
 Future<List<Map<String, dynamic>>> getAllJadwal() async {

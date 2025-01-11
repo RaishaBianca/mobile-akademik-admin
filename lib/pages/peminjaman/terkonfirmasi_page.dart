@@ -27,7 +27,8 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    return peminjaman.where((peminjaman) => peminjaman['id_status'] == '5' || peminjaman['id_status'] == '6').toList();
+    print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList()}");
+    return peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList();
   }
 
   @override
@@ -65,18 +66,18 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
                   studentName: peminjaman['nama_peminjam'],
                   no_tlp: peminjaman['no_tlp'],
                   grup_pengguna: peminjaman['grup_pengguna'],
-                  ruangan: peminjaman['ruangan'],
-                  groupSize: peminjaman['jumlah_orang'],
-                  isAccepted: peminjaman['id_status'] == '6',
+                  inputDate: peminjaman['tanggal'],
+                  bookDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim'],
-                  bookDate: peminjaman['tgl_pinjam'],
+                  keterangan: peminjaman['keterangan'] ?? '',
+                  alasanPenolakan: peminjaman['alasan_penolakan'] ?? '',
+                  catatan_kejadian: peminjaman['catatan_kejadian'] ?? '',
+                  time: "${peminjaman['jam_mulai']} - ${peminjaman['jam_selesai']} WIB",
                   jamMulai: peminjaman['jam_mulai'],
                   jamSelesai: peminjaman['jam_selesai'],
-                  keterangan: peminjaman['keterangan'],
-                  alasanPenolakan: peminjaman['alasan_penolakan'],
-                  catatan_kejadian: peminjaman['catatan_kejadian'],
-                  inputDate: peminjaman['tanggal'],
-                  // jumlahPengguna: "${peminjaman['jumlah_orang']} Orang",
+                  ruangan: peminjaman['ruangan'],
+                  groupSize: peminjaman['jumlah_orang'],
+                  status: peminjaman['status'],
                 );
               },
             );

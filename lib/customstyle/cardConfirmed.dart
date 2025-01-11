@@ -8,16 +8,16 @@ class CardConfirmed extends StatelessWidget {
   final String grup_pengguna;
   final String inputDate;
   final String ruangan;
-  final bool isAccepted;
   final String studentNim;
   final int groupSize;
   final String bookDate;
   final String jamMulai;
   final String jamSelesai;
-  // final String jumlahPengguna;
+  final String time;
   final String keterangan;
   final String alasanPenolakan;
   final String catatan_kejadian;
+  final String status;
 
   const CardConfirmed({
     Key? key,
@@ -28,15 +28,15 @@ class CardConfirmed extends StatelessWidget {
     required this.inputDate,
     required this.ruangan,
     required this.groupSize,
-    required this.isAccepted,
     required this.studentNim,
     required this.bookDate,
     required this.jamMulai,
     required this.jamSelesai,
-    // required this.jumlahPengguna,
+    required this.time,
     required this.keterangan,
     required this.alasanPenolakan,
     required this.catatan_kejadian,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -59,12 +59,10 @@ class CardConfirmed extends StatelessWidget {
               jamMulai: jamMulai,
               jamSelesai: jamSelesai,
               jumlahPengguna: groupSize,
-              // jumlahPengguna: jumlahPengguna,
               keterangan: keterangan,
               alasanPenolakan: alasanPenolakan,
               catatan_kejadian: catatan_kejadian,
-              isAccepted: isAccepted,
-              is_active: true || false,
+              status: status,
             ),
           ),
         );
@@ -131,11 +129,17 @@ class CardConfirmed extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     decoration: BoxDecoration(
-                      color: isAccepted ? Colors.green[500] : Colors.red[500],
+                      color: {
+                        'waiting': Colors.yellow[500],
+                        'rejected': Colors.red[500],
+                        'accepted': Colors.green[500],
+                        'ongoing': Colors.blue[500],
+                        'completed': Colors.grey[500],
+                      }[status] ?? Colors.black,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      isAccepted ? 'accepted' : 'rejected',
+                      status ?? 'unknown',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

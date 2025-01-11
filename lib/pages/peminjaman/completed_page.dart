@@ -1,7 +1,6 @@
 import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
 import 'package:flutter/material.dart';
-import 'package:admin_fik_app/customstyle/bookingCard.dart';
-import 'package:admin_fik_app/customstyle/bookstatusCard.dart';
+import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class CompletedPage extends StatefulWidget {
@@ -29,21 +28,22 @@ class _CompletedPageState extends State<CompletedPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    return peminjaman.where((peminjaman) => peminjaman['id_status'] == '8').toList();
+    print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 8).toList()}");
+    return peminjaman.where((peminjaman) => peminjaman['id_status'] == 8).toList();
   }
 
-  Future<int> verifikasiPeminjaman(String id, String id_status, String status, String alasanPenolakan, String catatan_kejadian, String jamMulai, String jamSelesai, String idRuang) async {
-    int statusCode = await api_data.verifikasiPeminjaman(id, id_status, alasanPenolakan, catatan_kejadian, jamMulai, jamSelesai, idRuang);
-    if (statusCode == 200) {
-      print('Peminjaman $id $id_status');
-      setState(() {
-        _peminjamanFuture = fetchPeminjaman();
-      });
-    } else {
-      print('Failed to verify peminjaman $id: $statusCode');
-    }
-    return statusCode;
-  }
+  // Future<int> verifikasiPeminjaman(String id, String id_status, String status, String alasanPenolakan, String catatan_kejadian, String jamMulai, String jamSelesai, String idRuang) async {
+  //   int statusCode = await api_data.verifikasiPeminjaman(id, id_status, alasanPenolakan, catatan_kejadian, jamMulai, jamSelesai, idRuang);
+  //   if (statusCode == 200) {
+  //     print('Peminjaman $id $id_status');
+  //     setState(() {
+  //       _peminjamanFuture = fetchPeminjaman();
+  //     });
+  //   } else {
+  //     print('Failed to verify peminjaman $id: $statusCode');
+  //   }
+  //   return statusCode;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class _CompletedPageState extends State<CompletedPage> {
               itemCount: peminjamanList.length,
               itemBuilder: (context, index) {
                 var peminjaman = peminjamanList[index];
-                return BookstatusCard(
+                return CardConfirmed(
                   id: peminjaman['id'],
                   studentName: peminjaman['nama_peminjam'],
                   no_tlp: peminjaman['no_tlp'],
@@ -83,17 +83,15 @@ class _CompletedPageState extends State<CompletedPage> {
                   inputDate: peminjaman['tanggal'],
                   bookDate: peminjaman['tanggal'],
                   studentNim: peminjaman['nim'],
-                  keterangan: peminjaman['keterangan'],
-                  alasanPenolakan: peminjaman['alasan_penolakan'],
-                  catatan_kejadian: peminjaman['catatan_kejadian'],
+                  keterangan: peminjaman['keterangan'] ?? '',
+                  alasanPenolakan: peminjaman['alasan_penolakan'] ?? '',
+                  catatan_kejadian: peminjaman['catatan_kejadian'] ?? '',
                   time: "${peminjaman['jam_mulai']} - ${peminjaman['jam_selesai']} WIB",
                   jamMulai: peminjaman['jam_mulai'],
                   jamSelesai: peminjaman['jam_selesai'],
                   ruangan: peminjaman['ruangan'],
                   groupSize: peminjaman['jumlah_orang'],
                   status: peminjaman['status'],
-                  isAccepted: peminjaman['id_status'] == '8',
-                  is_active: peminjaman['is_active'] == 'false',
                 );
               },
             );

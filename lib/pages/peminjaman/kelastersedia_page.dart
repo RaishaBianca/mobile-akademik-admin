@@ -75,9 +75,14 @@ class _KelastersediaPageState extends State<KelastersediaPage> {
     setState(() {
       _ruangantersediaFuture = _ruangantersediaFuture.then((rooms) {
         final room = rooms.firstWhere((room) => room['id_ruang'] == idRuang);
+        print("room: $room");
         room['status'] = room['status'] == 'open' ? 'close' : 'open';
+        print("room['status']: ${room['status']}");
         return rooms;
       });
+      print('Toggled status for room $idRuang');
+      print(_ruangantersediaFuture);
+
     });
   }
 

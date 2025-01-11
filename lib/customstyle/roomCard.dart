@@ -17,17 +17,22 @@ class RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isOpen = status.toLowerCase() == 'open';
+    print("isOpen: $isOpen");
+    
     return Card(
       child: ListTile(
         title: Text(idRuang),
         subtitle: Text(namaRuang),
         trailing: Switch(
-          value: status == 'open',
-          onChanged: (value) {
+          value: isOpen,
+          onChanged: (bool value) {
             onToggleStatus(idRuang);
           },
           activeColor: Colors.green,
+          activeTrackColor: Colors.green.withOpacity(0.5),
           inactiveThumbColor: Colors.red,
+          inactiveTrackColor: Colors.red.withOpacity(0.5),
         ),
       ),
     );
