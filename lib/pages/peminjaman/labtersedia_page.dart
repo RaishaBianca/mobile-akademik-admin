@@ -84,7 +84,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
     void _toggleStatus(String idRuang) async {
     final roomInfo = await _getRoomInfo(idRuang);
   
-    if (roomInfo?['status'] == 'open') {
+    if (roomInfo?['status'] == 'close') {
       showDialog(
         context: context,
         builder: (BuildContext context) {
