@@ -3,12 +3,18 @@ import 'package:admin_fik_app/customstyle/roomCard.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 import 'package:intl/intl.dart';
 
-class LabtersediaPage extends StatefulWidget {
+class RuanganTersediaPage extends StatefulWidget {
+  final String type;
+  const RuanganTersediaPage({
+    Key? key,
+    required this.type
+  }) : super(key: key);
+
   @override
-  _LabtersediaPageState createState() => _LabtersediaPageState();
+  _RuanganTersediaPageState createState() => _RuanganTersediaPageState();
 }
 
-class _LabtersediaPageState extends State<LabtersediaPage> {
+class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
   late Future<List<Map<String, dynamic>>> _ruangantersediaFuture;
   late TextEditingController jamMulaiController;
   late TextEditingController jamSelesaiController;
@@ -26,7 +32,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
     _ruangantersediaFuture = fetchRuangantersedia();
   }
 
-    @override
+  @override
   void dispose() {
     jamMulaiController.dispose();
     jamSelesaiController.dispose();
@@ -47,16 +53,14 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
         jamMulaiController.text,
         jamSelesaiController.text,
         DateFormat('yyyy-MM-dd').format(selectedDate),
-        'lab',
+        widget.type,
       );
-      print("allRuangantersedia: $allRuangantersedia");
       return allRuangantersedia;
     } catch (e) {
       print("Error fetching ruangan tersedia: $e");
       return [];
     }
   }
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -80,7 +84,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
     if (picked != null) {
       final now = DateTime.now();
       final formattedTime = DateFormat('HH:mm').format(
-        DateTime(now.year, now.month, now.day, picked.hour, picked.minute)
+          DateTime(now.year, now.month, now.day, picked.hour, picked.minute)
       );
       setState(() {
         controller.text = formattedTime;
@@ -106,7 +110,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
   Future<Map<String, dynamic>?> _getRoomInfo(String idRuang) async {
     final rooms = await _ruangantersediaFuture;
     return rooms.firstWhere(
-      (room) => room['id_ruang'] == idRuang,
+          (room) => room['id_ruang'] == idRuang,
       orElse: () => {},
     );
   }
@@ -119,8 +123,8 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Pilih Tindakan'),
-            content: Text('Apakah anda yakin ingin membuka ruangan ini?' + 
-              (roomInfo?['alasan'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${roomInfo?['alasan']}' : '')),
+            content: Text('Apakah anda yakin ingin membuka ruangan ini?' +
+                (roomInfo?['alasan'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${roomInfo?['alasan']}' : '')),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -129,8 +133,8 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                 final idJadwal = (roomInfo?['id'] ?? '').toString();
-                _showUndurDialog(idRuang, idJadwal);
+                  final idJadwal = (roomInfo?['id'] ?? '').toString();
+                  _showUndurDialog(idRuang, idJadwal);
                 },
                 child: Text('Buka'),
               ),
@@ -158,6 +162,49 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
                   _showPinjamDialog(idRuang, idPinjam);
                 },
                 child: Text('Buka'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else if(roomInfo?['status'] == 'open') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Form Peminjaman'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Keperluan Input
+                  TextFormField(
+                    controller: keperluanController,
+                    decoration: InputDecoration(
+                      labelText: 'Keperluan',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _handleRoomClosure(
+                    idRuang,
+                    jamMulaiController.text,
+                    jamSelesaiController.text,
+                    keperluanController.text,);
+                  Navigator.of(context).pop();
+                },
+                child: Text('Simpan'),
               ),
             ],
           );
@@ -206,7 +253,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
       },
     );
   }
-  
+
   void _showUndurDialog(String idRuang, String idJadwal) {
     final dialogJamMulaiController = TextEditingController();
     final dialogJamSelesaiController = TextEditingController();
@@ -217,106 +264,130 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState) {
-          return AlertDialog(
-            title: Text('Form Pengunduran'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: dialogTglUndurController,
-                    decoration: InputDecoration(
-                      labelText: 'Tanggal Undur',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.calendar_today),
-                    ),
-                    onTap: () => _selectUndurDate(context, dialogTglUndurController),
-                    readOnly: true,
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text('Form Pengunduran'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: dialogTglUndurController,
+                        decoration: InputDecoration(
+                          labelText: 'Tanggal Undur',
+                          border: OutlineInputBorder(),
+                          suffixIcon: Icon(Icons.calendar_today),
+                        ),
+                        onTap: () => _selectUndurDate(context, dialogTglUndurController),
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: dialogJamMulaiController,
+                        decoration: InputDecoration(
+                          labelText: 'Jam Mulai',
+                          border: OutlineInputBorder(),
+                        ),
+                        onTap: () async {
+                          await _selectTime(context, dialogJamMulaiController);
+                        },
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: dialogJamSelesaiController,
+                        decoration: InputDecoration(
+                          labelText: 'Jam Selesai',
+                          border: OutlineInputBorder(),
+                        ),
+                        onTap: () async {
+                          await _selectTime(context, dialogJamSelesaiController);
+                        },
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: dialogAlasanController,
+                        decoration: InputDecoration(
+                          labelText: 'Alasan',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: dialogJamMulaiController,
-                    decoration: InputDecoration(
-                      labelText: 'Jam Mulai',
-                      border: OutlineInputBorder(),
-                    ),
-                    onTap: () async {
-                      await _selectTime(context, dialogJamMulaiController);
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Batal'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _handleJadwalClosure(
+                        idJadwal,
+                        idRuang,
+                        dialogTglUndurController.text,
+                        dialogJamMulaiController.text,
+                        dialogJamSelesaiController.text,
+                        dialogAlasanController.text,
+                      );
+                      Navigator.of(context).pop();
                     },
-                    readOnly: true,
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: dialogJamSelesaiController,
-                    decoration: InputDecoration(
-                      labelText: 'Jam Selesai',
-                      border: OutlineInputBorder(),
-                    ),
-                    onTap: () async {
-                      await _selectTime(context, dialogJamSelesaiController);
-                    },
-                    readOnly: true,
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: dialogAlasanController,
-                    decoration: InputDecoration(
-                      labelText: 'Alasan',
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: 3,
+                    child: Text('Simpan'),
                   ),
                 ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Batal'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _handleJadwalClosure(
-                    idJadwal,
-                    idRuang,
-                    dialogTglUndurController.text,
-                    dialogJamMulaiController.text,
-                    dialogJamSelesaiController.text,
-                    dialogAlasanController.text,
-                  );
-                  Navigator.of(context).pop();
-                },
-                child: Text('Simpan'),
-              ),
-            ],
-          );
-        });
+              );
+            });
       },
     );
   }
 
-  void _handleJadwalClosure(
-    String idJadwal,
-    String idRuang,
-    String tglUndur,
-    String jamMulai, 
-    String jamSelesai,
-    String alasan,
-  ) async {
+  void _handleRoomClosure(String idRuang, String jamMulai, String jamSelesai, String alasan) async {
     try {
       final tglAwal = DateFormat('yyyy-MM-dd').format(selectedDate);
-      
+      final response = await api_data.tutupPemakaianRuang(
+        tglPinjam: tglAwal,
+        jamMulai: jamMulai.isEmpty ? null : jamMulai,
+        jamSelesai: jamSelesai.isEmpty ? null : jamSelesai,
+        keterangan: alasan.isEmpty ? null : alasan,
+        idRuang: idRuang,
+      );
+
+      if (response == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ruangan berhasil ditutup')),
+        );
+        updateRuangantersedia();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menutup ruangan: $e')),
+      );
+    }
+  }
+
+  void _handleJadwalClosure(
+      String idJadwal,
+      String idRuang,
+      String tglUndur,
+      String jamMulai,
+      String jamSelesai,
+      String alasan,
+      ) async {
+    try {
+      final tglAwal = DateFormat('yyyy-MM-dd').format(selectedDate);
+
       final response = await api_data.bukaPemakaianJadwal(
         idJadwal: idJadwal,
         tglAwal: tglAwal,
         tglUndur: tglUndur.isEmpty ? null : tglUndur,
         jamMulai: jamMulai.isEmpty ? null : jamMulai,
-        jamSelesai: jamSelesai.isEmpty ? null : jamSelesai, 
+        jamSelesai: jamSelesai.isEmpty ? null : jamSelesai,
         alasan: alasan.isEmpty ? null : alasan,
         idRuang: idRuang,
       );
-  
+
       if (response == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ruangan berhasil dibuka')),
@@ -331,14 +402,14 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
   }
 
   void _handlePinjamClosure(
-    String idPinjam,
-    String alasan) async {
+      String idPinjam,
+      String alasan) async {
     try {
       final response = await api_data.bukaPemakaianPinjam(
         idPinjam: idPinjam,
         alasan: alasan,
       );
-  
+
       if (response == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ruangan berhasil dibuka')),
@@ -358,7 +429,7 @@ class _LabtersediaPageState extends State<LabtersediaPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Ruang Lab Tersedia',
+          'Ruang ${widget.type == 'lab' ? 'Lab' : 'Kelas'} Tersedia',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white,

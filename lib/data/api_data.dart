@@ -519,3 +519,32 @@ Future<int> bukaPemakaianPinjam({required String idPinjam, String? alasan}) asyn
     throw e;
   }
 }
+
+Future<int> tutupPemakaianRuang({required String idRuang, String? keterangan, required String tglPinjam, String? jamMulai, String? jamSelesai  }) async {
+  endpoint = 'tutup-ruangan';
+  var url = Uri.parse(base_url + endpoint);
+  print("data: $idRuang $keterangan $tglPinjam $jamMulai $jamSelesai");
+  try {
+    var response = await http.post(
+        url,
+        body: {
+          'id_ruang': idRuang,
+          'keterangan': keterangan ?? '',
+          'tgl_pinjam': tglPinjam,
+          'jam_mulai': jamMulai ?? '',
+          'jam_selesai': jamSelesai ?? '',
+        },
+        headers: await _getHeaders()
+    );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupRuangan: $e');
+    throw e;
+  }
+}
