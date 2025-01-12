@@ -23,7 +23,7 @@ class ReportCard extends StatelessWidget {
     required this.jenis_kendala,
     required this.bentuk_kendala,
     required this.deskripsi_kendala,
-    required this.status, // Mengambil status sebagai string
+    required this.status,
     this.keterangan_penyelesaian,
   }) : super(key: key);
 
@@ -133,12 +133,12 @@ class ReportCard extends StatelessWidget {
   // Fungsi untuk menentukan warna berdasarkan status
   Color _getStatusColor() {
     switch (status) {
-      case 'menunggu':
-        return Colors.green[500]!;
-      case 'dalam proses':
-        return Colors.yellow[500]!;
-      case 'selesai':
+      case 'waiting':
         return Colors.red[500]!;
+      case 'onprogress':
+        return Colors.green[500]!;
+      case 'resolved':
+        return Colors.blue[500]!;
       default:
         return Colors.grey; // Jika status tidak dikenali
     }
@@ -146,12 +146,12 @@ class ReportCard extends StatelessWidget {
 
   String _mapStatus(String status) {
     switch (status) {
-      case 'menunggu':
-        return 'Menunggu';
-      case 'dalam proses':
-        return 'Dalam Proses';
-      case 'selesai':
-        return 'Selesai';
+      case 'waiting':
+        return 'Waiting';
+      case 'onprogress':
+        return 'On Progress';
+      case 'resolved':
+        return 'resolved';
       default:
         return 'Unknown';
     }

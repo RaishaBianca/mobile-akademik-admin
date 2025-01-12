@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/cardConfirmed.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
-class MenungguPage extends StatefulWidget {
+class OngoingPage extends StatefulWidget {
   final String room;
 
-  MenungguPage({required this.room});
+  OngoingPage({required this.room});
 
   @override
-  _MenungguPageState createState() => _MenungguPageState();
+  _OngoingPageState createState() => _OngoingPageState();
 }
 
-class _MenungguPageState extends State<MenungguPage> {
+class _OngoingPageState extends State<OngoingPage> {
   late Future<List<Map<String, dynamic>>> _peminjamanFuture;
 
   @override
@@ -27,8 +27,8 @@ class _MenungguPageState extends State<MenungguPage> {
     }else{
       peminjaman = await api_data.getPeminjamanKelas();
     }
-    print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 4).toList()}");
-    return peminjaman.where((peminjaman) => peminjaman['id_status'] == 4).toList();
+    print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 7).toList()}");
+    return peminjaman.where((peminjaman) => peminjaman['id_status'] == 7).toList();
   }
 
   // Future<int> verifikasiPeminjaman(String id, String id_status, String status, String alasanPenolakan, String catatan_kejadian, String jamMulai, String jamSelesai, String idRuang) async {
@@ -50,7 +50,7 @@ class _MenungguPageState extends State<MenungguPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Daftar Dalam Antrian',
+          'Daftar Sedang Berjalan',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white,

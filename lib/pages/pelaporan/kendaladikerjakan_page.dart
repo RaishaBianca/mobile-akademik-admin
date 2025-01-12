@@ -27,7 +27,8 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
     }else{
       kendala = await api_data.getKendalaKelas();
     }
-    return kendala.where((kendala) => kendala['status'] == 'dalam proses').toList();
+    print("peminjaman: ${kendala.where((kendala) => kendala['id_status'] == 2).toList()}");
+    return kendala.where((kendala) => kendala['id_status'] == 2).toList();
   }
 
   @override
@@ -70,7 +71,7 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
                   jenis_kendala: kendala['jenis_kendala'],
                   bentuk_kendala: kendala['bentuk_kendala'],
                   deskripsi_kendala: kendala['deskripsi_kendala'],
-                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'],
+                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'] ?? '',
                 );
               },
             );

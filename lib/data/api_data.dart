@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:http_parser/http_parser.dart';
 
-final String base_url = 'https://b9fe-103-147-92-253.ngrok-free.app/api/';
+const String base_url = 'https://5405-103-147-92-253.ngrok-free.app/api/';
 late String endpoint;
 late SharedPreferences prefs;
 
@@ -116,8 +116,8 @@ Future<List<Map<String, dynamic>>> getAllPeminjaman() async {
   endpoint = 'peminjaman';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.get(url,
-    headers: await _getHeaders()
-    );
+      headers: await _getHeaders()
+  );
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -130,8 +130,8 @@ Future<List<Map<String, dynamic>>> getPeminjamanLab() async {
   endpoint = 'peminjaman/lab';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.get(url,
-    headers: await _getHeaders()
-    );
+      headers: await _getHeaders()
+  );
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -144,8 +144,8 @@ Future<List<Map<String, dynamic>>> getPeminjamanKelas() async {
   endpoint = 'peminjaman/kelas';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.get(url,
-    headers: await _getHeaders()
-    );
+      headers: await _getHeaders()
+  );
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -158,8 +158,91 @@ Future<Map<String, dynamic>> getPeminjamanCount() async {
   endpoint = 'peminjaman/count';
   var url = Uri.parse(base_url + endpoint);
   var response = await http.get(url, headers: await _getHeaders());
+  print(response.body);
   if (response.statusCode == 200) {
     return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<int> verifikasiPeminjaman(String id, String id_status, String alasanPenolakan, String catatanKejadian, String jamMulai, String jamSelesai, String idRuang) async {
+  endpoint = 'peminjaman/verifikasi';
+  var url = Uri.parse(base_url + endpoint);
+  print(id);
+  print(id_status);
+  print(alasanPenolakan);
+  print(catatanKejadian);
+  print(jamMulai);
+  print(jamSelesai);
+  print(idRuang);
+
+  try {
+    final headers = await _getHeaders();
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    
+    var response = await http.post(
+      url,
+      headers: headers,
+      body: {
+        'id': id,
+        'id_status': id_status,
+        'alasan_penolakan': alasanPenolakan,
+        'catatan_kejadian': catatanKejadian,
+        'jam_mulai': jamMulai,
+        'jam_selesai': jamSelesai,
+        // 'id_ruang': idRuang,
+        'ruangan' : idRuang,
+      }
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      var errorBody = json.decode(response.body);
+      throw Exception('Failed to verify peminjaman: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in verifikasiPeminjaman: $e');
+    throw e;
+  }
+}
+
+
+Future<List<Map<String, dynamic>>> getAllRuangantersedia(String jamMulai, String jamSelesai, String tglPinjam, String tipeRuang) async {
+  endpoint = 'ruangan/status';
+  var url = Uri.parse(base_url + endpoint);
+  print('data $jamMulai $jamSelesai $tglPinjam $tipeRuang');
+  
+  var response = await http.post(url, 
+    body: {
+      'jam_mulai': jamMulai,
+      'jam_selesai': jamSelesai,
+      'tgl_pinjam': tglPinjam,
+      'tipe_ruang': tipeRuang
+    }, 
+    headers: await _getHeaders()
+  );
+  print(response.body);
+
+  if (response.statusCode == 200) {
+    var responseBody = json.decode(response.body);
+    return responseBody.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getAllKendala() async {
+  endpoint = 'kendala';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception('Failed to load data');
   }
@@ -171,39 +254,6 @@ Future<Map<String, dynamic>> getKendalaCount() async {
   var response = await http.get(url, headers: await _getHeaders());
   if (response.statusCode == 200) {
     return json.decode(response.body);
-  } else {
-    throw Exception('Failed to load data');
-  }
-}
-
-Future<int> verifikasiPeminjaman(String id, String status, String alasanPenolakan, String jamMulai, String jamSelesai, String idRuang) async {
-  endpoint = 'peminjaman/verifikasi';
-  var url = Uri.parse(base_url + endpoint);
-  print(id);
-  print(status);
-  print(alasanPenolakan);
-  print(jamMulai);
-  print(jamSelesai);
-  print(idRuang);
-  var response = await http.post(url, body: {
-    'id': id,
-    'status': status,
-    'alasan_penolakan': alasanPenolakan,
-    'jam_mulai': jamMulai,
-    'jam_selesai': jamSelesai,
-    'id_ruang': idRuang,
-  }, headers: await _getHeaders());
-  print(response.body);
-  return response.statusCode;
-}
-
-Future<List<Map<String, dynamic>>> getAllKendala() async {
-  endpoint = 'kendala';
-  var url = Uri.parse(base_url + endpoint);
-  var response = await http.get(url, headers: await _getHeaders());
-  if (response.statusCode == 200) {
-    List<dynamic> data = json.decode(response.body);
-    return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception('Failed to load data');
   }
@@ -221,6 +271,19 @@ Future<List<Map<String, dynamic>>> getKendalaLab() async {
   }
 }
 
+Future<List<Map<String, dynamic>>> getStatus({bool isActive = true}) async {
+  endpoint = 'status';
+  var url = Uri.parse(base_url + endpoint);
+  var response = await http.get(url, headers: await _getHeaders());
+  print("fetch status");
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to get status data');
+  }
+}
+
 Future<List<Map<String, dynamic>>> getKendalaKelas() async {
   endpoint = 'kendala/kelas';
   var url = Uri.parse(base_url + endpoint);
@@ -233,16 +296,45 @@ Future<List<Map<String, dynamic>>> getKendalaKelas() async {
   }
 }
 
-Future<int> verifikasiKendala(String id, String status, String keterangan) async {
+Future<int> verifikasiKendala(String id, String id_status, String keterangan) async {
   endpoint = 'kendala/verifikasi';
   var url = Uri.parse(base_url + endpoint);
-  var response = await http.post(url, body: {
-    'id': id,
-    'status': status,
-    'keterangan_penyelesaian': keterangan,
-  }, headers: await _getHeaders());
-  print(response.body);
-  return response.statusCode;
+  print(id);
+  print(id_status);
+  print(keterangan);
+  // var response = await http.post(url, body: {
+  //   'id': id,
+  //   'id_status': id_status,
+  //   'keterangan_penyelesaian': keterangan,
+  // }, headers: await _getHeaders());
+  // print(response.body);
+  // return response.statusCode;
+  try {
+    final headers = await _getHeaders();
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
+    var response = await http.post(
+        url,
+        headers: headers,
+        body: {
+          'id': id,
+          'id_status': id_status,
+          'keterangan_penyelesaian': keterangan,
+        }
+        );
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          return response.statusCode;
+        } else {
+        var errorBody = json.decode(response.body);
+        throw Exception('Failed to verify kendala: ${response.statusCode}');
+        }
+      } catch (e) {
+      print('Error in verifikasiKendala: $e');
+      throw e;
+      }
 }
 
 Future<List<Map<String, dynamic>>> getAllJadwal() async {
@@ -358,3 +450,72 @@ Future<void> saveTokenToServer(String? token) async {
   }
 }
 
+Future<int> bukaPemakaianJadwal({
+  required String idJadwal, 
+  required String tglAwal, 
+  String? tglUndur, 
+  String? jamMulai, 
+  String? jamSelesai, 
+  String? alasan, 
+  required String idRuang,
+}) async {
+  endpoint = 'buka-pemakaian/jadwal';
+  var url = Uri.parse(base_url + endpoint);
+  print('Data: $idJadwal $tglAwal $tglUndur $jamMulai $jamSelesai $alasan $idRuang');
+  print('url $url');
+  try {
+    var response = await http.post(
+      url, 
+      body: {
+        'id_jadwal': idJadwal,
+        'tgl_awal': tglAwal,
+        'tgl_undur': tglUndur ?? '',
+        'jam_mulai': jamMulai ?? '',
+        'jam_selesai': jamSelesai ?? '',
+        'alasan': alasan ?? '',
+        'id_ruang': idRuang,
+      },
+      headers: await _getHeaders()
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupPemakaianJadwal: $e');
+    throw e;
+  }
+}
+
+Future<int> bukaPemakaianPinjam({required String idPinjam, String? alasan}) async {
+  endpoint = 'buka-pemakaian/pinjam';
+  var url = Uri.parse(base_url + endpoint);
+  print('Data: $idPinjam $alasan');
+  try {
+    var response = await http.post(
+      url, 
+      body: {
+        'id_pinjam': idPinjam,
+        'alasan': alasan ?? '',
+      },
+      headers: await _getHeaders()
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupPemakaianPinjam: $e');
+    throw e;
+  }
+}

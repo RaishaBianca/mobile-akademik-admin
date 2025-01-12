@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/buttonaccept.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
+const List<String> list = <String>['waiting','onprogress', 'resolved'];
+
 class DetailkendalaPage extends StatefulWidget {
   final int id;
   final String nama_pelapor;
@@ -33,38 +35,122 @@ class DetailkendalaPage extends StatefulWidget {
   _DetailkendalaPageState createState() => _DetailkendalaPageState();
 }
 
-const List<String> list = <String>['Terima', 'Selesai'];
+// const List<String> list = <String>['Terima', 'Selesai'];
 class _DetailkendalaPageState extends State<DetailkendalaPage> {
-  late Future<List<Map<String, dynamic>>> _kendalaFuture;
-  String? _lastSavedStatus;
-  late TextEditingController reasonController;
-  late String _deskripsi_kendala;
-  String statusDropdown = 'menunggu';
+  String? statusDropdown;
+  List<Map<String, dynamic>> statusList = [];
+  bool isLoadingStatus = true;
+  String _lastSavedStatus = '';
+  String _deskripsi_kendala = '';
+  final TextEditingController reasonController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _kendalaFuture = fetchKendala();
-    reasonController = TextEditingController(text: widget.keterangan_penyelesaian);
+    // _kendalaFuture = fetchKendala();
+    // reasonController = TextEditingController(text: widget.keterangan_penyelesaian);
     _deskripsi_kendala = widget.deskripsi_kendala;
+    statusDropdown = widget.status;
+    reasonController.text = widget.keterangan_penyelesaian;
+    _fetchStatus();
   }
 
-  Future<void> _handlePost() async {
-    api_data.verifikasiKendala(
-      widget.id.toString(),
-      statusDropdown,
-      reasonController.text,
-    );
+  @override
+  void dispose() {
+    reasonController.dispose();
+    super.dispose();
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-      content: Text('Berhasil menyimpan'),
-      duration: Duration(seconds: 2),
-      ),
-    );
-    //close widget
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+  Future<void> _fetchStatus() async {
+    setState(() {
+      isLoadingStatus = true;
+    });
+
+    try {
+      var data = await api_data.getStatus();
+      setState(() {
+        // Filter only kendala status
+        statusList = data.where((status) =>
+        status['fungsi'] == 'kendala').toList();
+
+        if (widget.status != null) {
+          var matchingStatus = statusList.firstWhere(
+                  (s) => s['status'].toString().toLowerCase() == widget.status.toLowerCase(),
+              orElse: () => {'id_status': null}
+          );
+          statusDropdown = matchingStatus['id_status']?.toString();
+        }
+
+        isLoadingStatus = false;
+      });
+    } catch (e) {
+      print('Error fetching status: $e');
+      setState(() {
+        isLoadingStatus = false;
+      });
+    }
+  }
+
+  // Future<void> _handlePost() async {
+  //   api_data.verifikasiKendala(
+  //     widget.id.toString(),
+  //     statusDropdown,
+  //     reasonController.text,
+  //   );
+  //
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //     content: Text('Berhasil menyimpan'),
+  //     duration: Duration(seconds: 2),
+  //     ),
+  //   );
+  //   //close widget
+  //   Navigator.of(context).pop();
+  //   Navigator.of(context).pop();
+  // }
+
+  Future<void> _handlePost() async {
+    try {
+      if (!_validateForm()) {
+        return;
+      }
+      print('Sending data:');
+      print('ID: ${widget.id}');
+      print('Status: ${statusDropdown}');
+      print('Reason: ${reasonController.text}');
+
+      final statusCode = await api_data.verifikasiKendala(
+          widget.id.toString(),
+          statusDropdown!,
+          reasonController.text,
+      );
+
+      if (statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Berhasil menyimpan'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menyimpan'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error in _handlePost: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   Future<List<Map<String, dynamic>>> fetchKendala() async {
@@ -77,6 +163,19 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
       _lastSavedStatus = status;
       _deskripsi_kendala = reasonController.text;
     });
+  }
+
+  bool _validateForm() {
+    if (statusDropdown == null || statusDropdown!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Silahkan pilih status'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -100,6 +199,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                buildRowWithDivider('ID', widget.id.toString()),
                 buildRowWithDivider('Nama', widget.nama_pelapor),
                 buildRowWithDivider('NIM', widget.nim_nrp),
                 buildRowWithDivider('Tgl Input', widget.tanggal),
@@ -128,6 +228,7 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                   maxLines: 3,
                 ),
                 SizedBox(height: 20),
+                // Status dropdown from API
                 DropdownButtonFormField<String>(
                   value: statusDropdown,
                   decoration: InputDecoration(
@@ -138,31 +239,19 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                       borderSide: BorderSide(color: Color(0x99FF5833)),
                     ),
                   ),
-                  onChanged: (String? newValue) {
+                  hint: Text("Pilih Status"),
+                  onChanged: isLoadingStatus ? null : (String? newValue) {
                     setState(() {
-                      statusDropdown = newValue!;
+                      statusDropdown = newValue;
                     });
                   },
-                  items: [
-                    DropdownMenuItem(
-                        value: 'menunggu',
-                        child: Text('Menunggu'),
-                    ),
-                    DropdownMenuItem(
-                        value: 'dalam proses',
-                        child: Text('Dalam Proses'),
-                    ),
-                    DropdownMenuItem(
-                        value: 'selesai',
-                        child: Text('Selesai'),
-                    ),
-                  ],
-                  // items: list.map<DropdownMenuItem<String>>((String value) {
-                  //   return DropdownMenuItem<String>(
-                  //     value: value,
-                  //     child: Text(value),
-                  //   );
-                  // }).toList(),
+                  items: statusList.map<DropdownMenuItem<String>>((Map<String, dynamic> status) {
+                    // String statusValue = status['status'].toString().toLowerCase();
+                    return DropdownMenuItem<String>(
+                      value: status['id_status'].toString(),
+                      child: Text(status['status']),
+                    );
+                  }).toList(),
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -175,19 +264,20 @@ class _DetailkendalaPageState extends State<DetailkendalaPage> {
                         // print("Diterima");
                       },
                     ),
-                    // SizedBox(width: 40),
-                    // ButtonReject(
-                    //   label: 'Tolak',
-                    //   onPressed: () {
-                    //     print("Ditolak dengan alasan: ${reasonController.text}");
-                    //   },
-                    // ),
                   ],
                 ),
               ],
             ),
           ),
       ),
+    );
+  }
+
+  // Helper widgets
+  Widget buildLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
     );
   }
 
