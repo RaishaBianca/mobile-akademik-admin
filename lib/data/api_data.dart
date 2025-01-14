@@ -422,6 +422,129 @@ Future<void> saveTokenToServer(String? token) async {
   print('FCM Token: $token');
 
   final response = await http.post(url, body: {
-  'fcm_token' : token,
+    'fcm_token' : token,
   }, headers: await _getHeaders());
+
+  if (response.statusCode == 200) {
+    print('FCM token saved successfully');
+  } else if (response.statusCode == 302 || response.statusCode == 301) {
+    // Handle redirect
+    final redirectUrl = response.headers['location'];
+    if (redirectUrl != null) {
+      final redirectResponse = await http.post(
+        Uri.parse(redirectUrl),
+        headers: await _getHeaders(),
+        body: jsonEncode({'fcm_token': token}),
+      );
+
+      if (redirectResponse.statusCode == 200) {
+        print('FCM token saved successfully after redirect');
+      } else {
+        print('Failed to save FCM token after redirect');
+      }
+    } else {
+      print('Redirect URL is null');
+    }
+  } else {
+    print('Failed to save FCM token');
+  }
+}
+
+Future<int> bukaPemakaianJadwal({
+  required String idJadwal, 
+  required String tglAwal, 
+  String? tglUndur, 
+  String? jamMulai, 
+  String? jamSelesai, 
+  String? alasan, 
+  required String idRuang,
+}) async {
+  endpoint = 'buka-pemakaian/jadwal';
+  var url = Uri.parse(base_url + endpoint);
+  print('Data: $idJadwal $tglAwal $tglUndur $jamMulai $jamSelesai $alasan $idRuang');
+  print('url $url');
+  try {
+    var response = await http.post(
+      url, 
+      body: {
+        'id_jadwal': idJadwal,
+        'tgl_awal': tglAwal,
+        'tgl_undur': tglUndur ?? '',
+        'jam_mulai': jamMulai ?? '',
+        'jam_selesai': jamSelesai ?? '',
+        'alasan': alasan ?? '',
+        'id_ruang': idRuang,
+      },
+      headers: await _getHeaders()
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupPemakaianJadwal: $e');
+    throw e;
+  }
+}
+
+Future<int> bukaPemakaianPinjam({required String idPinjam, String? alasan}) async {
+  endpoint = 'buka-pemakaian/pinjam';
+  var url = Uri.parse(base_url + endpoint);
+  print('Data: $idPinjam $alasan');
+  try {
+    var response = await http.post(
+      url, 
+      body: {
+        'id_pinjam': idPinjam,
+        'alasan': alasan ?? '',
+      },
+      headers: await _getHeaders()
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupPemakaianPinjam: $e');
+    throw e;
+  }
+}
+
+Future<int> tutupPemakaianRuang({required String idRuang, String? keterangan, required String tglPinjam, String? jamMulai, String? jamSelesai  }) async {
+  endpoint = 'tutup-ruangan';
+  var url = Uri.parse(base_url + endpoint);
+  print("data: $idRuang $keterangan $tglPinjam $jamMulai $jamSelesai");
+  try {
+    var response = await http.post(
+        url,
+        body: {
+          'id_ruang': idRuang,
+          'keterangan': keterangan ?? '',
+          'tgl_pinjam': tglPinjam,
+          'jam_mulai': jamMulai ?? '',
+          'jam_selesai': jamSelesai ?? '',
+        },
+        headers: await _getHeaders()
+    );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else {
+      throw Exception('Failed to close room usage: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error in tutupRuangan: $e');
+    throw e;
+  }
 }

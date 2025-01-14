@@ -28,20 +28,43 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchUserData() async {
-    final userData = await api_data.fetchUserData();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (userData != null && mounted) {
-      setState(() {
-        name = userData['nama']!;
-        email = userData['email']!;
-        profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-        isLoading = false;
-      });
-    } else {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+    final accessToken = prefs.getString('access_token');
+
+    if (accessToken != null) {
+      try {
+        final response = await http.get(
+          Uri.parse('http://127.0.0.1:8000/api/user'),
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'ngrok-skip-browser-warning': '69420',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final userData = jsonDecode(response.body);
+          if (userData != null && mounted) {
+            setState(() {
+              name = userData['nama']!;
+              email = userData['email']!;
+              profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+              isLoading = false;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              isLoading = false; // Set loading to false if adminId is null
+            });
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            isLoading = false; // Set loading to false on error
+          });
+        }
       }
     }
   }
@@ -137,16 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildProfileField(label: 'Email', value: email),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EditProfilePage(
-                      name: name,
-                      email: email,
-                      profile: profile,
-                    )),
-                  );
-                },
+                onPressed: _navigateToEditProfile,
                 child: const Text('Edit Profil'),
               ),
               const SizedBox(height: 20),

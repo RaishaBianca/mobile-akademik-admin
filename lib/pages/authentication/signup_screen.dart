@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/customstyle/theme.dart';
 import 'package:admin_fik_app/customstyle/custom_scaffold.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:admin_fik_app/data/api_data.dart'; 
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -230,7 +232,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   lightColorScheme.primary),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formSignUpKey.currentState!.validate() &&
                                   agreePersonalData) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -238,6 +240,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     content: Text('Sign up success'),
                                   ),
                                 );
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                String? fcmToken = prefs.getString('fcm_token');
+                                if (fcmToken != null) {
+                                  await saveTokenToServer(fcmToken);
+                                }
                                 Navigator.pushNamed(context, '/home');
                               } else if (!agreePersonalData) {
                                 ScaffoldMessenger.of(context).showSnackBar(

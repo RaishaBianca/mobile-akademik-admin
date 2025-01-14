@@ -6,8 +6,7 @@ import 'package:admin_fik_app/pages/peminjaman/menunggu_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/terkonfirmasi_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/ongoing_page.dart';
 import 'package:admin_fik_app/pages/peminjaman/completed_page.dart';
-import 'package:admin_fik_app/pages/peminjaman/kelastersedia_page.dart';
-import 'package:admin_fik_app/pages/peminjaman/labtersedia_page.dart';
+import 'package:admin_fik_app/pages/peminjaman/ruangantersedia_page.dart';
 import 'package:admin_fik_app/data/api_data.dart' as api_data;
 
 class PeminjamanPage extends StatefulWidget {
@@ -116,7 +115,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> with SingleTickerProvid
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => roomType == 'lab' ? LabtersediaPage() : KelastersediaPage(),
+                    builder: (context) => RuanganTersediaPage(type: roomType),
                   ),
                 ),
               ),
