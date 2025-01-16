@@ -24,34 +24,34 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
 
   Future<List<Map<String, dynamic>>> fetchPeminjaman() async {
     List<Map<String, dynamic>> peminjaman = [];
-      try {
+    try {
       if(widget.room == 'lab') {
         peminjaman = await api_data.getPeminjamanLab();
       } else if (widget.room == 'kelas') {
         peminjaman = await api_data.getPeminjamanKelas();
       }
-    print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList()}");
-    return peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList();
-    return peminjaman.map((item) => {
-          'id': item['id'] ?? 0, // Provide default value
-          'nama_peminjam': item['nama_peminjam'] ?? '',
-          'no_tlp': item['no_tlp'] ?? '',
-          'grup_pengguna': item['grup_pengguna'] ?? '',
-          'tanggal': item['tanggal'] ?? '',
-          'nim': item['nim'] ?? '',
-          'keterangan': item['keterangan'] ?? '',
-          'alasan_penolakan': item['alasan_penolakan'] ?? '',
-          'catatan_kejadian': item['catatan_kejadian'] ?? '',
-          'jam_mulai': item['jam_mulai'] ?? '',
-          'jam_selesai': item['jam_selesai'] ?? '',
-          'ruangan': item['ruangan'] ?? '',
-          'jumlah_orang': item['jumlah_orang'] ?? 0,
-          'status': item['status'] ?? '',
-        }).toList();
-      } catch (e) {
-        print('Error in fetchPeminjaman: $e');
-        return [];
-      }
+      print("peminjaman: ${peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList()}");
+      return peminjaman.where((peminjaman) => peminjaman['id_status'] == 5 || peminjaman['id_status'] == 6).toList();
+      return peminjaman.map((item) => {
+        'id': item['id'] ?? 0, // Provide default value
+        'nama_peminjam': item['nama_peminjam'] ?? '',
+        'no_tlp': item['no_tlp'] ?? '',
+        'grup_pengguna': item['grup_pengguna'] ?? '',
+        'tanggal': item['tanggal'] ?? '',
+        'nim': item['nim'] ?? '',
+        'keterangan': item['keterangan'] ?? '',
+        'alasan_penolakan': item['alasan_penolakan'] ?? '',
+        'catatan_kejadian': item['catatan_kejadian'] ?? '',
+        'jam_mulai': item['jam_mulai'] ?? '',
+        'jam_selesai': item['jam_selesai'] ?? '',
+        'ruangan': item['ruangan'] ?? '',
+        'jumlah_orang': item['jumlah_orang'] ?? 0,
+        'status': item['status'] ?? '',
+      }).toList();
+    } catch (e) {
+      print('Error in fetchPeminjaman: $e');
+      return [];
+    }
   }
 
   @override
@@ -118,13 +118,13 @@ class _TerkonfirmasiPageState extends State<TerkonfirmasiPage> {
                   return Center(child: Text('No data available'));
                 } else {
                   List<Map<String, dynamic>> peminjamanList = snapshot.data!;
-                  
+
                   // Filter the list based on search query
                   var filteredList = peminjamanList.where((peminjaman) {
                     final namaPeminjam = peminjaman['nama_peminjam'].toString().toLowerCase();
                     final ruangan = peminjaman['ruangan'].toString().toLowerCase();
-                    return namaPeminjam.contains(searchQuery) || 
-                           ruangan.contains(searchQuery);
+                    return namaPeminjam.contains(searchQuery) ||
+                        ruangan.contains(searchQuery);
                   }).toList();
 
                   return ListView.builder(

@@ -6,7 +6,7 @@ class SemuakendalaPage extends StatefulWidget {
   final String room;
 
   SemuakendalaPage({required this.room});
-  
+
   @override
   _SemuakendalaPageState createState() => _SemuakendalaPageState();
 }
@@ -96,13 +96,13 @@ class _SemuakendalaPageState extends State<SemuakendalaPage> {
                   return Center(child: Text('No data available'));
                 } else {
                   List<Map<String, dynamic>> kendalaList = snapshot.data!;
-                  
+
                   // Filter the list based on search query
                   var filteredList = kendalaList.where((kendala) {
                     final namaPelapor = kendala['nama_pelapor'].toString().toLowerCase();
                     final namaRuangan = kendala['nama_ruangan'].toString().toLowerCase();
-                    return namaPelapor.contains(searchQuery) || 
-                           namaRuangan.contains(searchQuery);
+                    return namaPelapor.contains(searchQuery) ||
+                        namaRuangan.contains(searchQuery);
                   }).toList();
 
                   return ListView.builder(
