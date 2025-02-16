@@ -13,6 +13,8 @@ class KendaladikerjakanPage extends StatefulWidget {
 
 class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
   late Future<List<Map<String, dynamic>>> _kendalaFuture;
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -32,6 +34,12 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,37 +54,81 @@ class _KendaladikerjakanPageState extends State<KendaladikerjakanPage> {
         ),
         backgroundColor: Color(0xFFFF5833),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _kendalaFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data available'));
-          } else {
-            List<Map<String, dynamic>> kendalaList = snapshot.data!;
-            return ListView.builder(
-              itemCount: kendalaList.length,
-              itemBuilder: (context, index) {
-                var kendala = kendalaList[index];
-                return ReportCard(
-                  id: kendala['id'],
-                  nama_pelapor: kendala['nama_pelapor'],
-                  nim_nrp: kendala['nim_nrp'],
-                  nama_ruangan: kendala['nama_ruangan'],
-                  status: kendala['status'],
-                  tanggal: kendala['tanggal'],
-                  jenis_kendala: kendala['jenis_kendala'],
-                  bentuk_kendala: kendala['bentuk_kendala'],
-                  deskripsi_kendala: kendala['deskripsi_kendala'],
-                  keterangan_penyelesaian: kendala['keterangan_penyelesaian'] ?? '',
-                );
+      body: Column(
+        children: [
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Cari nama pelapor atau ruangan...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0x99FF5833)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFFF5833)),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.toLowerCase();
+                });
               },
-            );
-          }
-        },
+            ),
+          ),
+          // List View with Search Filter
+          Expanded(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: _kendalaFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No data available'));
+                } else {
+                  List<Map<String, dynamic>> kendalaList = snapshot.data!;
+
+                  // Filter the list based on search query
+                  var filteredList = kendalaList.where((kendala) {
+                    final namaPelapor = kendala['nama_pelapor'].toString().toLowerCase();
+                    final namaRuangan = kendala['nama_ruangan'].toString().toLowerCase();
+                    return namaPelapor.contains(searchQuery) ||
+                        namaRuangan.contains(searchQuery);
+                  }).toList();
+
+                  return ListView.builder(
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      var kendala = filteredList[index];
+                      return ReportCard(
+                        id: kendala['id'],
+                        nama_pelapor: kendala['nama_pelapor'],
+                        nim_nrp: kendala['nim_nrp'],
+                        nama_ruangan: kendala['nama_ruangan'],
+                        status: kendala['status'],
+                        tanggal: kendala['tanggal'],
+                        jenis_kendala: kendala['jenis_kendala'],
+                        bentuk_kendala: kendala['bentuk_kendala'],
+                        deskripsi_kendala: kendala['deskripsi_kendala'],
+                        keterangan_penyelesaian: kendala['keterangan_penyelesaian'] ?? '',
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

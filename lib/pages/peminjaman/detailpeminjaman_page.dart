@@ -62,6 +62,34 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
   final TextEditingController jamMulaiController = TextEditingController();
   final TextEditingController jamSelesaiController = TextEditingController();
 
+  Widget _buildAdditionalFields() {
+    // Get current status ID from statusDropdown or initial widget status
+    final currentStatusId = int.tryParse(statusDropdown ?? '') ?? 
+                          int.tryParse(widget.status) ?? 0;
+    
+    if (currentStatusId == 4 || currentStatusId == 5) { // waiting or rejected
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16),
+          buildLabel('Alasan Ditolak:'),
+          buildTextField(reasonController, 'Masukkan alasan ditolak'),
+        ],
+      );
+    } else if (currentStatusId == 7 || currentStatusId == 8) { // ongoing or completed
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16),
+          buildLabel('Catatan Kejadian:'),
+          buildTextField(catatanKejadianController, 'Masukkan catatan kejadian'),
+        ],
+      );
+    }
+    
+    return SizedBox(); // Return empty widget for accepted status (6)
+  }
+
   @override
   void initState() {
     super.initState();
@@ -221,15 +249,14 @@ class _DetailpeminjamanPageState extends State<DetailpeminjamanPage> {
               buildEditableRow('Jam Selesai', jamSelesaiController),
               buildRowWithDivider('Jml Pengguna', widget.jumlahPengguna.toString()),
               buildRowWithDivider('Keterangan', widget.keterangan),
-              SizedBox(height: 16),
+              // SizedBox(height: 16),
+              // buildLabel('Alasan Ditolak:'),
+              // buildTextField(reasonController, 'Masukkan alasan ditolak'),
               
-              buildLabel('Alasan Ditolak:'),
-              buildTextField(reasonController, 'Masukkan alasan ditolak'),
-              
-              SizedBox(height: 16),
-              buildLabel('Catatan Kejadian:'), 
-              buildTextField(catatanKejadianController, 'Masukkan catatan kejadian'),
-
+              // SizedBox(height: 16),
+              // buildLabel('Catatan Kejadian:'), 
+              // buildTextField(catatanKejadianController, 'Masukkan catatan kejadian'),
+               _buildAdditionalFields(),
               SizedBox(height: 20),
               // Status dropdown from API
               DropdownButtonFormField<String>(

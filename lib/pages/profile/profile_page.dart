@@ -27,44 +27,54 @@ class _ProfilePageState extends State<ProfilePage> {
     _fetchUserData();
   }
 
-  Future<void> _fetchUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final accessToken = prefs.getString('access_token');
-
-    if (accessToken != null) {
-      try {
-        final response = await http.get(
-          Uri.parse('http://127.0.0.1:8000/api/user'),
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-            'ngrok-skip-browser-warning': '69420',
-          },
-        );
-
-        if (response.statusCode == 200) {
-          final userData = jsonDecode(response.body);
-          if (userData != null && mounted) {
-            setState(() {
-              name = userData['nama']!;
-              email = userData['email']!;
-              profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-              isLoading = false;
-            });
-          }
-        } else {
-          if (mounted) {
-            setState(() {
-              isLoading = false; // Set loading to false if adminId is null
-            });
-          }
-        }
-      } catch (e) {
-        if (mounted) {
+    Future<void> _fetchUserData() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final accessToken = prefs.getString('access_token');
+  
+      if (accessToken == null) {
+        print('No access token found');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+  
+      final response = await http.get(
+        Uri.parse('https://layananlab.fik.upnvj.ac.id/api/user'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'ngrok-skip-browser-warning': '69420',
+        },
+      );
+  
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+  
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        if (userData != null && mounted) {
           setState(() {
-            isLoading = false; // Set loading to false on error
+            name = userData['nama'] ?? '';
+            email = userData['email'] ?? '';
+            profile = userData['profil'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+            isLoading = false;
           });
         }
+      } else {
+        print('Failed to fetch user data: ${response.statusCode}');
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
