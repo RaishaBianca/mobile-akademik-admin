@@ -493,6 +493,20 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
                       itemCount: ruangantersediaList.length,
                       itemBuilder: (context, index) {
                         var ruangantersedia = ruangantersediaList[index];
+                        List<Widget> availableSlots = [];
+
+                        // Convert available_slots to widgets
+                            if (ruangantersedia['available_slots'] != null) {
+                              var slots = ruangantersedia['available_slots'] as List;
+                              availableSlots = slots.map((slot) => 
+                                ListTile(
+                                  leading: const Icon(Icons.access_time),
+                                  title: Text('${slot['start']} - ${slot['end']}'),
+                                  dense: true,
+                                ),
+                              ).toList();
+                            }
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                           child: RoomCard(
@@ -500,6 +514,7 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
                             namaRuang: ruangantersedia['nama_ruang'] ?? 'Unknown',
                             status: ruangantersedia['status'] ?? 'Unknown',
                             onToggleStatus: _toggleStatus,
+                            children: availableSlots,
                           ),
                         );
                       },

@@ -6,6 +6,7 @@ class RoomCard extends StatelessWidget {
   final String namaRuang;
   final String status;
   final Function(String) onToggleStatus;
+  final List<Widget>? children;
 
   const RoomCard({
     Key? key,
@@ -13,6 +14,7 @@ class RoomCard extends StatelessWidget {
     required this.namaRuang,
     required this.status,
     required this.onToggleStatus,
+    this.children,
   }) : super(key: key);
 
   @override
@@ -21,19 +23,35 @@ class RoomCard extends StatelessWidget {
     print("isOpen: $isOpen");
     
     return Card(
-      child: ListTile(
-        title: Text(idRuang),
-        subtitle: Text(namaRuang),
-        trailing: Switch(
-          value: isOpen,
-          onChanged: (bool value) {
-            onToggleStatus(idRuang);
-          },
-          activeColor: Colors.green,
-          activeTrackColor: Colors.green.withOpacity(0.5),
-          inactiveThumbColor: Colors.red,
-          inactiveTrackColor: Colors.red.withOpacity(0.5),
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // Add this
+        crossAxisAlignment: CrossAxisAlignment.start, // Add this
+        children: [
+          ListTile(
+            title: Text(idRuang),
+            subtitle: Text(namaRuang),
+            trailing: Switch(
+              value: isOpen,
+              onChanged: (bool value) {
+                onToggleStatus(idRuang);
+              },
+              activeColor: Colors.green,
+              activeTrackColor: Colors.green.withOpacity(0.5),
+              inactiveThumbColor: Colors.red,
+              inactiveTrackColor: Colors.red.withOpacity(0.5),
+            ),
+          ),
+          if (children != null) 
+            ...children!,
+          // if (ruangantersedia['available_slots'] != null)
+          //   ...(ruangantersedia['available_slots'] as List).map((slot) =>
+          //       ListTile(
+          //         leading: const Icon(Icons.access_time),
+          //         title: Text('${slot['start']} - ${slot['end']}'),
+          //         dense: true,
+          //       ),
+          //   ).toList(),
+        ],
       ),
     );
   }

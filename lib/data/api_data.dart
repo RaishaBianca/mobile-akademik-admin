@@ -9,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:http_parser/http_parser.dart';
 
 // const String base_url = 'http://103.147.92.179:25500/api/';
-const String base_url = 'https://layananlab.fik.upnvj.ac.id/api/';
+const String base_url = 'https://8f2a-180-252-94-104.ngrok-free.app/api/';
+// const String base_url = 'https://layananlab.fik.upnvj.ac.id/api/';
 late String endpoint;
 late SharedPreferences prefs;
 
@@ -227,6 +228,58 @@ Future<int> verifikasiPeminjaman(String id, String id_status, String alasanPenol
   }
 }
 
+Map<String, String> formatTime(String jamMulai, String jamSelesai) {
+  jamMulai = jamMulai.trim();
+  jamSelesai = jamSelesai.trim();
+
+  DateFormat inputFormat = DateFormat('HH:mm');
+  DateFormat outputFormat = DateFormat('HH:mm:ss');
+
+  DateTime startTime = inputFormat.parse(jamMulai);
+  DateTime endTime = inputFormat.parse(jamSelesai);
+
+  String formattedStartTime = outputFormat.format(startTime);
+  String formattedEndTime = outputFormat.format(endTime);
+
+  return {
+    'formattedStartTime': formattedStartTime,
+    'formattedEndTime': formattedEndTime,
+  };
+}
+
+Future<Map<String, dynamic>> getAvailablity(String tanggal, String jamMulai, String jamSelesai, String idRuang, String jumlahOrang) async {
+  endpoint = 'ketersediaan-ruangan';
+
+  var formattedTimes = formatTime(jamMulai, jamSelesai);
+
+  var url = Uri.parse(base_url + endpoint);
+  print({
+    'tgl_pinjam': tanggal,
+    'jam_mulai': formattedTimes['formattedStartTime']??'',
+    'jam_selesai': formattedTimes['formattedEndTime'],
+    'id_ruang': idRuang,
+    'jumlah_orang': jumlahOrang,
+  });
+
+  var response = await http.post(url, body: {
+    'tgl_pinjam': tanggal,
+    'jam_mulai': formattedTimes['formattedStartTime']!,
+    'jam_selesai': formattedTimes['formattedEndTime']!,
+    'id_ruang': idRuang,
+    'jumlah_orang': jumlahOrang,
+  }, headers: await _getHeaders());
+  print(response.body);
+
+  if (response.statusCode == 200) {
+    var responseBody = json.decode(response.body);
+    var isAvailable = responseBody['available'];
+    var message = responseBody['message'];
+    return {'available': isAvailable, 'message': message};
+  } else {
+    print('Error: ${response.statusCode}');
+    return {'available': false, 'message': 'Error checking availability'};
+  }
+}
 
 Future<List<Map<String, dynamic>>> getAllRuangantersedia(String jamMulai, String jamSelesai, String tglPinjam, String tipeRuang) async {
   endpoint = 'ruangan/status';
