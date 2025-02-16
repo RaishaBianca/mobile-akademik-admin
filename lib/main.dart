@@ -83,9 +83,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
-    JadwalPage(),
     PeminjamanPage(),
     PelaporanPage(),
+    JadwalPage(),
     KalenderPage(),
     ProfilePage(),
   ];
@@ -207,16 +207,16 @@ class _MyAppState extends State<MyApp> {
                 onTap: _onItemTapped,
                 items: const [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.calendar_today_rounded),
-                    label: 'Jadwal',
-                  ),
-                  BottomNavigationBarItem(
                     icon: Icon(Icons.bookmarks_outlined),
                     label: 'Peminjaman',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.warning_amber_rounded),
                     label: 'Pelaporan',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_today_rounded),
+                    label: 'Jadwal',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.calendar_month_outlined),

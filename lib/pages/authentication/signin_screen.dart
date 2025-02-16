@@ -37,9 +37,6 @@ class _SignInScreenState extends State<SignInScreen> {
     if (_formSignInKey.currentState!.validate()) {
       try {
         final response = await login(_identifierController.text, _passwordController.text);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login berhasil masuk')),
-        );
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('access_token', response['token']);
         if (rememberPassword) {
@@ -59,9 +56,6 @@ class _SignInScreenState extends State<SignInScreen> {
         }
         Navigator.pushReplacementNamed(context, '/home');
       } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login gagal masuk')),
-        );
       }
     }
   }
@@ -121,8 +115,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Email atau NIM', style: TextStyle(fontSize: 14)),
-                          hintText: 'Tolong Masukkan Email/NIM Anda',
+                          label: const Text('Email', style: TextStyle(fontSize: 14)),
+                          hintText: 'Tolong Masukkan Email Anda',
                           hintStyle: const TextStyle(
                             fontSize: 14,
                             color: Colors.black26,
