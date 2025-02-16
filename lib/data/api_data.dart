@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:http_parser/http_parser.dart';
 
 // const String base_url = 'http://103.147.92.179:25500/api/';
-const String base_url = 'https://8f2a-180-252-94-104.ngrok-free.app/api/';
+const String base_url = 'https://451b-180-252-83-220.ngrok-free.app/api/';
 // const String base_url = 'https://layananlab.fik.upnvj.ac.id/api/';
 late String endpoint;
 late SharedPreferences prefs;

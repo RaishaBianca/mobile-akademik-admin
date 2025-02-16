@@ -115,60 +115,61 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
     );
   }
 
-  void _toggleStatus(String idRuang) async {
-    final roomInfo = await _getRoomInfo(idRuang);
-    if (roomInfo?['status'] == 'close' && roomInfo?['tipe'] == 'jadwal') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Pilih Tindakan'),
-            content: Text('Apakah anda yakin ingin membuka ruangan ini?' +
-                (roomInfo?['alasan'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${roomInfo?['alasan']}' : '')),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Batal'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  final idJadwal = (roomInfo?['id'] ?? '').toString();
-                  _showUndurDialog(idRuang, idJadwal);
-                },
-                child: Text('Buka'),
-              ),
-            ],
-          );
-        },
-      );
-    } else if(roomInfo?['status'] == 'close' && roomInfo?['tipe'] == 'peminjaman') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Pilih Tindakan'),
-            content: Text('Apakah anda yakin ingin membuka ruangan ini?' +
-                (roomInfo?['alasan'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${roomInfo?['alasan']}' : '')),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Batal'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  final idPinjam = (roomInfo?['id'] ?? '').toString();
-                  _showPinjamDialog(idRuang, idPinjam);
-                },
-                child: Text('Buka'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-    else if(roomInfo?['status'] == 'open') {
+    void _toggleStatus(String idRuang, Map<String, dynamic> timeSlot) async {
+    if (timeSlot['status'] == 'close') {
+      if ((timeSlot['type'] == 'jadwal') || (timeSlot['type'] == 'jadwal_ulang')) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Pilih Tindakan'),
+              content: Text('Apakah anda yakin ingin membuka ruangan ini?' +
+                  (timeSlot['reason'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${timeSlot['reason']}' : '')),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Batal'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    final idJadwal = (timeSlot['id'] ?? '').toString();
+                    _showUndurDialog(idRuang, idJadwal);
+                  },
+                  child: Text('Buka'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (timeSlot['type'] == 'peminjaman') {
+        // Handle peminjaman case
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Pilih Tindakan'),
+              content: Text('Apakah anda yakin ingin membuka ruangan ini?' +
+                  (timeSlot['reason'] != null ? '\n\nRuangan ini sedang dipakai untuk: ${timeSlot['reason']}' : '')),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Batal'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    final idPinjam = (timeSlot['id'] ?? '').toString();
+                    _showPinjamDialog(idRuang, idPinjam);
+                  },
+                  child: Text('Buka'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else if (timeSlot['status'] == 'open') {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -178,7 +179,6 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Keperluan Input
                   TextFormField(
                     controller: keperluanController,
                     decoration: InputDecoration(
@@ -199,9 +199,10 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
                 onPressed: () {
                   _handleRoomClosure(
                     idRuang,
-                    jamMulaiController.text,
-                    jamSelesaiController.text,
-                    keperluanController.text,);
+                    timeSlot['start'],
+                    timeSlot['end'],
+                    keperluanController.text,
+                  );
                   Navigator.of(context).pop();
                 },
                 child: Text('Simpan'),
@@ -489,32 +490,21 @@ class _RuanganTersediaPageState extends State<RuanganTersediaPage> {
                     return Center(child: Text('No data available'));
                   } else {
                     List<Map<String, dynamic>> ruangantersediaList = snapshot.data!;
-                    return ListView.builder(
+                    return ListView.builder( // Add 'return' here
                       itemCount: ruangantersediaList.length,
                       itemBuilder: (context, index) {
                         var ruangantersedia = ruangantersediaList[index];
-                        List<Widget> availableSlots = [];
-
-                        // Convert available_slots to widgets
-                            if (ruangantersedia['available_slots'] != null) {
-                              var slots = ruangantersedia['available_slots'] as List;
-                              availableSlots = slots.map((slot) => 
-                                ListTile(
-                                  leading: const Icon(Icons.access_time),
-                                  title: Text('${slot['start']} - ${slot['end']}'),
-                                  dense: true,
-                                ),
-                              ).toList();
-                            }
-
+                        List<Map<String, dynamic>> timeSlots = List<Map<String, dynamic>>.from(
+                          ruangantersedia['time_slots'] ?? []
+                        );
+                    
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                           child: RoomCard(
                             idRuang: ruangantersedia['id_ruang'] ?? 'Unknown',
                             namaRuang: ruangantersedia['nama_ruang'] ?? 'Unknown',
-                            status: ruangantersedia['status'] ?? 'Unknown',
+                            timeSlots: timeSlots,
                             onToggleStatus: _toggleStatus,
-                            children: availableSlots,
                           ),
                         );
                       },

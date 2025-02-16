@@ -4,53 +4,42 @@ import 'package:flutter/material.dart';
 class RoomCard extends StatelessWidget {
   final String idRuang;
   final String namaRuang;
-  final String status;
-  final Function(String) onToggleStatus;
-  final List<Widget>? children;
+  final List<Map<String, dynamic>> timeSlots;
+  final Function(String, Map<String, dynamic>) onToggleStatus;
 
   const RoomCard({
     Key? key,
     required this.idRuang,
     required this.namaRuang,
-    required this.status,
+    required this.timeSlots,
     required this.onToggleStatus,
-    this.children,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isOpen = status.toLowerCase() == 'open';
-    print("isOpen: $isOpen");
-    
     return Card(
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Add this
-        crossAxisAlignment: CrossAxisAlignment.start, // Add this
         children: [
           ListTile(
-            title: Text(idRuang),
-            subtitle: Text(namaRuang),
-            trailing: Switch(
-              value: isOpen,
-              onChanged: (bool value) {
-                onToggleStatus(idRuang);
-              },
-              activeColor: Colors.green,
-              activeTrackColor: Colors.green.withOpacity(0.5),
-              inactiveThumbColor: Colors.red,
-              inactiveTrackColor: Colors.red.withOpacity(0.5),
-            ),
+            title: Text(namaRuang),
+            subtitle: Text(idRuang),
           ),
-          if (children != null) 
-            ...children!,
-          // if (ruangantersedia['available_slots'] != null)
-          //   ...(ruangantersedia['available_slots'] as List).map((slot) =>
-          //       ListTile(
-          //         leading: const Icon(Icons.access_time),
-          //         title: Text('${slot['start']} - ${slot['end']}'),
-          //         dense: true,
-          //       ),
-          //   ).toList(),
+          ...timeSlots.map((slot) => 
+            ListTile(
+              leading: Icon(
+                slot['status'] == 'open' ? Icons.lock_open : Icons.lock,
+                color: slot['status'] == 'open' ? Colors.green : Colors.red,
+              ),
+              title: Text('${slot['start']} - ${slot['end']}'),
+              subtitle: Text(slot['reason'] ?? 'No reason provided'),
+              trailing: Switch(
+                value: slot['status'] == 'open',
+                onChanged: (_) => onToggleStatus(idRuang, slot),
+                activeColor: Colors.green,
+                inactiveThumbColor: Colors.red,
+              ),
+            ),
+          ).toList(),
         ],
       ),
     );
