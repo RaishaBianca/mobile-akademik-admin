@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }
   
       final response = await http.get(
-        Uri.parse('http://103.147.92.179:25500/api/user'),
+        Uri.parse('https://layananlab.fik.upnvj.ac.id/api/user'),
         headers: {
           'Authorization': 'Bearer $accessToken',
           'ngrok-skip-browser-warning': '69420',

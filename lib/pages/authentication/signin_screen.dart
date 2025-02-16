@@ -4,6 +4,7 @@ import 'package:admin_fik_app/customstyle/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_fik_app/data/api_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:admin_fik_app/pages/password/forget_password.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -208,6 +209,72 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: const Text('Masuk', style: TextStyle(color: Colors.white)),
                         ),
                       ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Expanded(
+                      //       child: Divider(
+                      //         thickness: 0.7,
+                      //         color: Colors.grey.withOpacity(0.5),
+                      //       ),
+                      //     ),
+                      //     const Padding(
+                      //       padding: EdgeInsets.symmetric(
+                      //           vertical: 0, horizontal: 10),
+                      //       child: Text(
+                      //         'Belum punya akun?',
+                      //         style: TextStyle(
+                      //           color: Colors.black45,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     GestureDetector(
+                      //       onTap: () {
+                      //         Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (e) => const SignUpScreen()),
+                      //         );
+                      //       },
+                      //       child: Padding(
+                      //         padding: const EdgeInsets.only(right: 10.0), // Add padding to the right
+                      //         child: Text(
+                      //           'Daftar',
+                      //           style: TextStyle(
+                      //             color: lightColorScheme.primary,
+                      //             fontWeight: FontWeight.bold,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     Expanded(
+                      //       child: Divider(
+                      //         thickness: 0.7,
+                      //         color: Colors.grey.withOpacity(0.5),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgetPasswordScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Color(0xFFFF5833)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -219,3 +286,14 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 }
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
